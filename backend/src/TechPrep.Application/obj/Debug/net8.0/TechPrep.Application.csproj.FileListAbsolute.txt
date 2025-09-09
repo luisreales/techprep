@@ -1,0 +1,16 @@
+/Users/luisreales/techprep/backend/src/TechPrep.Application/bin/Debug/net8.0/TechPrep.Application.deps.json
+/Users/luisreales/techprep/backend/src/TechPrep.Application/bin/Debug/net8.0/TechPrep.Application.dll
+/Users/luisreales/techprep/backend/src/TechPrep.Application/bin/Debug/net8.0/TechPrep.Application.pdb
+/Users/luisreales/techprep/backend/src/TechPrep.Application/bin/Debug/net8.0/TechPrep.Core.dll
+/Users/luisreales/techprep/backend/src/TechPrep.Application/bin/Debug/net8.0/TechPrep.Core.pdb
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.csproj.AssemblyReference.cache
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.AssemblyInfoInputs.cache
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.AssemblyInfo.cs
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.csproj.CoreCompileInputs.cache
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.sourcelink.json
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.76D646BE.Up2Date
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.dll
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/refint/TechPrep.Application.dll
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/TechPrep.Application.pdb
+/Users/luisreales/techprep/backend/src/TechPrep.Application/obj/Debug/net8.0/ref/TechPrep.Application.dll

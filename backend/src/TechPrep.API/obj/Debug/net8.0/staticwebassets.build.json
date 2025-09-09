@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "F0xHFD0OsdtBRfHP7oTaSSqBy93SOao5Krm75vEbg7g=",
+  "Source": "TechPrep.API",
+  "BasePath": "_content/TechPrep.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
