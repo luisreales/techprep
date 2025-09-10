@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User } from '../types/api';
-import { apiClient } from '../services/api';
+import { User } from '@/types/api';
+import { apiClient } from '@/services/api';
 
 interface AuthState {
   user: User | null;
@@ -69,7 +69,7 @@ export const useAuthStore = create<AuthStore>()(
             });
             return false;
           }
-        } catch (error) {
+        } catch {
           set({
             isLoading: false,
             error: 'Network error occurred',
@@ -107,7 +107,7 @@ export const useAuthStore = create<AuthStore>()(
             });
             return false;
           }
-        } catch (error) {
+        } catch {
           set({
             isLoading: false,
             error: 'Network error occurred',
@@ -159,7 +159,7 @@ export const useAuthStore = create<AuthStore>()(
             get().logout();
             return false;
           }
-        } catch (error) {
+        } catch {
           get().logout();
           return false;
         }

@@ -1,24 +1,34 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { Eye, EyeOff, BookOpen } from 'lucide-react';
-import { useAuthStore } from '../stores/authStore';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuthStore } from '@/stores/authStore';
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+type LoginForm = z.infer<typeof schema>;
 
 export const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  
   const { login, isLoading, error, isAuthenticated, clearError } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>({ resolver: zodResolver(schema) });
 
-  // Redirect if already authenticated
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: LoginForm) => {
     clearError();
-    await login(email, password);
+    await login(values.email, values.password);
   };
 
   return (
@@ -36,16 +46,13 @@ export const LoginPage: React.FC = () => {
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Or{' '}
-            <Link
-              to="/register"
-              className="font-medium text-primary-600 hover:text-primary-500"
-            >
+            <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
               create a new account
             </Link>
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -53,15 +60,15 @@ export const LoginPage: React.FC = () => {
               </label>
               <input
                 id="email"
-                name="email"
                 type="email"
                 autoComplete="email"
-                required
                 className="input-field"
                 placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register('email')}
               />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="relative">
@@ -70,14 +77,11 @@ export const LoginPage: React.FC = () => {
               </label>
               <input
                 id="password"
-                name="password"
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
-                required
                 className="input-field pr-10"
                 placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register('password')}
               />
               <button
                 type="button"
@@ -90,6 +94,9 @@ export const LoginPage: React.FC = () => {
                   <Eye className="h-5 w-5 text-gray-400" />
                 )}
               </button>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              )}
             </div>
           </div>
 
@@ -113,21 +120,14 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div className="text-sm">
-              <Link
-                to="/forgot-password"
-                className="font-medium text-primary-600 hover:text-primary-500"
-              >
+              <Link to="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500">
                 Forgot your password?
               </Link>
             </div>
           </div>
 
           <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="btn-primary w-full"
-            >
+            <button type="submit" disabled={isLoading} className="btn-primary w-full">
               {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
