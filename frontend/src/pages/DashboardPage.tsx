@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Play, TrendingUp, Clock } from 'lucide-react';
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuthStore();
