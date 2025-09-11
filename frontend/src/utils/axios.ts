@@ -3,3 +3,4 @@ import axios from 'axios';
 export const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE || '/api',
 });
+console.log('axios baseURL:', http.defaults.baseURL);

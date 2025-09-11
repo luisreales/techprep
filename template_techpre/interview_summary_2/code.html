@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #137fec;
+      --background-color: #f0f5fa;
+      --text-color: #111827;
+      --secondary-text-color: #6b7280;
+      --card-background: #ffffff;
+      --border-color: #e5e7eb;
+    }
+    body {
+      background-color: var(--background-color);
+      font-family: Inter, "Noto Sans", sans-serif;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[var(--background-color)]">
+<div class="relative flex size-full min-h-screen flex-col justify-between group/design-root overflow-x-hidden">
+<div>
+<header class="bg-white sticky top-0 z-10 shadow-sm">
+<div class="flex items-center p-4">
+<button class="text-[var(--text-color)]">
+<span class="material-symbols-outlined">
+              arrow_back
+            </span>
+</button>
+<h1 class="text-[var(--text-color)] text-lg font-bold flex-1 text-center pr-6">Interview Summary</h1>
+</div>
+</header>
+<main class="p-4 sm:p-6">
+<section class="mb-8">
+<h2 class="text-[var(--text-color)] text-2xl font-bold mb-4">Performance Overview</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-[var(--card-background)] rounded-xl p-4 flex flex-col gap-2 border border-[var(--border-color)] shadow-sm">
+<p class="text-[var(--secondary-text-color)] text-sm font-medium">Total Questions</p>
+<p class="text-[var(--text-color)] text-3xl font-bold">150</p>
+</div>
+<div class="bg-[var(--card-background)] rounded-xl p-4 flex flex-col gap-2 border border-[var(--border-color)] shadow-sm">
+<p class="text-[var(--secondary-text-color)] text-sm font-medium">Correct</p>
+<p class="text-green-600 text-3xl font-bold">120</p>
+</div>
+<div class="bg-[var(--card-background)] rounded-xl p-4 flex flex-col gap-2 border border-[var(--border-color)] shadow-sm">
+<p class="text-[var(--secondary-text-color)] text-sm font-medium">Wrong</p>
+<p class="text-red-600 text-3xl font-bold">30</p>
+</div>
+<div class="bg-[var(--card-background)] rounded-xl p-4 flex flex-col gap-2 border border-[var(--border-color)] shadow-sm">
+<p class="text-[var(--secondary-text-color)] text-sm font-medium">Accuracy</p>
+<p class="text-[var(--primary-color)] text-3xl font-bold">80%</p>
+</div>
+</div>
+</section>
+<section class="mb-8">
+<h2 class="text-[var(--text-color)] text-2xl font-bold mb-4">Progress by Topic</h2>
+<div class="bg-[var(--card-background)] rounded-xl border border-[var(--border-color)] shadow-sm p-4">
+<div class="flow-root">
+<div class="-my-4 divide-y divide-[var(--border-color)]">
+<div class="flex items-center justify-between py-4">
+<p class="text-[var(--text-color)] font-medium">Data Structures</p>
+<p class="text-[var(--primary-color)] font-semibold">90%</p>
+</div>
+<div class="flex items-center justify-between py-4">
+<p class="text-[var(--text-color)] font-medium">Algorithms</p>
+<p class="text-[var(--primary-color)] font-semibold">75%</p>
+</div>
+<div class="flex items-center justify-between py-4">
+<p class="text-[var(--text-color)] font-medium">System Design</p>
+<p class="text-[var(--primary-color)] font-semibold">85%</p>
+</div>
+<div class="flex items-center justify-between py-4">
+<p class="text-[var(--text-color)] font-medium">Behavioral</p>
+<p class="text-[var(--primary-color)] font-semibold">95%</p>
+</div>
+<div class="flex items-center justify-between py-4 font-bold">
+<p class="text-[var(--text-color)]">Overall</p>
+<p class="text-[var(--primary-color)]">80%</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-8">
+<h2 class="text-[var(--text-color)] text-2xl font-bold mb-4">Progress Over Time</h2>
+<div class="bg-[var(--card-background)] rounded-xl border border-[var(--border-color)] shadow-sm p-4">
+<div class="flex items-baseline gap-2 mb-2">
+<p class="text-[var(--text-color)] text-4xl font-bold">80%</p>
+<div class="flex items-center gap-1 text-green-600">
+<span class="material-symbols-outlined text-base">trending_up</span>
+<p class="font-semibold text-sm">+5%</p>
+</div>
+</div>
+<p class="text-[var(--secondary-text-color)] text-sm mb-4">Last 6 Months</p>
+<div class="h-48">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 400 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 110C22.2222 110 22.2222 20 44.4444 20C66.6667 20 66.6667 40 88.8889 40C111.111 40 111.111 90 133.333 90C155.556 90 155.556 30 177.778 30C200 30 200 100 222.222 100C244.444 100 244.444 60 266.667 60C288.889 60 288.889 45 311.111 45C333.333 45 333.333 120 355.556 120C377.778 120 377.778 150 400 150" stroke="var(--primary-color)" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<path d="M0 110C22.2222 110 22.2222 20 44.4444 20C66.6667 20 66.6667 40 88.8889 40C111.111 40 111.111 90 133.333 90C155.556 90 155.556 30 177.778 30C200 30 200 100 222.222 100C244.444 100 244.444 60 266.667 60C288.889 60 288.889 45 311.111 45C333.333 45 333.333 120 355.556 120C377.778 120 377.778 150 400 150V150H0V110Z" fill="url(#paint0_linear_chart)"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_chart" x1="200" x2="200" y1="20" y2="150">
+<stop stop-color="var(--primary-color)" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="var(--primary-color)" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+<div class="flex justify-between text-xs text-[var(--secondary-text-color)] font-medium mt-2">
+<span>Jan</span>
+<span>Feb</span>
+<span>Mar</span>
+<span>Apr</span>
+<span>May</span>
+<span>Jun</span>
+</div>
+</div>
+</section>
+<div class="flex justify-center mt-8 mb-4">
+<button class="flex w-full max-w-sm items-center justify-center gap-2 rounded-lg h-12 px-6 bg-[var(--primary-color)] text-white text-base font-bold shadow-lg shadow-blue-500/30">
+<span class="material-symbols-outlined">
+              download
+            </span>
+<span>Download Unsolved</span>
+</button>
+</div>
+</main>
+</div>
+<footer class="sticky bottom-0 bg-white border-t border-[var(--border-color)]">
+<nav class="flex justify-around py-2">
+<a class="flex flex-col items-center gap-1 text-[var(--primary-color)]" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-xs font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[var(--secondary-text-color)]" href="#">
+<span class="material-symbols-outlined">code</span>
+<span class="text-xs font-medium">Practice</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[var(--secondary-text-color)]" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-xs font-medium">Review</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-[var(--secondary-text-color)]" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-xs font-medium">Profile</span>
+</a>
+</nav>
+</footer>
+</div>
+
+</body></html>

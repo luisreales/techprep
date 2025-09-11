@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TechPrep - Practice</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #1380ec;
+      --foreground-color: #0f172a;
+      --background-color: #f8fafc;
+      --card-background-color: #ffffff;
+      --muted-foreground-color: #64748b;
+      --border-color: #e2e8f0;
+      --success-color: #22c55e;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background-color);
+    }
+    .icon {
+        font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+    .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex bg-slate-100">
+<aside class="fixed inset-y-0 left-0 bg-white shadow-lg w-16 md:w-20 lg:w-64 z-20 flex flex-col transition-all duration-300">
+<div class="flex items-center justify-center h-16 border-b border-slate-200">
+<h1 class="text-xl font-bold text-blue-600 hidden lg:block">TechPrep</h1>
+<span class="material-symbols-outlined text-blue-600 text-3xl lg:hidden">
+        code
+      </span>
+</div>
+<nav class="flex-grow">
+<ul class="py-4">
+<li><a class="flex items-center py-3 px-4 lg:px-6 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="ml-4 hidden lg:block font-medium">Dashboard</span>
+</a></li>
+<li><a class="flex items-center py-3 px-4 lg:px-6 bg-blue-50 text-blue-600 border-l-4 border-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined icon">school</span>
+<span class="ml-4 hidden lg:block font-bold">Practice</span>
+</a></li>
+<li><a class="flex items-center py-3 px-4 lg:px-6 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">code_blocks</span>
+<span class="ml-4 hidden lg:block font-medium">Code Challenges</span>
+</a></li>
+<li><a class="flex items-center py-3 px-4 lg:px-6 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">book</span>
+<span class="ml-4 hidden lg:block font-medium">Resources</span>
+</a></li>
+<li><a class="flex items-center py-3 px-4 lg:px-6 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="ml-4 hidden lg:block font-medium">Profile</span>
+</a></li>
+<li><a class="flex items-center py-3 px-4 lg:px-6 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="ml-4 hidden lg:block font-medium">Admin</span>
+</a></li>
+</ul>
+</nav>
+</aside>
+<div class="flex-1 ml-16 md:ml-20 lg:ml-64 min-h-screen">
+<main class="container mx-auto px-4 py-8 md:px-6 md:py-12">
+<div class="max-w-2xl mx-auto">
+<div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
+<div class="flex items-start justify-between mb-4">
+<h2 class="text-xl md:text-2xl font-bold text-slate-800">What is the Big O notation for the best-case time complexity of Bubble Sort?</h2>
+<div class="w-6 h-6 rounded-full" id="feedback-indicator-1"></div>
+</div>
+<p class="text-slate-500 mb-6">Select the correct answer from the options below.</p>
+<div class="space-y-3">
+<label class="flex items-center p-4 rounded-lg border border-slate-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all cursor-pointer">
+<input class="h-5 w-5 text-blue-600 border-slate-300 focus:ring-blue-500" name="single-choice" type="radio"/>
+<span class="ml-4 text-slate-700">O(n²)</span>
+</label>
+<label class="flex items-center p-4 rounded-lg border border-slate-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all cursor-pointer">
+<input class="h-5 w-5 text-blue-600 border-slate-300 focus:ring-blue-500" name="single-choice" type="radio"/>
+<span class="ml-4 text-slate-700">O(n log n)</span>
+</label>
+<label class="flex items-center p-4 rounded-lg border border-slate-200 has-[:checked]:bg-green-50 has-[:checked]:border-green-500 transition-all cursor-pointer relative">
+<input checked="" class="h-5 w-5 text-blue-600 border-slate-300 focus:ring-blue-500" name="single-choice" type="radio"/>
+<span class="ml-4 text-slate-700">O(n)</span>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-green-600">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+<span class="text-sm font-semibold hidden sm:inline">Correct</span>
+</div>
+</label>
+</div>
+</div>
+<div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
+<div class="flex items-start justify-between mb-4">
+<h2 class="text-xl md:text-2xl font-bold text-slate-800">Which of the following are examples of linear data structures?</h2>
+<div class="w-6 h-6 rounded-full bg-yellow-400" id="feedback-indicator-2"></div>
+</div>
+<p class="text-slate-500 mb-6">Select all that apply.</p>
+<div class="space-y-3">
+<label class="flex items-center p-4 rounded-lg border border-slate-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all cursor-pointer">
+<input checked="" class="h-5 w-5 rounded text-blue-600 border-slate-300 focus:ring-blue-500" name="multi-choice" type="checkbox"/>
+<span class="ml-4 text-slate-700">Array</span>
+</label>
+<label class="flex items-center p-4 rounded-lg border border-slate-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all cursor-pointer">
+<input class="h-5 w-5 rounded text-blue-600 border-slate-300 focus:ring-blue-500" name="multi-choice" type="checkbox"/>
+<span class="ml-4 text-slate-700">Tree</span>
+</label>
+<label class="flex items-center p-4 rounded-lg border border-slate-200 has-[:checked]:bg-blue-50 has-[:checked]:border-blue-500 transition-all cursor-pointer">
+<input checked="" class="h-5 w-5 rounded text-blue-600 border-slate-300 focus:ring-blue-500" name="multi-choice" type="checkbox"/>
+<span class="ml-4 text-slate-700">Stack</span>
+</label>
+<div class="p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
+<p><span class="font-bold">Partially Correct.</span> Trees are non-linear data structures.</p>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8">
+<div class="flex items-start justify-between mb-4">
+<h2 class="text-xl md:text-2xl font-bold text-slate-800">Explain the difference between `let`, `const`, and `var` in JavaScript.</h2>
+<div class="w-6 h-6 rounded-full bg-red-500" id="feedback-indicator-3"></div>
+</div>
+<p class="text-slate-500 mb-6">Provide a concise explanation in the text area below.</p>
+<textarea class="w-full p-4 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="Your answer here..." rows="6"></textarea>
+<div class="mt-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-800 text-sm">
+<p><span class="font-bold">Incorrect.</span> Your explanation is missing key details about block scope vs. function scope.</p>
+</div>
+</div>
+<div class="flex items-center justify-end gap-4 mt-8">
+<button class="px-6 py-3 rounded-lg text-slate-700 font-bold bg-slate-200 hover:bg-slate-300 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400">
+            Submit
+          </button>
+<button class="px-6 py-3 rounded-lg text-white font-bold bg-blue-600 hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Next <span class="material-symbols-outlined text-base align-middle ml-1">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

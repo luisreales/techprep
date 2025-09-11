@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using TechPrep.Core.Entities;
 
 namespace TechPrep.Infrastructure.Data;
 
 // TODO: Minimal DbContext for startup testing
-public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : DbContext(options)
+public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Topic> Topics { get; set; } = null!;
     public DbSet<Question> Questions { get; set; } = null!;

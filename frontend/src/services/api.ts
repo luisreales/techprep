@@ -1,5 +1,7 @@
 import { http } from '@/utils/axios';
-import { ApiResponse } from '@/types/api';
+import { ApiResponse, AuthOk , BackendError} from '@/types/api';
+import type { AxiosError } from 'axios';
+
 import type {
   Topic,
   Question,
@@ -20,8 +22,17 @@ export const apiClient = {
 
   // Auth
   async login(email: string, password: string) {
-    const { data } = await http.post<ApiResponse>("/auth/login", { email, password });
-    return data;
+    try {
+      const { data } = await http.post<AuthOk>('/auth/login', { email, password });
+      return data; // AuthOk
+    } catch (err) {
+      const axErr = err as AxiosError<BackendError>;
+      if (axErr.response?.data?.message) {
+        return axErr.response.data; // BackendError { message }
+      }
+      // Fallback unexpected
+      return { message: 'Network error occurred' };
+    }
   },
   async register(user: {
     email: string;

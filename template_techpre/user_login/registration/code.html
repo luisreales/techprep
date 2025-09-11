@@ -1,0 +1,71 @@
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<title>TechPrep - Login</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #137fec;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-50">
+<div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style="--select-button-svg: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(156, 163, 175)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M215.39,92.61l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,1,1,11.32-11.32L128,154.69l74.07-73.4a8,8,0,0,1,11.32,11.32Z%27%3e%3c/path%3e%3c/svg%3e'); font-family: Inter, &quot;Noto Sans&quot;, sans-serif;">
+<div class="flex flex-col items-center justify-center flex-1 px-4 sm:px-6 lg:px-8">
+<div class="w-full max-w-md space-y-8">
+<div class="text-center">
+<span class="material-symbols-outlined text-5xl text-[var(--primary-color)]">
+              code
+              </span>
+<h1 class="mt-2 text-3xl font-bold tracking-tight text-gray-900">
+              Welcome to TechPrep
+            </h1>
+<p class="mt-2 text-sm text-gray-600">
+              Your journey to acing tech interviews starts here.
+            </p>
+</div>
+<div class="mt-8 space-y-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute top-1/2 left-3 -translate-y-1/2 text-gray-400">
+                person
+              </span>
+<input class="form-input w-full rounded-md border-gray-300 bg-gray-50 py-3 pl-10 pr-4 text-gray-900 shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" placeholder="Username" type="text" value=""/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute top-1/2 left-3 -translate-y-1/2 text-gray-400">
+                lock
+              </span>
+<input class="form-input w-full rounded-md border-gray-300 bg-gray-50 py-3 pl-10 pr-4 text-gray-900 shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" placeholder="Password" type="password" value=""/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute top-1/2 left-3 -translate-y-1/2 text-gray-400">
+                badge
+              </span>
+<select class="form-select w-full rounded-md border-gray-300 bg-gray-50 py-3 pl-10 pr-4 text-gray-900 shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[image:--select-button-svg]">
+<option disabled="" selected="" value="">Select Role</option>
+<option value="student">Student</option>
+<option value="admin">Admin</option>
+</select>
+</div>
+<div class="flex flex-col gap-4 pt-4">
+<button class="flex w-full justify-center rounded-md border border-transparent bg-[var(--primary-color)] py-3 px-4 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] focus:ring-offset-2">
+                Login
+              </button>
+<button class="flex w-full justify-center rounded-md border border-gray-300 bg-white py-3 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                Register
+              </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

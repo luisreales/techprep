@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TechPrep Dashboard</title>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #137fec;
+      --background-color: #f0f2f5;
+      --text-primary: #111827;
+      --text-secondary: #6b7280;
+      --card-background: #ffffff;
+      --border-color: #e5e7eb;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[var(--background-color)]">
+<div class="flex flex-col min-h-screen">
+<div class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg p-6 transform -translate-x-full transition-transform duration-300 ease-in-out z-50" id="sidebar">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-lg text-gray-700">A</div>
+<span class="text-xl font-bold text-[var(--text-primary)]">Alex</span>
+</div>
+<nav>
+<ul>
+<li class="mb-2">
+<a class="flex items-center p-3 rounded-md bg-[var(--primary-color)]/10 text-[var(--primary-color)] font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+              Dashboard
+            </a>
+</li>
+<li class="mb-2">
+<a class="flex items-center p-3 rounded-md hover:bg-gray-100 text-[var(--text-secondary)] font-medium" href="#">
+<span class="material-symbols-outlined mr-3">model_training</span>
+              Practice
+            </a>
+</li>
+<li class="mb-2">
+<a class="flex items-center p-3 rounded-md hover:bg-gray-100 text-[var(--text-secondary)] font-medium" href="#">
+<span class="material-symbols-outlined mr-3">code</span>
+              Code Challenges
+            </a>
+</li>
+<li class="mb-2">
+<a class="flex items-center p-3 rounded-md hover:bg-gray-100 text-[var(--text-secondary)] font-medium" href="#">
+<span class="material-symbols-outlined mr-3">source</span>
+              Resources
+            </a>
+</li>
+<li class="mb-2">
+<a class="flex items-center p-3 rounded-md hover:bg-gray-100 text-[var(--text-secondary)] font-medium" href="#">
+<span class="material-symbols-outlined mr-3">person</span>
+              Profile
+            </a>
+</li>
+<li class="mb-2">
+<a class="flex items-center p-3 rounded-md hover:bg-gray-100 text-[var(--text-secondary)] font-medium" href="#">
+<span class="material-symbols-outlined mr-3">admin_panel_settings</span>
+              Admin
+            </a>
+</li>
+</ul>
+</nav>
+</div>
+<div class="fixed inset-0 bg-black/50 z-40 hidden" id="sidebar-overlay"></div>
+<div class="flex-1 flex flex-col">
+<header class="bg-white sticky top-0 z-30 shadow-sm">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<button class="lg:hidden text-[var(--text-primary)]" id="menu-button">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+<h1 class="text-xl font-bold text-[var(--text-primary)] lg:text-2xl">Dashboard</h1>
+<div class="flex items-center gap-4">
+<button class="relative text-[var(--text-secondary)] hover:text-[var(--primary-color)]">
+<span class="material-symbols-outlined text-3xl">notifications</span>
+<span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="space-y-8">
+<div class="bg-white rounded-lg shadow-md p-6">
+<h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">Choose Your Mode</h2>
+<div class="flex bg-[var(--background-color)] rounded-lg p-1">
+<label class="flex-1 text-center py-2 rounded-md cursor-pointer has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-[var(--primary-color)] font-semibold text-sm transition-all duration-200">
+<input checked="" class="sr-only" name="mode" type="radio" value="study"/>
+                Study
+              </label>
+<label class="flex-1 text-center py-2 rounded-md cursor-pointer has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-[var(--primary-color)] font-semibold text-sm transition-all duration-200">
+<input class="sr-only" name="mode" type="radio" value="interview"/>
+                Interview
+              </label>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6">
+<h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">Select Topics</h2>
+<div class="flex flex-wrap gap-3">
+<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-full border border-transparent has-[:checked]:bg-[var(--primary-color)]/10 has-[:checked]:text-[var(--primary-color)] has-[:checked]:border-[var(--primary-color)] bg-gray-100 text-[var(--text-secondary)] text-sm font-medium transition-all duration-200">
+<input class="sr-only" type="checkbox"/>
+                .NET
+              </label>
+<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-full border border-transparent has-[:checked]:bg-[var(--primary-color)]/10 has-[:checked]:text-[var(--primary-color)] has-[:checked]:border-[var(--primary-color)] bg-gray-100 text-[var(--text-secondary)] text-sm font-medium transition-all duration-200">
+<input checked="" class="sr-only" type="checkbox"/>
+                Angular
+              </label>
+<label class="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-full border border-transparent has-[:checked]:bg-[var(--primary-color)]/10 has-[:checked]:text-[var(--primary-color)] has-[:checked]:border-[var(--primary-color)] bg-gray-100 text-[var(--text-secondary)] text-sm font-medium transition-all duration-200">
+<input class="sr-only" type="checkbox"/>
+                React
+              </label>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6">
+<h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">Difficulty Level</h2>
+<div class="grid grid-cols-3 gap-3">
+<label class="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-gray-200 cursor-pointer has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[var(--primary-color)]/5 transition-all duration-200">
+<input class="sr-only" name="difficulty" type="radio"/>
+<span class="font-semibold text-sm text-[var(--text-primary)]">Basic</span>
+</label>
+<label class="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-gray-200 cursor-pointer has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[var(--primary-color)]/5 transition-all duration-200">
+<input checked="" class="sr-only" name="difficulty" type="radio"/>
+<span class="font-semibold text-sm text-[var(--text-primary)]">Medium</span>
+</label>
+<label class="flex flex-col items-center justify-center p-4 rounded-lg border-2 border-gray-200 cursor-pointer has-[:checked]:border-[var(--primary-color)] has-[:checked]:bg-[var(--primary-color)]/5 transition-all duration-200">
+<input class="sr-only" name="difficulty" type="radio"/>
+<span class="font-semibold text-sm text-[var(--text-primary)]">Hard</span>
+</label>
+</div>
+</div>
+<div class="bg-white rounded-lg shadow-md p-6">
+<h2 class="text-lg font-semibold text-[var(--text-primary)] mb-4">Shortcuts</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<a class="flex items-center justify-center gap-2 bg-[var(--primary-color)] text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-opacity-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span>Code Challenges</span>
+</a>
+<a class="flex items-center justify-center gap-2 bg-[var(--primary-color)] text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-opacity-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span>Resources</span>
+</a>
+<a class="sm:col-span-2 flex items-center justify-center gap-2 bg-gray-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:bg-opacity-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">upload_file</span>
+<span>Excel Import (Admin)</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script>
+    const menuButton = document.getElementById('menu-button');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    function toggleSidebar() {
+      sidebar.classList.toggle('-translate-x-full');
+      sidebarOverlay.classList.toggle('hidden');
+    }
+    menuButton.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+  </script>
+
+</body></html>

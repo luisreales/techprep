@@ -185,3 +185,25 @@ export interface AuthResponse {
 export interface RefreshTokenDto {
   refreshToken: string;
 }
+
+// types/api.ts
+export type BackendError = { message: string };
+
+export type AuthOk = {
+  token: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+
+// Type guard helpers
+export const isBackendError = (v: unknown): v is BackendError =>
+  typeof v === 'object' && v !== null && 'message' in v;
+
+export const isAuthOk = (v: unknown): v is AuthOk =>
+  typeof v === 'object' &&
+  v !== null &&
+  'token' in v &&
+  'email' in v &&
+  'firstName' in v &&
+  'lastName' in v;

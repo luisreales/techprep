@@ -1,0 +1,135 @@
+<html><head>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B700%3B900&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-50: #f0f9ff;
+        --primary-100: #e0f2fe;
+        --primary-200: #bae6fd;
+        --primary-300: #7dd3fc;
+        --primary-400: #38bdf8;
+        --primary-500: #0ea5e9;
+        --primary-600: #0284c7;
+        --primary-700: #0369a1;
+        --primary-800: #075985;
+        --primary-900: #0c4a6e;
+        --primary-950: #082f49;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-50">
+<div class="relative flex size-full min-h-screen flex-col justify-between group/design-root" style='font-family: Inter, "Noto Sans", sans-serif;'>
+<div class="flex flex-col">
+<header class="flex items-center border-b border-gray-200 bg-white px-4 py-3">
+<button class="flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="flex-1 text-center text-lg font-bold text-gray-800">Import Data</h1>
+<div class="w-10"></div>
+</header>
+<main class="flex-1 overflow-y-auto p-6">
+<section class="mb-8">
+<h2 class="text-xl font-bold text-gray-800">Upload Excel File</h2>
+<p class="mt-1 text-gray-600">Select an Excel file to import your data.</p>
+<div class="mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-8 text-center">
+<span class="material-symbols-outlined text-5xl text-gray-400">upload_file</span>
+<p class="mt-4 text-gray-600">
+<span class="font-semibold text-[var(--primary-600)]">Click to upload</span> or drag and drop
+              </p>
+<p class="mt-1 text-xs text-gray-500">XLSX, XLS (max. 10MB)</p>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-bold text-gray-800">Preview</h2>
+<span class="text-sm font-medium text-gray-500">Showing 5 of 5 rows</span>
+</div>
+<p class="mt-1 text-gray-600">Previewing the first 5 rows. Errors will be highlighted.</p>
+<div class="mt-4 flow-root">
+<div class="-mx-6 -my-2 overflow-x-auto">
+<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+<div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+<table class="min-w-full divide-y divide-gray-200">
+<thead class="bg-gray-50">
+<tr>
+<th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500" scope="col">Row</th>
+<th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500" scope="col">Question</th>
+<th class="relative px-6 py-3" scope="col">
+<span class="sr-only">Status</span>
+</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 bg-white">
+<tr>
+<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">1</td>
+<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-700">Valid question entry</td>
+<td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+<div class="flex items-center justify-end text-green-600">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</div>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">2</td>
+<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-700">Valid question entry</td>
+<td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+<div class="flex items-center justify-end text-green-600">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</div>
+</td>
+</tr>
+<tr class="bg-red-50">
+<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-red-900">3</td>
+<td class="whitespace-nowrap px-6 py-4 text-sm text-red-900">Missing required field</td>
+<td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+<div class="flex items-center justify-end text-red-600">
+<span class="material-symbols-outlined text-xl">error</span>
+</div>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">4</td>
+<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-700">Valid question entry</td>
+<td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+<div class="flex items-center justify-end text-green-600">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</div>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">5</td>
+<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-700">Valid question entry</td>
+<td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+<div class="flex items-center justify-end text-green-600">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<footer class="sticky bottom-0 border-t border-gray-200 bg-white/80 p-4 backdrop-blur-sm">
+<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--primary-600)] px-5 py-3 text-base font-bold text-white shadow-sm hover:bg-[var(--primary-700)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-500)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+<span class="material-symbols-outlined">file_upload</span>
+<span>Import Data</span>
+</button>
+</footer>
+</div>
+
+</body></html>
