@@ -285,3 +285,6 @@ System.IO.IOException: Failed to bind to address https://127.0.0.1:5001: address
 2025-09-10 13:36:36.057 -05:00 [WRN] Failed to determine the https port for redirect.
 2025-09-10 14:23:27.437 -05:00 [WRN] Failed to determine the https port for redirect.
 2025-09-10 14:39:45.175 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-10 19:53:44.467 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-10 20:49:12.425 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-10 21:46:36.788 -05:00 [WRN] Failed to determine the https port for redirect.

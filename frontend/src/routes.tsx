@@ -4,11 +4,7 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { ResetPage } from '@/pages/auth/ResetPage';
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
-import { DashboardPage } from '@/pages/DashboardPage';
-import { PracticePage } from '@/pages/practice/PracticePage';
-import { ChallengesPage } from '@/pages/challenges/ChallengesPage';
-import { ResourcesPage } from '@/pages/resources/ResourcesPage';
-import { AppLayout } from '@/components/layout/AppLayout';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { useAuthStore } from '@/stores/authStore';
 
 export const AppRoutes: React.FC = () => {
@@ -19,54 +15,33 @@ export const AppRoutes: React.FC = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/reset" element={<ResetPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      
+      {/* Protected Routes - All use the same AuthenticatedLayout */}
       <Route
         path="/dashboard"
-        element={
-          isAuthenticated ? (
-            <AppLayout>
-              <DashboardPage />
-            </AppLayout>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
         path="/practice"
-        element={
-          isAuthenticated ? (
-            <AppLayout>
-              <PracticePage />
-            </AppLayout>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
         path="/challenges"
-        element={
-          isAuthenticated ? (
-            <AppLayout>
-              <ChallengesPage />
-            </AppLayout>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
         path="/resources"
-        element={
-          isAuthenticated ? (
-            <AppLayout>
-              <ResourcesPage />
-            </AppLayout>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
+      <Route
+        path="/profile"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      
       <Route
         path="/"
         element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />}

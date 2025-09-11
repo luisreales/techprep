@@ -1,18 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const stats = [
     {
@@ -84,108 +73,9 @@ const Dashboard: React.FC = () => {
     },
   ];
 
-  const rootStyle: React.CSSProperties = {
-    '--primary-color': '#4f46e5',
-    '--primary-color-light': '#e0e7ff',
-    '--background-color': '#f8fafc',
-    '--text-primary': '#1e293b',
-    '--text-secondary': '#64748b',
-    '--card-background': '#ffffff',
-    '--border-color': '#e2e8f0',
-    '--accent-color': '#10b981',
-  } as React.CSSProperties;
-
   return (
-    <div className="flex flex-col min-h-screen" style={rootStyle}>
-      {/* Sidebar */}
-      <div
-        id="sidebar"
-        className={`fixed top-0 left-0 h-full w-64 shadow-lg p-4 transform transition-transform duration-300 ease-in-out z-50 lg:translate-x-0 lg:shadow-none lg:border-r border-[var(--border-color)] ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
-        style={{ backgroundImage: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)' }}
-      >
-        <div className="flex items-center gap-3 mb-10 p-2">
-          <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">TechPrep</span>
-        </div>
-        <nav className="flex flex-col h-[calc(100%-80px)]">
-          <ul className="space-y-2 flex-grow">
-            <li>
-              <Link to="/dashboard" className="flex items-center p-3 rounded-lg bg-[var(--primary-color-light)] text-[var(--primary-color)] font-bold">
-                <span className="material-symbols-outlined mr-3">dashboard</span>
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/practice" className="flex items-center p-3 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)] font-medium transition-colors">
-                <span className="material-symbols-outlined mr-3">model_training</span>
-                Practice
-              </Link>
-            </li>
-            <li>
-              <Link to="/challenges" className="flex items-center p-3 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)] font-medium transition-colors">
-                <span className="material-symbols-outlined mr-3">code_blocks</span>
-                Code Challenges
-              </Link>
-            </li>
-            <li>
-              <Link to="/resources" className="flex items-center p-3 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)] font-medium transition-colors">
-                <span className="material-symbols-outlined mr-3">auto_stories</span>
-                Resources
-              </Link>
-            </li>
-            <li>
-              <Link to="/profile" className="flex items-center p-3 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)] font-medium transition-colors">
-                <span className="material-symbols-outlined mr-3">person</span>
-                Profile
-              </Link>
-            </li>
-          </ul>
-          <div>
-            <button onClick={handleLogout} className="flex w-full items-center p-3 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)] font-medium transition-colors">
-              <span className="material-symbols-outlined mr-3">logout</span>
-              Logout
-            </button>
-          </div>
-        </nav>
-      </div>
-
-      {/* Overlay for mobile */}
-      <div
-        id="sidebar-overlay"
-        className={`fixed inset-0 bg-black/50 z-40 ${sidebarOpen ? '' : 'hidden'} lg:hidden`}
-        onClick={toggleSidebar}
-      />
-
-      {/* Content */}
-      <div className="flex-1 flex flex-col lg:pl-64">
-        {/* Header */}
-        <header className="bg-[var(--card-background)]/80 backdrop-blur-sm sticky top-0 z-30">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-20 border-b border-[var(--border-color)]">
-              <button className="lg:hidden text-[var(--text-primary)]" onClick={toggleSidebar}>
-                <span className="material-symbols-outlined text-3xl">menu</span>
-              </button>
-              <div className="flex items-center gap-4">
-                <h1 className="text-xl font-bold text-[var(--text-primary)] lg:text-2xl">
-                  Welcome Back{user?.firstName ? `, ${user.firstName}!` : '!'}
-                </h1>
-              </div>
-              <div className="flex items-center gap-4">
-                <button className="relative text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors">
-                  <span className="material-symbols-outlined text-3xl">notifications</span>
-                  <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
-                </button>
-                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-lg text-gray-700 border-2 border-white shadow">
-                  {user?.firstName?.[0] || 'U'}
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main */}
-        <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="space-y-8">
-            {/* Stat cards */}
+    <div className="space-y-8">
+      {/* Stat cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {stats.map((s) => (
                 <div key={s.label} className="bg-[var(--card-background)] rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
@@ -263,9 +153,6 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </main>
-      </div>
     </div>
   );
 };

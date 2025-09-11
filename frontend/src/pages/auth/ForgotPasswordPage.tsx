@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen } from 'lucide-react';
 import { apiClient } from '@/services/api';
 
 export const ForgotPasswordPage: React.FC = () => {
@@ -26,29 +25,41 @@ export const ForgotPasswordPage: React.FC = () => {
     setIsLoading(false);
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="flex justify-center">
-            <div className="flex items-center space-x-2">
-              <BookOpen className="h-8 w-8 text-primary-600" />
-              <h1 className="text-2xl font-bold text-gray-900">TechPrep</h1>
-            </div>
-          </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">Forgot password</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Remember your password?{' '}
-            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
-              Sign in
-            </Link>
-          </p>
-        </div>
+  const rootStyle: React.CSSProperties = {
+    '--primary-color': '#4f46e5',
+    '--primary-color-light': '#e0e7ff',
+    '--background-color': '#f8fafc',
+    '--text-primary': '#1e293b',
+    '--text-secondary': '#64748b',
+    '--card-background': '#ffffff',
+    '--border-color': '#e2e8f0',
+    '--accent-color': '#10b981',
+  } as React.CSSProperties;
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background-color)] py-12 px-4 sm:px-6 lg:px-8" style={rootStyle}>
+      <div className="max-w-md w-full">
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-8">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">
+                TechPrep
+              </span>
+            </div>
+            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
+              Forgot password
+            </h2>
+            <p className="text-sm text-[var(--text-secondary)]">
+              Remember your password?{' '}
+              <Link to="/login" className="font-medium text-[var(--primary-color)] hover:text-[var(--primary-color)]/80 transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="sr-only">
+              <label htmlFor="email" className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 Email address
               </label>
               <input
@@ -56,32 +67,34 @@ export const ForgotPasswordPage: React.FC = () => {
                 name="email"
                 type="email"
                 required
-                className="input-field"
-                placeholder="Email address"
+                className="w-full px-4 py-3 rounded-lg border border-[var(--border-color)] bg-[var(--card-background)] text-[var(--text-primary)] placeholder-[var(--text-secondary)] focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] transition-all"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-          </div>
 
-          {message && (
-            <div className="bg-green-50 border border-green-200 rounded-md p-4">
-              <p className="text-sm text-green-700">{message}</p>
-            </div>
-          )}
+            {message && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <p className="text-sm text-green-700">{message}</p>
+              </div>
+            )}
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
 
-          <div>
-            <button type="submit" disabled={isLoading} className="btn-primary w-full">
+            <button 
+              type="submit" 
+              disabled={isLoading} 
+              className="w-full bg-[var(--primary-color)] text-white py-3 px-4 rounded-lg font-medium hover:bg-[var(--primary-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary-color)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            >
               {isLoading ? 'Sending...' : 'Send reset link'}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

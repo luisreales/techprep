@@ -67,54 +67,43 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
-      <div className="flex flex-col min-h-screen">
-        {/* Header */}
-        <header className="sticky top-0 z-10 bg-white shadow-sm">
-          <div className="flex items-center p-4">
-            <button className="text-gray-700">
-              <span className="material-symbols-outlined">arrow_back</span>
-            </button>
-            <h1 className="text-gray-900 text-xl font-bold flex-1 text-center pr-8">Profile</h1>
-          </div>
-          
-          {/* Tab Navigation */}
-          <div className="flex border-b border-gray-200">
-            <button
-              className={`flex-1 py-3 px-4 text-center font-medium transition-colors ${
-                activeTab === 'profile'
-                  ? 'border-b-2 border-blue-500 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setActiveTab('profile')}
-            >
-              Profile
-            </button>
-            <button
-              className={`flex-1 py-3 px-4 text-center font-medium transition-colors ${
-                activeTab === 'settings'
-                  ? 'border-b-2 border-blue-500 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-              onClick={() => setActiveTab('settings')}
-            >
-              Settings
-            </button>
-          </div>
-        </header>
+    <div className="space-y-6">
+        {/* Tab Navigation */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-1 flex">
+          <button
+            className={`flex-1 py-3 px-4 text-center font-medium transition-colors rounded-lg ${
+              activeTab === 'profile'
+                ? 'bg-[var(--primary-color)] text-white'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profile
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 text-center font-medium transition-colors rounded-lg ${
+              activeTab === 'settings'
+                ? 'bg-[var(--primary-color)] text-white'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+            onClick={() => setActiveTab('settings')}
+          >
+            Settings
+          </button>
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 space-y-6">
+        <div className="space-y-6">
           {activeTab === 'profile' ? (
             <>
               {/* Profile Information */}
-              <section className="bg-white rounded-lg shadow-sm p-6">
+              <section className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">Personal Information</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-primary)]">Personal Information</h2>
                   {!isEditing ? (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-[var(--primary-color)] hover:text-blue-700 font-medium"
                     >
                       Edit
                     </button>
@@ -122,13 +111,13 @@ const Profile: React.FC = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={handleCancelEdit}
-                        className="text-gray-600 hover:text-gray-700 font-medium"
+                        className="text-[var(--text-secondary)] hover:text-gray-700 font-medium"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleSaveProfile}
-                        className="text-blue-600 hover:text-blue-700 font-medium"
+                        className="text-[var(--primary-color)] hover:text-blue-700 font-medium"
                       >
                         Save
                       </button>
@@ -137,14 +126,14 @@ const Profile: React.FC = () => {
                 </div>
 
                 <div className="flex items-center mb-6">
-                  <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-blue-600">
+                  <div className="w-16 h-16 rounded-full bg-[var(--primary-color-light)] flex items-center justify-center">
+                    <span className="text-2xl font-bold text-[var(--primary-color)]">
                       {profile.name.split(' ').map(n => n[0]).join('')}
                     </span>
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-xl font-semibold text-gray-900">{profile.name}</h3>
-                    <p className="text-gray-600">{profile.email}</p>
+                    <h3 className="text-xl font-semibold text-[var(--text-primary)]">{profile.name}</h3>
+                    <p className="text-[var(--text-secondary)]">{profile.email}</p>
                   </div>
                 </div>
 
@@ -156,12 +145,12 @@ const Profile: React.FC = () => {
                     {isEditing ? (
                       <input
                         type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)]"
                         value={editedProfile.name}
                         onChange={(e) => setEditedProfile(prev => ({ ...prev, name: e.target.value }))}
                       />
                     ) : (
-                      <p className="text-gray-900">{profile.name}</p>
+                      <p className="text-[var(--text-primary)]">{profile.name}</p>
                     )}
                   </div>
 
@@ -172,12 +161,12 @@ const Profile: React.FC = () => {
                     {isEditing ? (
                       <input
                         type="email"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full px-3 py-2 border border-[var(--border-color)] rounded-md focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)]"
                         value={editedProfile.email}
                         onChange={(e) => setEditedProfile(prev => ({ ...prev, email: e.target.value }))}
                       />
                     ) : (
-                      <p className="text-gray-900">{profile.email}</p>
+                      <p className="text-[var(--text-primary)]">{profile.email}</p>
                     )}
                   </div>
 
@@ -185,33 +174,33 @@ const Profile: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Role
                     </label>
-                    <p className="text-gray-900">{profile.role}</p>
+                    <p className="text-[var(--text-primary)]">{profile.role}</p>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Member Since
                     </label>
-                    <p className="text-gray-900">{profile.joinDate}</p>
+                    <p className="text-[var(--text-primary)]">{profile.joinDate}</p>
                   </div>
                 </div>
               </section>
 
               {/* Statistics */}
-              <section className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Progress</h2>
+              <section className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Your Progress</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{profile.studyStreak}</div>
-                    <div className="text-sm text-gray-600">Day Streak</div>
+                    <div className="text-2xl font-bold text-[var(--primary-color)]">{profile.studyStreak}</div>
+                    <div className="text-sm text-[var(--text-secondary)]">Day Streak</div>
                   </div>
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <div className="text-2xl font-bold text-green-600">{profile.totalSessions}</div>
-                    <div className="text-sm text-gray-600">Total Sessions</div>
+                    <div className="text-sm text-[var(--text-secondary)]">Total Sessions</div>
                   </div>
                   <div className="text-center p-4 bg-orange-50 rounded-lg">
                     <div className="text-2xl font-bold text-orange-600">{profile.averageScore}%</div>
-                    <div className="text-sm text-gray-600">Average Score</div>
+                    <div className="text-sm text-[var(--text-secondary)]">Average Score</div>
                   </div>
                 </div>
               </section>
@@ -219,13 +208,13 @@ const Profile: React.FC = () => {
           ) : (
             <>
               {/* Notification Settings */}
-              <section className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Notifications</h2>
+              <section className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Notifications</h2>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">Email Notifications</h3>
-                      <p className="text-sm text-gray-600">Receive email updates about your progress</p>
+                      <h3 className="font-medium text-[var(--text-primary)]">Email Notifications</h3>
+                      <p className="text-sm text-[var(--text-secondary)]">Receive email updates about your progress</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -234,14 +223,14 @@ const Profile: React.FC = () => {
                         checked={notifications.emailNotifications}
                         onChange={() => handleNotificationChange('emailNotifications')}
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[var(--border-color)] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--primary-color)]"></div>
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">Study Reminders</h3>
-                      <p className="text-sm text-gray-600">Get reminded to practice daily</p>
+                      <h3 className="font-medium text-[var(--text-primary)]">Study Reminders</h3>
+                      <p className="text-sm text-[var(--text-secondary)]">Get reminded to practice daily</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -250,14 +239,14 @@ const Profile: React.FC = () => {
                         checked={notifications.studyReminders}
                         onChange={() => handleNotificationChange('studyReminders')}
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[var(--border-color)] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--primary-color)]"></div>
                     </label>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">Progress Reports</h3>
-                      <p className="text-sm text-gray-600">Weekly summary of your achievements</p>
+                      <h3 className="font-medium text-[var(--text-primary)]">Progress Reports</h3>
+                      <p className="text-sm text-[var(--text-secondary)]">Weekly summary of your achievements</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -266,40 +255,40 @@ const Profile: React.FC = () => {
                         checked={notifications.progressReports}
                         onChange={() => handleNotificationChange('progressReports')}
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[var(--border-color)] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--primary-color)]"></div>
                     </label>
                   </div>
                 </div>
               </section>
 
               {/* Account Actions */}
-              <section className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Account</h2>
+              <section className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Account</h2>
                 <div className="space-y-3">
                   <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-900">Change Password</span>
+                      <span className="text-[var(--text-primary)]">Change Password</span>
                       <span className="material-symbols-outlined text-gray-400">chevron_right</span>
                     </div>
                   </button>
                   
                   <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-900">Export Data</span>
+                      <span className="text-[var(--text-primary)]">Export Data</span>
                       <span className="material-symbols-outlined text-gray-400">chevron_right</span>
                     </div>
                   </button>
                   
                   <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-900">Privacy Policy</span>
+                      <span className="text-[var(--text-primary)]">Privacy Policy</span>
                       <span className="material-symbols-outlined text-gray-400">chevron_right</span>
                     </div>
                   </button>
                   
                   <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-900">Terms of Service</span>
+                      <span className="text-[var(--text-primary)]">Terms of Service</span>
                       <span className="material-symbols-outlined text-gray-400">chevron_right</span>
                     </div>
                   </button>
@@ -309,7 +298,7 @@ const Profile: React.FC = () => {
               {/* Danger Zone */}
               <section className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-400">
                 <h2 className="text-lg font-semibold text-red-600 mb-4">Danger Zone</h2>
-                <p className="text-gray-600 mb-4">
+                <p className="text-[var(--text-secondary)] mb-4">
                   Once you delete your account, there is no going back. Please be certain.
                 </p>
                 <button
@@ -321,30 +310,7 @@ const Profile: React.FC = () => {
               </section>
             </>
           )}
-        </main>
-
-        {/* Bottom Navigation */}
-        <footer className="sticky bottom-0 bg-white border-t border-gray-200">
-          <nav className="flex justify-around p-2">
-            <a className="flex flex-col items-center justify-end gap-1 text-gray-500" href="#">
-              <span className="material-symbols-outlined">home</span>
-              <p className="text-xs font-medium">Home</p>
-            </a>
-            <a className="flex flex-col items-center justify-end gap-1 text-gray-500" href="#">
-              <span className="material-symbols-outlined">code</span>
-              <p className="text-xs font-medium">Practice</p>
-            </a>
-            <a className="flex flex-col items-center justify-end gap-1 text-gray-500" href="#">
-              <span className="material-symbols-outlined">collections_bookmark</span>
-              <p className="text-xs font-medium">Resources</p>
-            </a>
-            <a className="flex flex-col items-center justify-end gap-1 text-[#137fec]" href="#">
-              <span className="material-symbols-outlined">person</span>
-              <p className="text-xs font-bold">Profile</p>
-            </a>
-          </nav>
-        </footer>
-      </div>
+        </div>
     </div>
   );
 };
