@@ -3,7 +3,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AxiosError } from 'axios';
 import { apiClient } from '@/services/api';
-import type { User, ApiResponse } from '@/types/api'; // adjust if your User type lives elsewhere
+import type { User, ApiResponse } from '@/types/api';
+import { UserRole } from '@/types/api';
+import { decodeJwt } from '@/utils/jwt';
 
 // ---- Types for auth payloads ----
 type LoginSuccessData = {
@@ -59,7 +61,6 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
 
         try {
-          debugger
           // apiClient.login may return either BackendError or ApiResponse<LoginSuccessData>
           const response = (await apiClient.login(email, password)) as BackendError | ApiResponse<LoginSuccessData>;
 
@@ -71,14 +72,37 @@ export const useAuthStore = create<AuthStore>()(
 
           // Case B: backend success response
           if (response != null && 'token' in response) {
-            const { token, email: userEmail, firstName, lastName } = response;
+            const { token, email: userEmail, firstName, lastName, role } = response as any;
 
-            apiClient.setToken(token);
+            // Convert numeric role to UserRole enum
+            // Backend returns: 1 = Student, 2 = Admin
+            let userRole: UserRole;
+            if (typeof role === 'number') {
+              userRole = role === 2 ? UserRole.Admin : UserRole.Student;
+            } else if (typeof role === 'string') {
+              userRole = role === 'Admin' ? UserRole.Admin : UserRole.Student;
+            } else {
+              // Fallback to JWT decoding if role is not provided
+              const payload = decodeJwt(token as string);
+              const roles = Array.isArray(payload?.role) ? payload?.role : [payload?.role].filter(Boolean);
+              userRole = roles?.includes('Admin') ? UserRole.Admin : UserRole.Student;
+            }
+
+            apiClient.setToken(token as string);
 
             set({
-              user: { email: userEmail, firstName, lastName },
-              accessToken: token,   // ✅ use token directly
-              refreshToken: null,   // ✅ backend doesn’t provide it yet
+              user: { 
+                email: userEmail, 
+                firstName, 
+                lastName,
+                role: userRole,
+                id: '',
+                matchingThreshold: 0,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+              },
+              accessToken: token as string,
+              refreshToken: null,
               isAuthenticated: true,
               isLoading: false,
               error: null,
@@ -216,6 +240,26 @@ export const useAuthStore = create<AuthStore>()(
       onRehydrateStorage: () => (state) => {
         if (state?.accessToken) {
           apiClient.setToken(state.accessToken);
+          
+          // Re-decode JWT to ensure we have correct role info
+          if (state.user) {
+            // If role is already set and is a valid UserRole, keep it
+            if (state.user.role && (state.user.role === UserRole.Admin || state.user.role === UserRole.Student)) {
+              // Role is already correct, no need to decode JWT
+            } else {
+              // Fallback to JWT decoding
+              const payload = decodeJwt(state.accessToken);
+              const roles = Array.isArray(payload?.role) ? payload?.role : [payload?.role].filter(Boolean);
+              const userRole: UserRole = roles?.includes('Admin') ? UserRole.Admin : UserRole.Student;
+              state.user.role = userRole;
+            }
+            
+            // Update ID if needed
+            if (!state.user.id) {
+              const payload = decodeJwt(state.accessToken);
+              state.user.id = payload?.sub || '';
+            }
+          }
         }
       },
     }

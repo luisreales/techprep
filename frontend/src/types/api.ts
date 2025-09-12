@@ -194,6 +194,7 @@ export type AuthOk = {
   email: string;
   firstName: string;
   lastName: string;
+  role: UserRole;
 };
 
 // Type guard helpers

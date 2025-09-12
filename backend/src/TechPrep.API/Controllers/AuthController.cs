@@ -44,18 +44,24 @@ public class AuthController : ControllerBase
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
+        if (result.Succeeded)
+        {
+            // Assign Student role to new users
+            await _userManager.AddToRoleAsync(user, "Student");
+        }
         if (!result.Succeeded)
         {
             return BadRequest(new { message = string.Join("; ", result.Errors.Select(e => e.Description)) });
         }
 
-        var token = GenerateJwtToken(user);
+        var token = await GenerateJwtTokenAsync(user);
         var response = new AuthResponse
         {
             Token = token,
             Email = user.Email!,
             FirstName = user.FirstName,
-            LastName = user.LastName
+            LastName = user.LastName,
+            Role = user.Role
         };
         return Ok(response);
     }
@@ -75,13 +81,14 @@ public class AuthController : ControllerBase
             return Unauthorized(new { message = "Invalid credentials." });
         }
 
-        var token = GenerateJwtToken(user);
+        var token = await GenerateJwtTokenAsync(user);
         var response = new AuthResponse
         {
             Token = token,
             Email = user.Email!,
             FirstName = user.FirstName,
-            LastName = user.LastName
+            LastName = user.LastName,
+            Role = user.Role
         };
         return Ok(response);
     }
@@ -125,15 +132,23 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Password has been reset." });
     }
 
-    private string GenerateJwtToken(User user)
+    private async Task<string> GenerateJwtTokenAsync(User user)
     {
-        var claims = new[]
+        var roles = await _userManager.GetRolesAsync(user);
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new Claim("firstName", user.FirstName ?? string.Empty),
-            new Claim("lastName", user.LastName ?? string.Empty)
+            new Claim("lastName", user.LastName ?? string.Empty),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
         };
+        
+        // Add role claims from Identity
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? "dev_secret_key"));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuthStore } from '@/stores/authStore';
+import { UserRole } from '@/types/api';
 
 const schema = z.object({
   email: z.string().email(),
@@ -14,20 +15,36 @@ type LoginForm = z.infer<typeof schema>;
 
 export const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { login, isLoading, error, isAuthenticated, clearError } = useAuthStore();
+  const navigate = useNavigate();
+  const { login, isLoading, error, isAuthenticated, user, clearError } = useAuthStore();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginForm>({ resolver: zodResolver(schema) });
 
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+  if (isAuthenticated && user) {
+    // Role-based redirection
+    if (user.role === 'Admin' || user.role === UserRole.Admin) {
+      return <Navigate to="/admin" replace />;
+    } else {
+      return <Navigate to="/dashboard" replace />;
+    }
   }
 
   const onSubmit = async (values: LoginForm) => {
     clearError();
-    await login(values.email, values.password);
+    const success = await login(values.email, values.password);
+    
+    if (success) {
+      // Get the updated user from the store
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser?.role === 'Admin' || currentUser?.role === UserRole.Admin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+    }
   };
 
   const rootStyle: React.CSSProperties = {

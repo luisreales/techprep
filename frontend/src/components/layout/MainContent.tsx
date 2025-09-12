@@ -1,17 +1,59 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import Practice from '@/pages/Practice';
 import Challenges from '@/pages/Challenges';
 import Resources from '@/pages/Resources';
 import Profile from '@/pages/Profile';
+import Help from '@/pages/Help';
+import AdminPanel from '@/pages/AdminPanel';
+import { useAuthStore } from '@/stores/authStore';
+import { UserRole } from '@/types/api';
+
+// Placeholder admin components - create these later
+const AdminQuestions = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Questions Management</h1><p className="mt-4 text-gray-600">Questions management interface coming soon...</p></div>;
+const AdminImport = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Excel Import</h1><p className="mt-4 text-gray-600">Excel import interface coming soon...</p></div>;
+const AdminChallenges = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Challenges</h1><p className="mt-4 text-gray-600">Admin challenges management coming soon...</p></div>;
+const AdminUsers = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Users Management</h1><p className="mt-4 text-gray-600">Users management interface coming soon...</p></div>;
+const AdminResources = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Resources</h1><p className="mt-4 text-gray-600">Admin resources management coming soon...</p></div>;
+const AdminSettings = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">System Settings</h1><p className="mt-4 text-gray-600">System settings interface coming soon...</p></div>;
 
 const MainContent: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuthStore();
 
   const renderContent = () => {
+    // Admin routes - require Admin role
+    if (location.pathname.startsWith('/admin/')) {
+      if (user?.role !== 'Admin') {
+        return <div className="p-6 bg-red-50 border border-red-200 rounded-lg"><h1 className="text-xl font-bold text-red-700">Access Denied</h1><p className="mt-2 text-red-600">You don't have permission to access this area.</p></div>;
+      }
+      
+      switch (location.pathname) {
+        case '/admin/questions':
+          return <AdminQuestions />;
+        case '/admin/import':
+          return <AdminImport />;
+        case '/admin/challenges':
+          return <AdminChallenges />;
+        case '/admin/users':
+          return <AdminUsers />;
+        case '/admin/resources':
+          return <AdminResources />;
+        case '/admin/settings':
+          return <AdminSettings />;
+        default:
+          return <AdminPanel />;
+      }
+    }
+
+    // Regular routes
     switch (location.pathname) {
       case '/dashboard':
+        // Redirect admin users to admin panel instead of dashboard
+        if (user?.role === UserRole.Admin) {
+          return <Navigate to="/admin" replace />;
+        }
         return <Dashboard />;
       case '/practice':
         return <Practice />;
@@ -21,15 +63,21 @@ const MainContent: React.FC = () => {
         return <Resources />;
       case '/profile':
         return <Profile />;
+      case '/help':
+        return <Help />;
       case '/admin':
-        // TODO: Create Admin component
-        return (
-          <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
-            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Admin Panel</h2>
-            <p className="text-[var(--text-secondary)]">Admin functionality coming soon...</p>
-          </div>
-        );
+        return user?.role === UserRole.Admin ? <AdminPanel /> : <div className="p-6 bg-red-50 border border-red-200 rounded-lg"><h1 className="text-xl font-bold text-red-700">Access Denied</h1><p className="mt-2 text-red-600">You don't have permission to access this area.</p></div>;
+      case '/':
+        // Root path - redirect based on role
+        if (user?.role === UserRole.Admin) {
+          return <Navigate to="/admin" replace />;
+        }
+        return <Navigate to="/dashboard" replace />;
       default:
+        // Default fallback - redirect based on role
+        if (user?.role === UserRole.Admin) {
+          return <Navigate to="/admin" replace />;
+        }
         return <Dashboard />;
     }
   };

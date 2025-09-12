@@ -7,6 +7,7 @@ interface NavItem {
   icon: string;
   label: string;
   adminOnly?: boolean;
+  studentOnly?: boolean;
 }
 
 interface SidebarProps {
@@ -19,35 +20,84 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user, logout } = useAuthStore();
 
   const navItems: NavItem[] = [
+    // Student menu items - only what students should see
     {
       to: '/dashboard',
       icon: 'dashboard',
-      label: 'Dashboard'
+      label: 'Dashboard',
+      studentOnly: true
     },
     {
       to: '/practice',
       icon: 'model_training',
-      label: 'Practice'
+      label: 'Practice',
+      studentOnly: true
     },
     {
       to: '/challenges',
       icon: 'code_blocks',
-      label: 'Code Challenges'
+      label: 'Challenges',
+      studentOnly: true
     },
     {
       to: '/resources',
       icon: 'auto_stories',
-      label: 'Resources'
+      label: 'Resources',
+      studentOnly: true
     },
     {
       to: '/profile',
       icon: 'person',
-      label: 'Profile'
+      label: 'Profile',
+      studentOnly: true
     },
+    {
+      to: '/help',
+      icon: 'help',
+      label: 'Help',
+      studentOnly: true
+    },
+    // Admin menu items - only what admins should see
     {
       to: '/admin',
       icon: 'admin_panel_settings',
-      label: 'Admin',
+      label: 'Admin Panel',
+      adminOnly: true
+    },
+    {
+      to: '/admin/questions',
+      icon: 'quiz',
+      label: 'Questions',
+      adminOnly: true
+    },
+    {
+      to: '/admin/import',
+      icon: 'upload_file',
+      label: 'Import Excel',
+      adminOnly: true
+    },
+    {
+      to: '/admin/challenges',
+      icon: 'code',
+      label: 'Challenges',
+      adminOnly: true
+    },
+    {
+      to: '/admin/users',
+      icon: 'people',
+      label: 'Users',
+      adminOnly: true
+    },
+    {
+      to: '/admin/resources',
+      icon: 'library_books',
+      label: 'Admin Resources',
+      adminOnly: true
+    },
+    {
+      to: '/admin/settings',
+      icon: 'settings',
+      label: 'Settings',
       adminOnly: true
     }
   ];
@@ -85,7 +135,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <nav className="flex-1 p-4">
             <ul className="space-y-2">
               {navItems.map((item) => {
+                // Filter based on user role
                 if (item.adminOnly && user?.role !== 'Admin') return null;
+                if (item.studentOnly && user?.role !== 'Student') return null;
                 
                 const isActive = isActiveRoute(item.to);
                 return (

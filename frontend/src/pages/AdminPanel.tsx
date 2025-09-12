@@ -1,233 +1,156 @@
-import React, { useState } from 'react';
-
-interface PreviewQuestion {
-  row: number;
-  question: string;
-  status: 'valid' | 'error';
-  errorMessage?: string;
-}
+import React from 'react';
 
 const AdminPanel: React.FC = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewQuestions, setPreviewQuestions] = useState<PreviewQuestion[]>([
-    {
-      row: 1,
-      question: 'Valid question entry',
-      status: 'valid'
-    },
-    {
-      row: 2,
-      question: 'Valid question entry',
-      status: 'valid'
-    },
-    {
-      row: 3,
-      question: 'Missing required field',
-      status: 'error',
-      errorMessage: 'Missing required field'
-    },
-    {
-      row: 4,
-      question: 'Valid question entry',
-      status: 'valid'
-    },
-    {
-      row: 5,
-      question: 'Valid question entry',
-      status: 'valid'
-    }
-  ]);
-
-  const [isDragOver, setIsDragOver] = useState(false);
-
-  const handleFileSelect = (file: File) => {
-    setSelectedFile(file);
-    // Here you would normally parse the file and update the preview
-    console.log('File selected:', file.name);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.type.includes('excel') || file.type.includes('spreadsheet') || 
-          file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
-        handleFileSelect(file);
-      } else {
-        alert('Please select a valid Excel file (.xlsx or .xls)');
-      }
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  };
-
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
-  const handleImport = () => {
-    if (!selectedFile) {
-      alert('Please select a file first');
-      return;
-    }
-    
-    // Here you would implement the actual import logic
-    console.log('Importing file:', selectedFile.name);
-    alert('Import functionality would be implemented here');
-  };
-
-  const validQuestions = previewQuestions.filter(q => q.status === 'valid').length;
-  const errorQuestions = previewQuestions.filter(q => q.status === 'error').length;
-
   return (
-    <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
-      <div className="flex flex-col min-h-screen justify-between">
-        {/* Header */}
-        <header className="flex items-center border-b border-gray-200 bg-white px-4 py-3">
-          <button className="flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100">
-            <span className="material-symbols-outlined text-2xl">arrow_back</span>
+    <div className="space-y-8">
+      {/* Welcome Header */}
+      <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Admin Panel</h1>
+        <p className="text-[var(--text-secondary)]">
+          Welcome to the TechPrep Admin Panel. Manage users, questions, topics, and system settings.
+        </p>
+      </div>
+
+      {/* Admin Statistics */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { icon: 'people', value: '1,234', label: 'Total Users', iconBg: 'bg-blue-100', iconColor: 'text-blue-600' },
+          { icon: 'quiz', value: '567', label: 'Questions', iconBg: 'bg-green-100', iconColor: 'text-green-600' },
+          { icon: 'category', value: '25', label: 'Topics', iconBg: 'bg-purple-100', iconColor: 'text-purple-600' },
+          { icon: 'assignment', value: '8,901', label: 'Sessions', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' }
+        ].map((stat) => (
+          <div key={stat.label} className="bg-[var(--card-background)] rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
+            <div className={`flex items-center justify-center w-12 h-12 rounded-full mb-3 ${stat.iconBg}`}>
+              <span className={`material-symbols-outlined text-2xl ${stat.iconColor}`}>{stat.icon}</span>
+            </div>
+            <p className="text-2xl font-bold text-[var(--text-primary)]">{stat.value}</p>
+            <p className="text-sm text-[var(--text-secondary)]">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Admin Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* User Management */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100">
+              <span className="material-symbols-outlined text-xl text-blue-600">manage_accounts</span>
+            </div>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">User Management</h3>
+          </div>
+          <p className="text-[var(--text-secondary)] mb-4 text-sm">
+            Manage user accounts, roles, and permissions.
+          </p>
+          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            Manage Users
           </button>
-          <h1 className="flex-1 text-center text-lg font-bold text-gray-800">Import Data</h1>
-          <div className="w-10"></div>
-        </header>
+        </div>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {/* Upload Section */}
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-gray-800">Upload Excel File</h2>
-            <p className="mt-1 text-gray-600">Select an Excel file to import your data.</p>
-            
-            <div 
-              className={`mt-4 flex flex-col items-center justify-center rounded-lg border-2 border-dashed ${isDragOver ? 'border-blue-400 bg-blue-50' : 'border-gray-300'} bg-white p-8 text-center transition-colors`}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-            >
-              <span className="material-symbols-outlined text-5xl text-gray-400">upload_file</span>
-              <p className="mt-4 text-gray-600">
-                <label className="font-semibold text-blue-600 cursor-pointer hover:text-blue-700">
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept=".xlsx,.xls"
-                    onChange={handleFileInputChange}
-                  />
-                  Click to upload
-                </label> or drag and drop
-              </p>
-              <p className="mt-1 text-xs text-gray-500">XLSX, XLS (max. 10MB)</p>
-              {selectedFile && (
-                <p className="mt-2 text-sm text-green-600">
-                  Selected: {selectedFile.name}
+        {/* Question Management */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-100">
+              <span className="material-symbols-outlined text-xl text-green-600">quiz</span>
+            </div>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">Questions & Topics</h3>
+          </div>
+          <p className="text-[var(--text-secondary)] mb-4 text-sm">
+            Create, edit, and organize practice questions.
+          </p>
+          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            Manage Questions
+          </button>
+        </div>
+
+        {/* Import/Export */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-100">
+              <span className="material-symbols-outlined text-xl text-purple-600">upload_file</span>
+            </div>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">Import/Export</h3>
+          </div>
+          <p className="text-[var(--text-secondary)] mb-4 text-sm">
+            Bulk import questions from Excel or export data.
+          </p>
+          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            Import/Export
+          </button>
+        </div>
+
+        {/* Analytics */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-orange-100">
+              <span className="material-symbols-outlined text-xl text-orange-600">analytics</span>
+            </div>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">Analytics</h3>
+          </div>
+          <p className="text-[var(--text-secondary)] mb-4 text-sm">
+            View detailed analytics and usage reports.
+          </p>
+          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            View Analytics
+          </button>
+        </div>
+
+        {/* System Settings */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100">
+              <span className="material-symbols-outlined text-xl text-red-600">settings</span>
+            </div>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">System Settings</h3>
+          </div>
+          <p className="text-[var(--text-secondary)] mb-4 text-sm">
+            Configure system-wide settings and preferences.
+          </p>
+          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            Settings
+          </button>
+        </div>
+
+        {/* Backup & Recovery */}
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100">
+              <span className="material-symbols-outlined text-xl text-gray-600">backup</span>
+            </div>
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">Backup & Recovery</h3>
+          </div>
+          <p className="text-[var(--text-secondary)] mb-4 text-sm">
+            Manage database backups and system recovery.
+          </p>
+          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            Backup Data
+          </button>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
+        <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Recent Admin Activity</h2>
+        <div className="space-y-3">
+          {[
+            { user: 'John Doe', action: 'Created new question in JavaScript topic', time: '2 minutes ago' },
+            { user: 'Jane Smith', action: 'Uploaded 50 questions via Excel import', time: '15 minutes ago' },
+            { user: 'Mike Wilson', action: 'Updated user permissions for sarah@example.com', time: '1 hour ago' },
+            { user: 'Admin', action: 'System backup completed successfully', time: '2 hours ago' }
+          ].map((activity, index) => (
+            <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--primary-color-light)]">
+                <span className="material-symbols-outlined text-sm text-[var(--primary-color)]">person</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-[var(--text-primary)]">
+                  <span className="font-medium">{activity.user}</span> {activity.action}
                 </p>
-              )}
-            </div>
-          </section>
-
-          {/* Preview Section */}
-          <section>
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-800">Preview</h2>
-              <span className="text-sm font-medium text-gray-500">
-                Showing {previewQuestions.length} of {previewQuestions.length} rows
-              </span>
-            </div>
-            <p className="mt-1 text-gray-600">
-              Previewing the first {previewQuestions.length} rows. Errors will be highlighted.
-            </p>
-            
-            {/* Summary */}
-            <div className="mt-2 flex gap-4 text-sm">
-              <span className="text-green-600">✓ {validQuestions} valid</span>
-              <span className="text-red-600">✗ {errorQuestions} errors</span>
-            </div>
-
-            <div className="mt-4 flow-root">
-              <div className="-mx-6 -my-2 overflow-x-auto">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500" scope="col">
-                            Row
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-gray-500" scope="col">
-                            Question
-                          </th>
-                          <th className="relative px-6 py-3" scope="col">
-                            <span className="sr-only">Status</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        {previewQuestions.map((question) => (
-                          <tr 
-                            key={question.row} 
-                            className={question.status === 'error' ? 'bg-red-50' : ''}
-                          >
-                            <td className={`whitespace-nowrap px-6 py-4 text-sm font-medium ${question.status === 'error' ? 'text-red-900' : 'text-gray-900'}`}>
-                              {question.row}
-                            </td>
-                            <td className={`px-6 py-4 text-sm ${question.status === 'error' ? 'text-red-900' : 'text-gray-700'}`}>
-                              <div>
-                                {question.question}
-                                {question.errorMessage && (
-                                  <div className="text-xs text-red-600 mt-1">
-                                    Error: {question.errorMessage}
-                                  </div>
-                                )}
-                              </div>
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                              <div className={`flex items-center justify-end ${question.status === 'valid' ? 'text-green-600' : 'text-red-600'}`}>
-                                <span className="material-symbols-outlined text-xl">
-                                  {question.status === 'valid' ? 'check_circle' : 'error'}
-                                </span>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <p className="text-xs text-[var(--text-secondary)]">{activity.time}</p>
               </div>
             </div>
-          </section>
-        </main>
-
-        {/* Footer with Import Button */}
-        <footer className="sticky bottom-0 border-t border-gray-200 bg-white/80 p-4 backdrop-blur-sm">
-          <button 
-            onClick={handleImport}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-base font-bold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-            disabled={!selectedFile || errorQuestions > 0}
-          >
-            <span className="material-symbols-outlined">file_upload</span>
-            <span>Import Data</span>
-          </button>
-          {errorQuestions > 0 && (
-            <p className="mt-2 text-center text-sm text-red-600">
-              Please fix all errors before importing
-            </p>
-          )}
-        </footer>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -47,7 +47,8 @@ builder.Services
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<TechPrepDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole<Guid>>();
 
 // JWT (lee JwtSettings del appsettings)
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
@@ -71,7 +72,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 //Enable Cors
 // 1) CORS policy
@@ -125,8 +129,12 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<TechPrepDbContext>();
     db.Database.Migrate();
 
-    // Seeder opcional (admin/temas/preguntas)
-    // await AppSeeder.SeedAsync(db, scope.ServiceProvider);
+    // Seeder admin/roles
+    await TechPrep.Infrastructure.Seed.AppSeeder.SeedAsync(scope.ServiceProvider);
+    
+    // Seeder topics/questions
+    var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<TechPrep.Core.Entities.User>>();
+    await TechPrep.Infrastructure.Data.SeedData.SeedAsync(db, userManager);
 }
 
 if (app.Environment.IsDevelopment())
