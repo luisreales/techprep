@@ -1,0 +1,7 @@
+Topic,Level,Type,Text,Options,Correct,OfficialAnswer
+JavaScript,basic,single_choice,What is the correct syntax for a JavaScript function?,"A) function myFunc() {};B) def myFunc() {};C) func myFunc() {};D) method myFunc() {}",A,
+Python,intermediate,multi_choice,Which of the following are Python built-in data types?,"A) list;B) array;C) dict;D) tuple;E) vector",A;C;D,
+React,basic,single_choice,What does JSX stand for?,"A) JavaScript XML;B) Java Syntax Extension;C) JSON XML",A,
+SQL,intermediate,multi_choice,Which SQL clauses can be used for filtering?,"A) WHERE;B) HAVING;C) SELECT;D) FROM",A;B,
+Algorithms,basic,single_choice,Binary search works on which type of array?,"A) Unsorted array;B) Sorted array;C) Any array;D) Empty array",B,
+JavaScript,advanced,written,Explain what a Promise is in JavaScript,,,"A Promise is an object representing the eventual completion or failure of an asynchronous operation. It allows you to write asynchronous code in a more manageable way than traditional callbacks."

@@ -1,13 +1,28 @@
-using TechPrep.Application.DTOs.Common;
-using TechPrep.Application.DTOs.Question;
+using TechPrep.Application.DTOs;
+using TechPrep.Core.Enums;
 
 namespace TechPrep.Application.Interfaces;
 
 public interface IQuestionService
 {
-    Task<PaginatedResponse<QuestionDto>> GetQuestionsAsync(QuestionFilterDto filter);
-    Task<ApiResponse<QuestionDto>> GetQuestionByIdAsync(Guid id);
-    Task<ApiResponse<QuestionDto>> CreateQuestionAsync(CreateQuestionDto createQuestionDto);
-    Task<ApiResponse<QuestionDto>> UpdateQuestionAsync(Guid id, CreateQuestionDto updateQuestionDto);
-    Task<ApiResponse<bool>> DeleteQuestionAsync(Guid id);
+    Task<List<QuestionDto>> GetQuestionsAsync(
+        int? topicId = null,
+        QuestionType? type = null,
+        DifficultyLevel? level = null,
+        string? search = null,
+        int page = 1,
+        int limit = 25);
+    
+    Task<int> GetQuestionsCountAsync(
+        int? topicId = null,
+        QuestionType? type = null,
+        DifficultyLevel? level = null,
+        string? search = null);
+    
+    Task<QuestionDto?> GetQuestionByIdAsync(Guid id);
+    Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto createQuestionDto);
+    Task<QuestionDto?> UpdateQuestionAsync(Guid id, UpdateQuestionDto updateQuestionDto);
+    Task<bool> DeleteQuestionAsync(Guid id);
+    Task<int> BulkDeleteQuestionsAsync(List<Guid> ids);
+    Task<byte[]> ExportQuestionsAsync(List<Guid>? ids = null);
 }

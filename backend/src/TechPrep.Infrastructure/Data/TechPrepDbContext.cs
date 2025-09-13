@@ -37,11 +37,24 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.Level).IsRequired();
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Property(e => e.UpdatedAt).IsRequired();
-            entity.Ignore(e => e.Topic);
-            entity.Ignore(e => e.Options);
             entity.Ignore(e => e.InterviewAnswers);
-            entity.Ignore(e => e.LearningResources);
             entity.HasIndex(e => e.TopicId);
+            
+            // Configure relationships
+            entity.HasOne(e => e.Topic)
+                  .WithMany()
+                  .HasForeignKey(e => e.TopicId)
+                  .OnDelete(DeleteBehavior.Restrict);
+                  
+            entity.HasMany(e => e.Options)
+                  .WithOne(o => o.Question)
+                  .HasForeignKey(o => o.QuestionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+                  
+            entity.HasMany(e => e.LearningResources)
+                  .WithOne(lr => lr.Question)
+                  .HasForeignKey(lr => lr.QuestionId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
         
         builder.Entity<QuestionOption>(entity =>
@@ -51,7 +64,6 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.QuestionId).IsRequired();
             entity.Property(e => e.IsCorrect).IsRequired();
             entity.Property(e => e.OrderIndex).IsRequired();
-            entity.Ignore(e => e.Question);
             entity.HasIndex(e => e.QuestionId);
         });
         
@@ -63,7 +75,6 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.Url).IsRequired().HasMaxLength(500);
             entity.Property(e => e.Description).HasMaxLength(1000);
             entity.Property(e => e.CreatedAt).IsRequired();
-            entity.Ignore(e => e.Question);
             entity.HasIndex(e => e.QuestionId);
         });
     }

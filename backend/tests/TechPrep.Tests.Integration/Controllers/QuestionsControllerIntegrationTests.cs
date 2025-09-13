@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using TechPrep.Application.DTOs.Common;
-using TechPrep.Application.DTOs.Question;
+using TechPrep.Application.DTOs;
 using TechPrep.Core.Enums;
 
 namespace TechPrep.Tests.Integration.Controllers;

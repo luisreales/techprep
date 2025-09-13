@@ -55,6 +55,7 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
         return await query
             .Include(q => q.Topic)
             .Include(q => q.Options)
+            .Include(q => q.LearningResources)
             .OrderBy(q => q.CreatedAt)
             .Skip(skip)
             .Take(take)
@@ -66,7 +67,7 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
         return await _dbSet
             .Where(q => q.Id == id)
             .Include(q => q.Topic)
-            .Include(q => q.Options.OrderBy(o => o.OrderIndex))
+            .Include(q => q.Options)
             .Include(q => q.LearningResources)
             .FirstOrDefaultAsync();
     }

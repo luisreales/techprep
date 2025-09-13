@@ -7,11 +7,9 @@ import Resources from '@/pages/Resources';
 import Profile from '@/pages/Profile';
 import Help from '@/pages/Help';
 import AdminPanel from '@/pages/AdminPanel';
+import { QuestionsPage } from '@/pages/admin/questions/QuestionsPage';
 import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/types/api';
-
-// Placeholder admin components - create these later
-const AdminQuestions = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Questions Management</h1><p className="mt-4 text-gray-600">Questions management interface coming soon...</p></div>;
 const AdminImport = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Excel Import</h1><p className="mt-4 text-gray-600">Excel import interface coming soon...</p></div>;
 const AdminChallenges = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Challenges</h1><p className="mt-4 text-gray-600">Admin challenges management coming soon...</p></div>;
 const AdminUsers = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Users Management</h1><p className="mt-4 text-gray-600">Users management interface coming soon...</p></div>;
@@ -31,7 +29,7 @@ const MainContent: React.FC = () => {
       
       switch (location.pathname) {
         case '/admin/questions':
-          return <AdminQuestions />;
+          return <QuestionsPage />;
         case '/admin/import':
           return <AdminImport />;
         case '/admin/challenges':

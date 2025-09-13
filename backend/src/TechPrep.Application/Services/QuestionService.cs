@@ -1,9 +1,9 @@
 using AutoMapper;
-using TechPrep.Application.DTOs.Common;
-using TechPrep.Application.DTOs.Question;
+using TechPrep.Application.DTOs;
 using TechPrep.Application.Interfaces;
 using TechPrep.Core.Entities;
 using TechPrep.Core.Interfaces;
+using TechPrep.Core.Enums;
 
 namespace TechPrep.Application.Services;
 
@@ -18,73 +18,79 @@ public class QuestionService : IQuestionService
         _mapper = mapper;
     }
 
-    public async Task<PaginatedResponse<QuestionDto>> GetQuestionsAsync(QuestionFilterDto filter)
+    public async Task<List<QuestionDto>> GetQuestionsAsync(
+        int? topicId = null,
+        QuestionType? type = null,
+        DifficultyLevel? level = null,
+        string? search = null,
+        int page = 1,
+        int limit = 25)
     {
         try
         {
-            var skip = (filter.Page - 1) * filter.PageSize;
+            Console.WriteLine($"[QUESTION SERVICE] GetQuestionsAsync called with topicId: {topicId}, type: {type}, level: {level}, search: {search}, page: {page}, limit: {limit}");
+            
+            var skip = (page - 1) * limit;
             var questions = await _unitOfWork.Questions.GetByFiltersAsync(
-                filter.TopicId, filter.Type, filter.Level, skip, filter.PageSize);
-            
-            var totalCount = await _unitOfWork.Questions.GetCountByFiltersAsync(
-                filter.TopicId, filter.Type, filter.Level);
+                topicId, type, level, skip, limit);
 
-            var questionDtos = _mapper.Map<IEnumerable<QuestionDto>>(questions);
+            Console.WriteLine($"[QUESTION SERVICE] Repository returned {questions?.Count()} questions");
             
-            var totalPages = (int)Math.Ceiling((double)totalCount / filter.PageSize);
-
-            return new PaginatedResponse<QuestionDto>
-            {
-                Success = true,
-                Data = questionDtos,
-                Pagination = new PaginationInfo
-                {
-                    Page = filter.Page,
-                    PageSize = filter.PageSize,
-                    TotalItems = totalCount,
-                    TotalPages = totalPages,
-                    HasNext = filter.Page < totalPages,
-                    HasPrevious = filter.Page > 1
-                }
-            };
+            var mappedQuestions = _mapper.Map<List<QuestionDto>>(questions);
+            Console.WriteLine($"[QUESTION SERVICE] Mapped to {mappedQuestions?.Count} DTOs");
+            
+            return mappedQuestions;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return new PaginatedResponse<QuestionDto>
-            {
-                Success = false,
-                Data = new List<QuestionDto>(),
-                Pagination = new PaginationInfo()
-            };
+            Console.WriteLine($"[QUESTION SERVICE ERROR] GetQuestionsAsync failed: {ex.Message}");
+            Console.WriteLine($"[QUESTION SERVICE ERROR] Stack trace: {ex.StackTrace}");
+            return new List<QuestionDto>();
         }
     }
 
-    public async Task<ApiResponse<QuestionDto>> GetQuestionByIdAsync(Guid id)
+    public async Task<int> GetQuestionsCountAsync(
+        int? topicId = null,
+        QuestionType? type = null,
+        DifficultyLevel? level = null,
+        string? search = null)
+    {
+        try
+        {
+            Console.WriteLine($"[QUESTION SERVICE] GetQuestionsCountAsync called with topicId: {topicId}, type: {type}, level: {level}, search: {search}");
+            
+            var count = await _unitOfWork.Questions.GetCountByFiltersAsync(
+                topicId, type, level);
+                
+            Console.WriteLine($"[QUESTION SERVICE] Repository returned count: {count}");
+            return count;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[QUESTION SERVICE ERROR] GetQuestionsCountAsync failed: {ex.Message}");
+            Console.WriteLine($"[QUESTION SERVICE ERROR] Stack trace: {ex.StackTrace}");
+            return 0;
+        }
+    }
+
+    public async Task<QuestionDto?> GetQuestionByIdAsync(Guid id)
     {
         try
         {
             var question = await _unitOfWork.Questions.GetWithOptionsAsync(id);
             
             if (question == null)
-            {
-                return ApiResponse<QuestionDto>.ErrorResponse(
-                    "QUESTION_NOT_FOUND", 
-                    "Question not found");
-            }
+                return null;
 
-            var questionDto = _mapper.Map<QuestionDto>(question);
-            return ApiResponse<QuestionDto>.SuccessResponse(questionDto);
+            return _mapper.Map<QuestionDto>(question);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return ApiResponse<QuestionDto>.ErrorResponse(
-                "GET_QUESTION_FAILED", 
-                "Failed to retrieve question", 
-                ex.Message);
+            return null;
         }
     }
 
-    public async Task<ApiResponse<QuestionDto>> CreateQuestionAsync(CreateQuestionDto createQuestionDto)
+    public async Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto createQuestionDto)
     {
         try
         {
@@ -92,9 +98,7 @@ public class QuestionService : IQuestionService
             var topic = await _unitOfWork.Topics.GetByIdAsync(createQuestionDto.TopicId);
             if (topic == null)
             {
-                return ApiResponse<QuestionDto>.ErrorResponse(
-                    "TOPIC_NOT_FOUND", 
-                    "Topic not found");
+                throw new ArgumentException("Topic not found");
             }
 
             var question = _mapper.Map<Question>(createQuestionDto);
@@ -124,38 +128,28 @@ public class QuestionService : IQuestionService
             await _unitOfWork.Questions.AddAsync(question);
             await _unitOfWork.SaveChangesAsync();
 
-            var questionDto = _mapper.Map<QuestionDto>(question);
-            return ApiResponse<QuestionDto>.SuccessResponse(questionDto, "Question created successfully");
+            return _mapper.Map<QuestionDto>(question);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return ApiResponse<QuestionDto>.ErrorResponse(
-                "CREATE_QUESTION_FAILED", 
-                "Failed to create question", 
-                ex.Message);
+            throw;
         }
     }
 
-    public async Task<ApiResponse<QuestionDto>> UpdateQuestionAsync(Guid id, CreateQuestionDto updateQuestionDto)
+    public async Task<QuestionDto?> UpdateQuestionAsync(Guid id, UpdateQuestionDto updateQuestionDto)
     {
         try
         {
             var question = await _unitOfWork.Questions.GetWithOptionsAsync(id);
             
             if (question == null)
-            {
-                return ApiResponse<QuestionDto>.ErrorResponse(
-                    "QUESTION_NOT_FOUND", 
-                    "Question not found");
-            }
+                return null;
 
             // Validate topic exists
             var topic = await _unitOfWork.Topics.GetByIdAsync(updateQuestionDto.TopicId);
             if (topic == null)
             {
-                return ApiResponse<QuestionDto>.ErrorResponse(
-                    "TOPIC_NOT_FOUND", 
-                    "Topic not found");
+                throw new ArgumentException("Topic not found");
             }
 
             // Update basic properties
@@ -206,42 +200,86 @@ public class QuestionService : IQuestionService
             _unitOfWork.Questions.Update(question);
             await _unitOfWork.SaveChangesAsync();
 
-            var questionDto = _mapper.Map<QuestionDto>(question);
-            return ApiResponse<QuestionDto>.SuccessResponse(questionDto, "Question updated successfully");
+            return _mapper.Map<QuestionDto>(question);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return ApiResponse<QuestionDto>.ErrorResponse(
-                "UPDATE_QUESTION_FAILED", 
-                "Failed to update question", 
-                ex.Message);
+            throw;
         }
     }
 
-    public async Task<ApiResponse<bool>> DeleteQuestionAsync(Guid id)
+    public async Task<bool> DeleteQuestionAsync(Guid id)
     {
         try
         {
             var question = await _unitOfWork.Questions.GetByIdAsync(id);
             
             if (question == null)
-            {
-                return ApiResponse<bool>.ErrorResponse(
-                    "QUESTION_NOT_FOUND", 
-                    "Question not found");
-            }
+                return false;
 
             _unitOfWork.Questions.Delete(question);
             await _unitOfWork.SaveChangesAsync();
 
-            return ApiResponse<bool>.SuccessResponse(true, "Question deleted successfully");
+            return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return ApiResponse<bool>.ErrorResponse(
-                "DELETE_QUESTION_FAILED", 
-                "Failed to delete question", 
-                ex.Message);
+            return false;
+        }
+    }
+
+    public async Task<int> BulkDeleteQuestionsAsync(List<Guid> ids)
+    {
+        try
+        {
+            var deletedCount = 0;
+            foreach (var id in ids)
+            {
+                var question = await _unitOfWork.Questions.GetByIdAsync(id);
+                if (question != null)
+                {
+                    _unitOfWork.Questions.Delete(question);
+                    deletedCount++;
+                }
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return deletedCount;
+        }
+        catch (Exception)
+        {
+            return 0;
+        }
+    }
+
+    public async Task<byte[]> ExportQuestionsAsync(List<Guid>? ids = null)
+    {
+        try
+        {
+            List<Question> questions;
+            
+            if (ids?.Any() == true)
+            {
+                questions = new List<Question>();
+                foreach (var id in ids)
+                {
+                    var question = await _unitOfWork.Questions.GetWithOptionsAsync(id);
+                    if (question != null)
+                        questions.Add(question);
+                }
+            }
+            else
+            {
+                questions = (await _unitOfWork.Questions.GetByFiltersAsync(null, null, null, 0, int.MaxValue)).ToList();
+            }
+
+            // TODO: Implement Excel export logic using EPPlus
+            // For now, return empty byte array
+            return Array.Empty<byte>();
+        }
+        catch (Exception)
+        {
+            return Array.Empty<byte>();
         }
     }
 }
