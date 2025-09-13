@@ -7,6 +7,7 @@ import { QuestionType, DifficultyLevel, questionTypeLabels, difficultyLevelLabel
 import { QuestionsTable } from './QuestionsTable';
 import { QuestionFormDrawer } from './QuestionFormDrawer';
 import { AdminImportDialog } from '@/components/admin/import/AdminImportDialog';
+import { TypeBadge, LevelBadge } from '@/components/admin/questions/TypeBadge';
 import { 
   Plus, 
   Search, 
@@ -16,7 +17,8 @@ import {
   AlertCircle,
   Trash2,
   Eye,
-  RotateCcw
+  RotateCcw,
+  X
 } from 'lucide-react';
 import { type RowSelectionState } from '@tanstack/react-table';
 
@@ -34,6 +36,7 @@ export const QuestionsPage: React.FC = () => {
   const [editingQuestion, setEditingQuestion] = React.useState<Question | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState<Question | null>(null);
   const [showImportDialog, setShowImportDialog] = React.useState(false);
+  const [viewingQuestion, setViewingQuestion] = React.useState<Question | null>(null);
 
   // Debounced search
   const debouncedSearchTerm = React.useMemo(() => {
@@ -109,8 +112,7 @@ export const QuestionsPage: React.FC = () => {
   };
 
   const handleViewQuestion = (question: Question) => {
-    // TODO: Implement view-only drawer or modal
-    console.log('View question:', question);
+    setViewingQuestion(question);
   };
 
   const handleDeleteQuestion = (question: Question) => {
@@ -332,6 +334,100 @@ export const QuestionsPage: React.FC = () => {
                 >
                   Cancel
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Question Modal */}
+      {viewingQuestion && (
+        <div className="fixed inset-0 z-[9999] overflow-y-auto" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            
+            <span className="hidden sm:inline-block sm:h-screen sm:align-middle">&#8203;</span>
+            
+            <div className="relative inline-block transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6 sm:align-middle">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">View Question</h3>
+                <button
+                  onClick={() => setViewingQuestion(null)}
+                  className="text-gray-400 hover:text-gray-500"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Topic</label>
+                  <p className="mt-1 text-sm text-gray-900">{viewingQuestion.topicName}</p>
+                </div>
+                
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700">Type</label>
+                    <div className="mt-1">
+                      <TypeBadge type={viewingQuestion.type as QuestionType} />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700">Level</label>
+                    <div className="mt-1">
+                      <LevelBadge level={viewingQuestion.level as DifficultyLevel} />
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Question Text</label>
+                  <p className="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded">{viewingQuestion.text}</p>
+                </div>
+                
+                {viewingQuestion.type === QuestionType.Written && viewingQuestion.officialAnswer && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Official Answer</label>
+                    <p className="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded">{viewingQuestion.officialAnswer}</p>
+                  </div>
+                )}
+                
+                {(viewingQuestion.type === QuestionType.SingleChoice || viewingQuestion.type === QuestionType.MultiChoice) && viewingQuestion.options && viewingQuestion.options.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Options</label>
+                    <div className="mt-2 space-y-2">
+                      {viewingQuestion.options.map((option, index) => (
+                        <div key={option.id || index} className={`p-3 rounded border ${option.isCorrect ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-gray-900">{option.text}</span>
+                            {option.isCorrect && (
+                              <span className="text-xs font-medium text-green-700 bg-green-100 px-2 py-1 rounded">Correct</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {viewingQuestion.learningResources && viewingQuestion.learningResources.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Learning Resources</label>
+                    <div className="mt-2 space-y-2">
+                      {viewingQuestion.learningResources.map((resource, index) => (
+                        <div key={resource.id || index} className="bg-gray-50 p-3 rounded">
+                          <h4 className="text-sm font-medium text-gray-900">{resource.title}</h4>
+                          <p className="text-sm text-blue-600 hover:text-blue-800">
+                            <a href={resource.url} target="_blank" rel="noopener noreferrer">{resource.url}</a>
+                          </p>
+                          {resource.description && (
+                            <p className="text-sm text-gray-600 mt-1">{resource.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

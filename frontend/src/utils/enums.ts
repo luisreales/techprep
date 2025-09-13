@@ -1,13 +1,13 @@
 export enum QuestionType {
-  SingleChoice = 'single_choice',
-  MultiChoice = 'multi_choice',
-  Written = 'written'
+  SingleChoice = 1,
+  MultiChoice = 2,
+  Written = 3
 }
 
 export enum DifficultyLevel {
-  Basic = 'basic',
-  Intermediate = 'intermediate',
-  Advanced = 'advanced'
+  Basic = 1,
+  Intermediate = 2,
+  Advanced = 3
 }
 
 // Display labels for question types

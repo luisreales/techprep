@@ -5,8 +5,8 @@ export const questionSchema = z.object({
   topicId: z.number().int().positive(),
   topicName: z.string().min(1).optional(),
   text: z.string().min(10, 'Enter at least 10 characters'),
-  type: z.enum(['single_choice', 'multi_choice', 'written']),
-  level: z.enum(['basic', 'intermediate', 'advanced']),
+  type: z.number().int().min(1).max(3),
+  level: z.number().int().min(1).max(3),
   officialAnswer: z.string().optional(),
   options: z.array(z.object({
     id: z.string().uuid().optional(),
@@ -25,7 +25,7 @@ export const questionSchema = z.object({
 
 // Refinements for type-specific rules
 export const questionSchemaRefined = questionSchema.superRefine((val, ctx) => {
-  if (val.type === 'written') {
+  if (val.type === 3) { // Written
     if (!val.officialAnswer || val.officialAnswer.trim().length < 10) {
       ctx.addIssue({ 
         code: z.ZodIssueCode.custom, 
@@ -42,14 +42,14 @@ export const questionSchemaRefined = questionSchema.superRefine((val, ctx) => {
       });
     }
     const correct = val.options.filter(o => o.isCorrect).length;
-    if (val.type === 'single_choice' && correct !== 1) {
+    if (val.type === 1 && correct !== 1) { // SingleChoice
       ctx.addIssue({ 
         code: z.ZodIssueCode.custom, 
         message: 'Exactly one correct option is required', 
         path: ['options'] 
       });
     }
-    if (val.type === 'multi_choice' && correct < 1) {
+    if (val.type === 2 && correct < 1) { // MultiChoice
       ctx.addIssue({ 
         code: z.ZodIssueCode.custom, 
         message: 'At least one correct option is required', 
@@ -65,8 +65,8 @@ export const questionDefaults = {
   topicId: 0,
   topicName: '',
   text: '',
-  type: 'single_choice' as const,
-  level: 'basic' as const,
+  type: 1, // SingleChoice
+  level: 1, // Basic
   officialAnswer: '',
   options: [
     { id: crypto.randomUUID(), text: '', isCorrect: false, orderIndex: 1 },

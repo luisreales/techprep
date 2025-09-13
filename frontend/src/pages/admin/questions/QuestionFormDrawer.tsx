@@ -49,7 +49,17 @@ export const QuestionFormDrawer: React.FC<QuestionFormDrawerProps> = ({
   // Reset form when question changes
   React.useEffect(() => {
     if (question) {
-      reset(question);
+      // Ensure the question data is properly formatted for the form
+      const formData = {
+        ...question,
+        // Ensure type and level are numbers
+        type: typeof question.type === 'string' ? parseInt(question.type) : question.type,
+        level: typeof question.level === 'string' ? parseInt(question.level) : question.level,
+        // Ensure arrays exist
+        options: question.options || [],
+        learningResources: question.learningResources || [],
+      };
+      reset(formData);
     } else {
       reset(questionDefaults);
     }
@@ -143,7 +153,7 @@ export const QuestionFormDrawer: React.FC<QuestionFormDrawerProps> = ({
                         type="radio"
                         value={type}
                         className="sr-only"
-                        {...register('type')}
+                        {...register('type', { valueAsNumber: true })}
                       />
                       {questionTypeLabels[type]}
                     </label>
@@ -173,7 +183,7 @@ export const QuestionFormDrawer: React.FC<QuestionFormDrawerProps> = ({
                         type="radio"
                         value={level}
                         className="sr-only"
-                        {...register('level')}
+                        {...register('level', { valueAsNumber: true })}
                       />
                       {difficultyLevelLabels[level]}
                     </label>
