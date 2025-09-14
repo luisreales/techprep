@@ -3,15 +3,16 @@ import { useLocation, Navigate } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import Practice from '@/pages/Practice';
 import Challenges from '@/pages/Challenges';
+import ChallengeDetail from '@/pages/ChallengeDetail';
 import Resources from '@/pages/Resources';
 import Profile from '@/pages/Profile';
 import Help from '@/pages/Help';
 import AdminPanel from '@/pages/AdminPanel';
 import { QuestionsPage } from '@/pages/admin/questions/QuestionsPage';
+import { ChallengesPage } from '@/pages/admin/challenges/ChallengesPage';
 import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/types/api';
 const AdminImport = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Excel Import</h1><p className="mt-4 text-gray-600">Excel import interface coming soon...</p></div>;
-const AdminChallenges = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Challenges</h1><p className="mt-4 text-gray-600">Admin challenges management coming soon...</p></div>;
 const AdminUsers = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Users Management</h1><p className="mt-4 text-gray-600">Users management interface coming soon...</p></div>;
 const AdminResources = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Resources</h1><p className="mt-4 text-gray-600">Admin resources management coming soon...</p></div>;
 const AdminSettings = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">System Settings</h1><p className="mt-4 text-gray-600">System settings interface coming soon...</p></div>;
@@ -33,7 +34,7 @@ const MainContent: React.FC = () => {
         case '/admin/import':
           return <AdminImport />;
         case '/admin/challenges':
-          return <AdminChallenges />;
+          return <ChallengesPage />;
         case '/admin/users':
           return <AdminUsers />;
         case '/admin/resources':
@@ -72,6 +73,10 @@ const MainContent: React.FC = () => {
         }
         return <Navigate to="/dashboard" replace />;
       default:
+        // Handle challenge detail route
+        if (location.pathname.startsWith('/challenges/')) {
+          return <ChallengeDetail />;
+        }
         // Default fallback - redirect based on role
         if (user?.role === UserRole.Admin) {
           return <Navigate to="/admin" replace />;

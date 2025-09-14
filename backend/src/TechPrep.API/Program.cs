@@ -28,6 +28,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<ICodeChallengeService, CodeChallengeService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

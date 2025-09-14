@@ -1,6 +1,7 @@
 using AutoMapper;
 using TechPrep.Application.DTOs;
 using TechPrep.Application.DTOs.Topic;
+using TechPrep.Application.DTOs.Challenges;
 using TechPrep.Core.Entities;
 
 namespace TechPrep.Application.Mappings;
@@ -46,5 +47,54 @@ public class MappingProfile : Profile
         CreateMap<UpdateTopicDto, Topic>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+
+        // Code Challenge mappings
+        CreateMap<CodeChallenge, ChallengeListItemDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => 
+                src.Tags.Select(ct => ct.Tag.Name)));
+
+        CreateMap<CodeChallenge, ChallengeDetailDto>()
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => 
+                src.Tags.Select(ct => ct.Tag.Name)))
+            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => 
+                src.Topics.Select(ct => ct.Topic.Name)));
+
+        CreateMap<ChallengeCreateDto, CodeChallenge>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.Tags, opt => opt.Ignore())
+            .ForMember(dest => dest.Topics, opt => opt.Ignore())
+            .ForMember(dest => dest.Attempts, opt => opt.Ignore());
+
+        CreateMap<ChallengeUpdateDto, CodeChallenge>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.Tags, opt => opt.Ignore())
+            .ForMember(dest => dest.Topics, opt => opt.Ignore())
+            .ForMember(dest => dest.Attempts, opt => opt.Ignore());
+
+        // Tag mappings
+        CreateMap<Tag, TagDto>();
+        
+        CreateMap<TagCreateDto, Tag>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ChallengeTag, opt => opt.Ignore());
+
+        CreateMap<TagUpdateDto, Tag>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ChallengeTag, opt => opt.Ignore());
+
+        // Challenge Attempt mappings
+        CreateMap<ChallengeAttempt, AttemptDto>();
+        
+        CreateMap<AttemptCreateDto, ChallengeAttempt>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+            .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.FinishedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.CodeChallengeId, opt => opt.Ignore())
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
+            .ForMember(dest => dest.CodeChallenge, opt => opt.Ignore());
     }
 }

@@ -143,6 +143,118 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.ChallengeAttempt", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CodeChallengeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("MarkedSolved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Score")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubmittedCode")
+                        .HasMaxLength(10000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StartedAt");
+
+                    b.HasIndex("CodeChallengeId", "UserId");
+
+                    b.ToTable("ChallengeAttempts");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.ChallengeTag", b =>
+                {
+                    b.Property<int>("CodeChallengeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CodeChallengeId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("ChallengeTags");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.ChallengeTopic", b =>
+                {
+                    b.Property<int>("CodeChallengeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CodeChallengeId", "TopicId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("ChallengeTopics");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.CodeChallenge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Language")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OfficialSolution")
+                        .HasMaxLength(10000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Prompt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TestsJson")
+                        .HasMaxLength(5000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CodeChallenges");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -321,6 +433,25 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("QuestionOptions");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Topic", b =>
                 {
                     b.Property<int>("Id")
@@ -486,6 +617,55 @@ namespace TechPrep.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.ChallengeAttempt", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.CodeChallenge", "CodeChallenge")
+                        .WithMany("Attempts")
+                        .HasForeignKey("CodeChallengeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CodeChallenge");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.ChallengeTag", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.CodeChallenge", "CodeChallenge")
+                        .WithMany("Tags")
+                        .HasForeignKey("CodeChallengeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Tag", "Tag")
+                        .WithMany("ChallengeTag")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CodeChallenge");
+
+                    b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.ChallengeTopic", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.CodeChallenge", "CodeChallenge")
+                        .WithMany("Topics")
+                        .HasForeignKey("CodeChallengeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CodeChallenge");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswer", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Question", "Question")
@@ -522,9 +702,63 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.LearningResource", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
+                        .WithMany("LearningResources")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.QuestionOption", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
+                        .WithMany("Options")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.CodeChallenge", b =>
+                {
+                    b.Navigation("Attempts");
+
+                    b.Navigation("Tags");
+
+                    b.Navigation("Topics");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewSession", b =>
                 {
                     b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
+                {
+                    b.Navigation("LearningResources");
+
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>
+                {
+                    b.Navigation("ChallengeTag");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.User", b =>

@@ -30,6 +30,10 @@ export const AppRoutes: React.FC = () => {
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
+        path="/challenges/:id"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
         path="/resources"
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />

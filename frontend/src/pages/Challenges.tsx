@@ -1,192 +1,236 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { Grid, List, Loader } from 'lucide-react';
+import { useChallenges, useChallengeFilters } from '@/hooks/useChallenges';
+import { ChallengeCard } from '@/components/challenges/ChallengeCard';
+import { ChallengeFilters } from '@/components/challenges/ChallengeFilters';
+import type { ChallengeFilters as ChallengeFiltersType, ChallengeListParams } from '@/types/challenges';
 
-interface Challenge {
-  id: string;
-  title: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  language: string;
-  href: string;
-}
+type ViewMode = 'grid' | 'list';
 
-type DifficultyFilter = 'All' | 'Easy' | 'Medium' | 'Hard';
-type LanguageFilter = 'All' | 'Python' | 'Java' | 'JavaScript' | 'C++';
+const ITEMS_PER_PAGE = 20;
 
 const Challenges: React.FC = () => {
-  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('All');
-  const [languageFilter, setLanguageFilter] = useState<LanguageFilter>('All');
-  const [showDifficultyDropdown, setShowDifficultyDropdown] = useState(false);
-  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  // State
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<ChallengeFiltersType>({});
 
-  const challenges: Challenge[] = [
-    {
-      id: '1',
-      title: 'Reverse a String',
-      difficulty: 'Easy',
-      language: 'Python',
-      href: '#'
-    },
-    {
-      id: '2',
-      title: 'Binary Search',
-      difficulty: 'Medium',
-      language: 'Java',
-      href: '#'
-    },
-    {
-      id: '3',
-      title: 'Dynamic Programming',
-      difficulty: 'Hard',
-      language: 'C++',
-      href: '#'
-    },
-    {
-      id: '4',
-      title: 'Palindrome Check',
-      difficulty: 'Easy',
-      language: 'JavaScript',
-      href: '#'
-    },
-    {
-      id: '5',
-      title: 'Merge Sorted Lists',
-      difficulty: 'Medium',
-      language: 'Python',
-      href: '#'
-    },
-    {
-      id: '6',
-      title: 'Graph Traversal',
-      difficulty: 'Hard',
-      language: 'Java',
-      href: '#'
-    }
-  ];
+  // Build query parameters
+  const queryParams: ChallengeListParams = useMemo(
+    () => ({
+      page,
+      pageSize: ITEMS_PER_PAGE,
+      sortBy: 'createdAt',
+      sortOrder: 'desc',
+      ...filters,
+    }),
+    [page, filters]
+  );
 
-  const getDifficultyBadgeClasses = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Easy':
-        return 'bg-green-100 text-green-600';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-600';
-      case 'Hard':
-        return 'bg-red-100 text-red-600';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
+  // Hooks
+  const { data: challengesData, isLoading, error } = useChallenges(queryParams);
+  const { availableTags } = useChallengeFilters();
+
+  // Data
+  const challenges = challengesData?.challenges || [];
+  const pagination = challengesData?.pagination;
+
+  // Handlers
+  const handleFiltersChange = (newFilters: ChallengeFiltersType) => {
+    setFilters(newFilters);
+    setPage(1); // Reset to first page when filters change
   };
 
-  const filteredChallenges = challenges.filter(challenge => {
-    const matchesDifficulty = difficultyFilter === 'All' || challenge.difficulty === difficultyFilter;
-    const matchesLanguage = languageFilter === 'All' || challenge.language === languageFilter;
-    return matchesDifficulty && matchesLanguage;
-  });
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 text-lg font-medium">Failed to load challenges</p>
+          <p className="text-gray-500 mt-2">Please try again later</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-        {/* Filter Buttons */}
-        <div className="flex gap-3">
-            {/* Language Filter */}
-            <div className="relative flex-1">
-              <button
-                className="flex h-10 w-full items-center justify-center gap-x-2 rounded-lg bg-[var(--primary-color-light)] px-4"
-                onClick={() => {
-                  setShowLanguageDropdown(!showLanguageDropdown);
-                  setShowDifficultyDropdown(false);
-                }}
-              >
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  {languageFilter === 'All' ? 'Language' : languageFilter}
-                </p>
-                <span className="material-symbols-outlined text-xl text-[var(--text-secondary)]">expand_more</span>
-              </button>
-              
-              {showLanguageDropdown && (
-                <div className="absolute top-12 left-0 right-0 bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg shadow-lg z-20">
-                  {(['All', 'Python', 'Java', 'JavaScript', 'C++'] as LanguageFilter[]).map((language) => (
-                    <button
-                      key={language}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg text-[var(--text-primary)]"
-                      onClick={() => {
-                        setLanguageFilter(language);
-                        setShowLanguageDropdown(false);
-                      }}
-                    >
-                      {language}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Difficulty Filter */}
-            <div className="relative flex-1">
-              <button
-                className="flex h-10 w-full items-center justify-center gap-x-2 rounded-lg bg-[var(--primary-color-light)] px-4"
-                onClick={() => {
-                  setShowDifficultyDropdown(!showDifficultyDropdown);
-                  setShowLanguageDropdown(false);
-                }}
-              >
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  {difficultyFilter === 'All' ? 'Difficulty' : difficultyFilter}
-                </p>
-                <span className="material-symbols-outlined text-xl text-[var(--text-secondary)]">expand_more</span>
-              </button>
-              
-              {showDifficultyDropdown && (
-                <div className="absolute top-12 left-0 right-0 bg-[var(--card-background)] border border-[var(--border-color)] rounded-lg shadow-lg z-20">
-                  {(['All', 'Easy', 'Medium', 'Hard'] as DifficultyFilter[]).map((difficulty) => (
-                    <button
-                      key={difficulty}
-                      className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg text-[var(--text-primary)]"
-                      onClick={() => {
-                        setDifficultyFilter(difficulty);
-                        setShowDifficultyDropdown(false);
-                      }}
-                    >
-                      {difficulty}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Code Challenges</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Practice your coding skills with our collection of challenges
+          </p>
         </div>
-
-        {/* Main Content */}
-        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6">
-          <div className="space-y-3">
-            {filteredChallenges.map((challenge) => (
-              <a
-                key={challenge.id}
-                className="flex items-center gap-4 rounded-lg border border-[var(--border-color)] bg-[var(--card-background)] p-4 transition-all hover:shadow-md"
-                href={challenge.href}
-              >
-                <div className="flex-grow">
-                  <p className="text-base font-semibold text-[var(--text-primary)]">
-                    {challenge.title}
-                  </p>
-                  <div className="mt-1 flex items-center gap-2">
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getDifficultyBadgeClasses(challenge.difficulty)}`}>
-                      {challenge.difficulty}
-                    </span>
-                    <span className="text-sm text-[var(--text-secondary)]">
-                      {challenge.language}
-                    </span>
-                  </div>
-                </div>
-                <span className="material-symbols-outlined text-2xl text-[var(--text-secondary)]">
-                  chevron_right
-                </span>
-              </a>
-            ))}
+        
+        <div className="flex items-center gap-3">
+          {/* View Mode Toggle */}
+          <div className="inline-flex rounded-lg border border-gray-200 p-1">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewMode === 'grid'
+                  ? 'bg-gray-100 text-gray-900'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <Grid className="h-4 w-4 mr-2" />
+              Grid
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewMode === 'list'
+                  ? 'bg-gray-100 text-gray-900'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <List className="h-4 w-4 mr-2" />
+              List
+            </button>
           </div>
+        </div>
+      </div>
 
-          {filteredChallenges.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-[var(--text-secondary)]">No challenges found matching your filters.</p>
+      {/* Filters */}
+      <ChallengeFilters
+        filters={filters}
+        onFiltersChange={handleFiltersChange}
+        availableTags={availableTags}
+      />
+
+      {/* Results Summary */}
+      {pagination && (
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          <span>
+            Showing {((pagination.page - 1) * pagination.pageSize) + 1} to{' '}
+            {Math.min(pagination.page * pagination.pageSize, pagination.totalCount)} of{' '}
+            {pagination.totalCount} challenges
+          </span>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <Loader className="h-8 w-8 animate-spin text-blue-600" />
+          <span className="ml-3 text-gray-600">Loading challenges...</span>
+        </div>
+      )}
+
+      {/* Challenges Grid/List */}
+      {!isLoading && (
+        <>
+          {challenges.length > 0 ? (
+            <div
+              className={
+                viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+                  : 'space-y-4'
+              }
+            >
+              {challenges.map((challenge) => (
+                <ChallengeCard
+                  key={challenge.id}
+                  challenge={challenge}
+                  className={viewMode === 'list' ? 'flex-1' : ''}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <Grid className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No challenges found</h3>
+              <p className="text-gray-500 mb-4">
+                Try adjusting your filters or search criteria
+              </p>
+              <button
+                onClick={() => handleFiltersChange({})}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Clear all filters
+              </button>
             </div>
           )}
+        </>
+      )}
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex items-center justify-between bg-white px-4 py-3 border border-gray-200 rounded-lg">
+          <div className="flex flex-1 justify-between sm:hidden">
+            <button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={!pagination.hasPreviousPage}
+              className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={!pagination.hasNextPage}
+              className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700">
+                Page <span className="font-medium">{pagination.page}</span> of{' '}
+                <span className="font-medium">{pagination.totalPages}</span>
+              </p>
+            </div>
+            <div>
+              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                <button
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  disabled={!pagination.hasPreviousPage}
+                  className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                
+                {/* Page numbers */}
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  const pageNum = Math.max(1, pagination.page - 2) + i;
+                  if (pageNum > pagination.totalPages) return null;
+                  
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                        pageNum === pagination.page
+                          ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                          : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+
+                <button
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  disabled={!pagination.hasNextPage}
+                  className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </nav>
+            </div>
+          </div>
         </div>
+      )}
     </div>
   );
 };
