@@ -35,7 +35,7 @@ public static class AppSeeder
     private static async Task SeedAdminUserAsync(UserManager<User> userManager)
     {
         const string adminEmail = "admin@techprep.com";
-        const string adminPassword = "Nojoda123*";
+        const string adminPassword = "Admin123!";
 
         var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
         if (existingAdmin != null)

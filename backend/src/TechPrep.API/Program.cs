@@ -30,6 +30,7 @@ builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<ICodeChallengeService, CodeChallengeService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -39,7 +40,7 @@ builder.Services.AddDbContext<TechPrepDbContext>(options =>
 
 // Identity (User con Guid y Roles)
 builder.Services
-    .AddIdentity<User, IdentityRole<Guid>>(options =>
+    .AddIdentityCore<User>(options =>
     {
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
@@ -48,9 +49,10 @@ builder.Services
         options.Password.RequiredLength = 6;
         options.User.RequireUniqueEmail = true;
     })
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<TechPrepDbContext>()
     .AddDefaultTokenProviders()
-    .AddRoles<IdentityRole<Guid>>();
+    .AddSignInManager();
 
 // JWT (lee JwtSettings del appsettings)
 var jwtSection = builder.Configuration.GetSection("JwtSettings");
@@ -70,7 +72,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
+            // Ensure role claims from JWT ("role") are recognized by [Authorize(Roles = ...)]
+            RoleClaimType = "role"
         };
     });
 
