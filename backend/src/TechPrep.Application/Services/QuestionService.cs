@@ -114,16 +114,16 @@ public class QuestionService : IQuestionService
                 }
             }
 
-            // Set learning resources
-            if (createQuestionDto.LearningResources.Any())
-            {
-                foreach (var resourceDto in createQuestionDto.LearningResources)
-                {
-                    var resource = _mapper.Map<LearningResource>(resourceDto);
-                    resource.QuestionId = question.Id;
-                    question.LearningResources.Add(resource);
-                }
-            }
+            // TODO: Set learning resources - will implement with new ResourceService
+            // if (createQuestionDto.LearningResources.Any())
+            // {
+            //     foreach (var resourceDto in createQuestionDto.LearningResources)
+            //     {
+            //         var resource = _mapper.Map<LearningResource>(resourceDto);
+            //         resource.QuestionId = question.Id;
+            //         question.LearningResources.Add(resource);
+            //     }
+            // }
 
             await _unitOfWork.Questions.AddAsync(question);
             await _unitOfWork.SaveChangesAsync();
@@ -166,10 +166,11 @@ public class QuestionService : IQuestionService
                 _unitOfWork.Repository<QuestionOption>().DeleteRange(question.Options);
             }
             
-            if (question.LearningResources.Any())
-            {
-                _unitOfWork.Repository<LearningResource>().DeleteRange(question.LearningResources);
-            }
+            // TODO: Handle learning resources - will implement with new ResourceService
+            // if (question.LearningResources.Any())
+            // {
+            //     _unitOfWork.Repository<LearningResource>().DeleteRange(question.LearningResources);
+            // }
 
             // Add new options
             if (updateQuestionDto.Options.Any())
@@ -184,18 +185,18 @@ public class QuestionService : IQuestionService
                 await _unitOfWork.Repository<QuestionOption>().AddRangeAsync(newOptions);
             }
 
-            // Add new learning resources
-            if (updateQuestionDto.LearningResources.Any())
-            {
-                var newResources = new List<LearningResource>();
-                foreach (var resourceDto in updateQuestionDto.LearningResources)
-                {
-                    var resource = _mapper.Map<LearningResource>(resourceDto);
-                    resource.QuestionId = question.Id;
-                    newResources.Add(resource);
-                }
-                await _unitOfWork.Repository<LearningResource>().AddRangeAsync(newResources);
-            }
+            // TODO: Add new learning resources - will implement with new ResourceService
+            // if (updateQuestionDto.LearningResources.Any())
+            // {
+            //     var newResources = new List<LearningResource>();
+            //     foreach (var resourceDto in updateQuestionDto.LearningResources)
+            //     {
+            //         var resource = _mapper.Map<LearningResource>(resourceDto);
+            //         resource.QuestionId = question.Id;
+            //         newResources.Add(resource);
+            //     }
+            //     await _unitOfWork.Repository<LearningResource>().AddRangeAsync(newResources);
+            // }
 
             _unitOfWork.Questions.Update(question);
             await _unitOfWork.SaveChangesAsync();

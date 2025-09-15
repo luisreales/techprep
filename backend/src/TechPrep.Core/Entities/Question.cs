@@ -17,5 +17,5 @@ public class Question
     public virtual Topic Topic { get; set; } = null!;
     public virtual ICollection<QuestionOption> Options { get; set; } = new List<QuestionOption>();
     public virtual ICollection<InterviewAnswer> InterviewAnswers { get; set; } = new List<InterviewAnswer>();
-    public virtual ICollection<LearningResource> LearningResources { get; set; } = new List<LearningResource>();
+    public virtual ICollection<QuestionResource> ResourceLinks { get; set; } = new List<QuestionResource>();
 }

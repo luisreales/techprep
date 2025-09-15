@@ -95,12 +95,13 @@ public static class TestDataHelper
     {
         return new LearningResource
         {
-            Id = Guid.NewGuid(),
-            QuestionId = questionId,
+            Id = 1, // Changed from Guid to int
+            Kind = Core.Enums.ResourceKind.Article,
             Title = "Test Resource",
             Url = "https://example.com/resource",
             Description = "Test learning resource description",
             CreatedAt = DateTime.UtcNow
+            // Note: QuestionId removed - associations handled by QuestionResource junction table
         };
     }
 

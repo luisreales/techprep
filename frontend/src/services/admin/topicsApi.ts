@@ -16,7 +16,7 @@ export interface TopicsListResponse {
 
 export const topicsApi = {
   list: async (): Promise<TopicsListResponse> => {
-    const response = await http.get('/topics');
+    const response = await http.get('/admin/topics');
     return response.data;
   },
 };

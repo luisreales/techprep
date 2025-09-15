@@ -12,6 +12,8 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
     public DbSet<Question> Questions { get; set; } = null!;
     public DbSet<QuestionOption> QuestionOptions { get; set; } = null!;
     public DbSet<LearningResource> LearningResources { get; set; } = null!;
+    public DbSet<QuestionResource> QuestionResources { get; set; } = null!;
+    public DbSet<ResourceTopic> ResourceTopics { get; set; } = null!;
     
     // Code Challenges
     public DbSet<CodeChallenge> CodeChallenges { get; set; } = null!;
@@ -58,9 +60,9 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
                   .HasForeignKey(o => o.QuestionId)
                   .OnDelete(DeleteBehavior.Cascade);
                   
-            entity.HasMany(e => e.LearningResources)
-                  .WithOne(lr => lr.Question)
-                  .HasForeignKey(lr => lr.QuestionId)
+            entity.HasMany(e => e.ResourceLinks)
+                  .WithOne(qr => qr.Question)
+                  .HasForeignKey(qr => qr.QuestionId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
         
@@ -77,12 +79,46 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
         builder.Entity<LearningResource>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Kind).IsRequired();
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.QuestionId).IsRequired();
             entity.Property(e => e.Url).IsRequired().HasMaxLength(500);
+            entity.Property(e => e.Author).HasMaxLength(100);
+            entity.Property(e => e.Duration);
+            entity.Property(e => e.Rating);
             entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Difficulty);
             entity.Property(e => e.CreatedAt).IsRequired();
-            entity.HasIndex(e => e.QuestionId);
+            entity.Property(e => e.UpdatedAt);
+            
+            entity.HasMany(e => e.QuestionLinks)
+                  .WithOne(qr => qr.Resource)
+                  .HasForeignKey(qr => qr.ResourceId)
+                  .OnDelete(DeleteBehavior.Cascade);
+                  
+            entity.HasMany(e => e.TopicLinks)
+                  .WithOne(rt => rt.Resource)
+                  .HasForeignKey(rt => rt.ResourceId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+        
+        builder.Entity<QuestionResource>(entity =>
+        {
+            entity.HasKey(e => new { e.QuestionId, e.ResourceId });
+            entity.Property(e => e.QuestionId).IsRequired();
+            entity.Property(e => e.ResourceId).IsRequired();
+            entity.Property(e => e.Note).HasMaxLength(500);
+        });
+        
+        builder.Entity<ResourceTopic>(entity =>
+        {
+            entity.HasKey(e => new { e.ResourceId, e.TopicId });
+            entity.Property(e => e.ResourceId).IsRequired();
+            entity.Property(e => e.TopicId).IsRequired();
+            
+            entity.HasOne(e => e.Topic)
+                  .WithMany()
+                  .HasForeignKey(e => e.TopicId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
         
         // Code Challenges configuration

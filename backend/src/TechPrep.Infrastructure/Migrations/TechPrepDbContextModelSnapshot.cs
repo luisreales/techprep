@@ -341,8 +341,12 @@ namespace TechPrep.Infrastructure.Migrations
 
             modelBuilder.Entity("TechPrep.Core.Entities.LearningResource", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Author")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -352,12 +356,24 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("QuestionId")
+                    b.Property<int?>("Difficulty")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeSpan?>("Duration")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
@@ -366,8 +382,6 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
 
                     b.ToTable("LearningResources");
                 });
@@ -431,6 +445,40 @@ namespace TechPrep.Infrastructure.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("QuestionOptions");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.QuestionResource", b =>
+                {
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ResourceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("QuestionId", "ResourceId");
+
+                    b.HasIndex("ResourceId");
+
+                    b.ToTable("QuestionResources");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.ResourceTopic", b =>
+                {
+                    b.Property<int>("ResourceId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ResourceId", "TopicId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("ResourceTopics");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>
@@ -702,17 +750,6 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TechPrep.Core.Entities.LearningResource", b =>
-                {
-                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
-                        .WithMany("LearningResources")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
@@ -735,6 +772,44 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.QuestionResource", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
+                        .WithMany("ResourceLinks")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.LearningResource", "Resource")
+                        .WithMany("QuestionLinks")
+                        .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Resource");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.ResourceTopic", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.LearningResource", "Resource")
+                        .WithMany("TopicLinks")
+                        .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Resource");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.CodeChallenge", b =>
                 {
                     b.Navigation("Attempts");
@@ -749,11 +824,18 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Answers");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.LearningResource", b =>
+                {
+                    b.Navigation("QuestionLinks");
+
+                    b.Navigation("TopicLinks");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
-                    b.Navigation("LearningResources");
-
                     b.Navigation("Options");
+
+                    b.Navigation("ResourceLinks");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>

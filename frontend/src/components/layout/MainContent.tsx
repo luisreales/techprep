@@ -11,10 +11,10 @@ import AdminPanel from '@/pages/AdminPanel';
 import { QuestionsPage } from '@/pages/admin/questions/QuestionsPage';
 import { ChallengesPage } from '@/pages/admin/challenges/ChallengesPage';
 import { UsersPage } from '@/pages/admin/users/UsersPage';
+import { ResourcesPage } from '@/pages/admin/resources/ResourcesPage';
 import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/types/api';
 const AdminImport = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Excel Import</h1><p className="mt-4 text-gray-600">Excel import interface coming soon...</p></div>;
-const AdminResources = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Admin Resources</h1><p className="mt-4 text-gray-600">Admin resources management coming soon...</p></div>;
 const AdminSettings = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">System Settings</h1><p className="mt-4 text-gray-600">System settings interface coming soon...</p></div>;
 
 const MainContent: React.FC = () => {
@@ -38,7 +38,7 @@ const MainContent: React.FC = () => {
         case '/admin/users':
           return <UsersPage />;
         case '/admin/resources':
-          return <AdminResources />;
+          return <ResourcesPage />;
         case '/admin/settings':
           return <AdminSettings />;
         default:
