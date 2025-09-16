@@ -75,9 +75,7 @@ public class TagService : ITagService
 
             // Update properties
             tag.Name = updateDto.Name;
-            // Note: Tag entity doesn't have Color property in the entity I saw, 
-            // but the DTO has it. If Tag entity has Color, uncomment the line below:
-            // tag.Color = updateDto.Color;
+            tag.Color = updateDto.Color;
 
             _unitOfWork.Tags.Update(tag);
             await _unitOfWork.SaveChangesAsync();

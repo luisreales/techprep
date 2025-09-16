@@ -7,7 +7,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TechPrep.Core.Entities;
+using TechPrep.Core.Enums;
 using TechPrep.API.Models.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TechPrep.API.Controllers;
 
@@ -24,6 +26,27 @@ public class AuthController : ControllerBase
         _userManager = userManager;
         _signInManager = signInManager;
         _config = config;
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> Me()
+    {
+        var userId = User.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        var email = User.FindFirstValue(JwtRegisteredClaimNames.Email) ?? User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+        var roles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).Distinct().ToList();
+        var customRoles = User.FindAll("role").Select(c => c.Value).Distinct().ToList();
+        return Ok(new
+        {
+            success = true,
+            data = new
+            {
+                userId,
+                email,
+                roles,
+                customRoles
+            }
+        });
     }
 
     [HttpPost("register")]
@@ -61,7 +84,7 @@ public class AuthController : ControllerBase
             Email = user.Email!,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Role = user.Role
+            Role = user.Role == UserRole.Admin ? "Admin" : "Student"
         };
         return Ok(response);
     }
@@ -88,7 +111,7 @@ public class AuthController : ControllerBase
             Email = user.Email!,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Role = user.Role
+            Role = user.Role == UserRole.Admin ? "Admin" : "Student"
         };
         return Ok(response);
     }
@@ -140,14 +163,13 @@ public class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new Claim("firstName", user.FirstName ?? string.Empty),
-            new Claim("lastName", user.LastName ?? string.Empty),
-            new Claim(ClaimTypes.Role, user.Role.ToString())
+            new Claim("lastName", user.LastName ?? string.Empty)
         };
         
-        // Add role claims from Identity
+        // Add role claims from Identity (preferred over user.Role enum)
         foreach (var role in roles)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role));
+            claims.Add(new Claim("role", role));
         }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"] ?? "dev_secret_key"));

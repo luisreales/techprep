@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,8 +36,33 @@ builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // DB (SQLite)
-builder.Services.AddDbContext<TechPrepDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Build absolute path for the SQLite file so reads/writes go to a stable location
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+if (!string.IsNullOrWhiteSpace(connStr))
+{
+    try
+    {
+        // If connection string is relative like "Data Source=Data/techprep.db",
+        // rewrite to absolute: Data Source={ContentRoot}/Data/techprep.db
+        var parts = connStr.Split('=', 2, StringSplitOptions.TrimEntries);
+        if (parts.Length == 2 && parts[0].Equals("Data Source", StringComparison.OrdinalIgnoreCase))
+        {
+            var rawPath = parts[1];
+            var absPath = System.IO.Path.IsPathRooted(rawPath)
+                ? rawPath
+                : System.IO.Path.Combine(builder.Environment.ContentRootPath, rawPath);
+            var dir = System.IO.Path.GetDirectoryName(absPath);
+            if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+            {
+                System.IO.Directory.CreateDirectory(dir);
+            }
+            connStr = $"Data Source={absPath}";
+        }
+    }
+    catch { /* fallback to original */ }
+}
+
+builder.Services.AddDbContext<TechPrepDbContext>(options => options.UseSqlite(connStr));
 
 // Identity (User con Guid y Roles)
 builder.Services
@@ -74,7 +100,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
             ClockSkew = TimeSpan.Zero,
             // Ensure role claims from JWT ("role") are recognized by [Authorize(Roles = ...)]
-            RoleClaimType = "role"
+            // Accept role claims. We'll also mirror any 'role' claims into ClaimTypes.Role in events below
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var identity = context.Principal?.Identity as System.Security.Claims.ClaimsIdentity;
+                if (identity != null)
+                {
+                    // Mirror 'role' claims to ClaimTypes.Role so [Authorize(Roles=...)] works regardless of token claim type
+                    var customRoleClaims = identity.FindAll("role");
+                    foreach (var rc in customRoleClaims)
+                    {
+                        // Avoid duplicates
+                        if (!identity.HasClaim(System.Security.Claims.ClaimTypes.Role, rc.Value))
+                        {
+                            identity.AddClaim(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, rc.Value));
+                        }
+                    }
+                }
+                return Task.CompletedTask;
+            }
         };
     });
 
@@ -134,6 +182,22 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TechPrepDbContext>();
     db.Database.Migrate();
+
+    // Safety net: ensure new normalized join table exists even if a migration was missed locally
+    try
+    {
+        db.Database.ExecuteSqlRaw(@"
+            CREATE TABLE IF NOT EXISTS SessionTemplateTopics (
+                TemplateId INTEGER NOT NULL,
+                TopicId INTEGER NOT NULL,
+                CONSTRAINT PK_SessionTemplateTopics PRIMARY KEY (TemplateId, TopicId),
+                CONSTRAINT FK_SessionTemplateTopics_SessionTemplates_TemplateId FOREIGN KEY (TemplateId) REFERENCES SessionTemplates (Id) ON DELETE CASCADE,
+                CONSTRAINT FK_SessionTemplateTopics_Topics_TopicId FOREIGN KEY (TopicId) REFERENCES Topics (Id) ON DELETE RESTRICT
+            );
+            CREATE INDEX IF NOT EXISTS IX_SessionTemplateTopics_TopicId ON SessionTemplateTopics(TopicId);
+        ");
+    }
+    catch { /* ignore - best effort fallback */ }
 
     // Seeder admin/roles
     await TechPrep.Infrastructure.Seed.AppSeeder.SeedAsync(scope.ServiceProvider);

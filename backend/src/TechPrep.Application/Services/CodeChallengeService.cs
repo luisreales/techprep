@@ -33,7 +33,15 @@ public class CodeChallengeService : ICodeChallengeService
             var challenges = await _unitOfWork.CodeChallenges.GetByFiltersAsync(
                 language, difficulty, searchTerm, tagIds, topicIds, skip, limit);
 
-            return _mapper.Map<List<ChallengeListItemDto>>(challenges);
+            return challenges.Select(challenge => new ChallengeListItemDto(
+                challenge.Id,
+                challenge.Title,
+                challenge.Language.ToString(),
+                challenge.Difficulty.ToString(),
+                challenge.HasSolution,
+                challenge.CreatedAt,
+                challenge.Tags?.Where(ct => ct?.Tag?.Name != null).Select(ct => ct.Tag.Name).ToList() ?? new List<string>()
+            )).ToList();
         }
         catch (Exception)
         {
@@ -46,11 +54,22 @@ public class CodeChallengeService : ICodeChallengeService
         try
         {
             var challenge = await _unitOfWork.CodeChallenges.GetWithDetailsAsync(id);
-            
+
             if (challenge == null)
                 return null;
 
-            return _mapper.Map<ChallengeDetailDto>(challenge);
+            return new ChallengeDetailDto(
+                challenge.Id,
+                challenge.Title,
+                challenge.Language.ToString(),
+                challenge.Difficulty.ToString(),
+                challenge.Prompt,
+                challenge.HasSolution,
+                challenge.OfficialSolution,
+                challenge.TestsJson,
+                challenge.Tags?.Where(ct => ct?.Tag?.Name != null).Select(ct => ct.Tag.Name).ToList() ?? new List<string>(),
+                challenge.Topics?.Where(ct => ct?.Topic?.Name != null).Select(ct => ct.Topic.Name).ToList() ?? new List<string>()
+            );
         }
         catch (Exception)
         {
@@ -81,7 +100,8 @@ public class CodeChallengeService : ICodeChallengeService
                 Prompt = createDto.Prompt,
                 OfficialSolution = createDto.OfficialSolution,
                 TestsJson = createDto.TestsJson,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             await _unitOfWork.CodeChallenges.AddAsync(challenge);
@@ -103,7 +123,21 @@ public class CodeChallengeService : ICodeChallengeService
 
             // Return the complete challenge with relationships
             var createdChallenge = await _unitOfWork.CodeChallenges.GetWithDetailsAsync(challenge.Id);
-            return _mapper.Map<ChallengeDetailDto>(createdChallenge);
+            if (createdChallenge == null)
+                throw new InvalidOperationException("Failed to retrieve created challenge");
+
+            return new ChallengeDetailDto(
+                createdChallenge.Id,
+                createdChallenge.Title,
+                createdChallenge.Language.ToString(),
+                createdChallenge.Difficulty.ToString(),
+                createdChallenge.Prompt,
+                createdChallenge.HasSolution,
+                createdChallenge.OfficialSolution,
+                createdChallenge.TestsJson,
+                createdChallenge.Tags?.Where(ct => ct?.Tag?.Name != null).Select(ct => ct.Tag.Name).ToList() ?? new List<string>(),
+                createdChallenge.Topics?.Where(ct => ct?.Topic?.Name != null).Select(ct => ct.Topic.Name).ToList() ?? new List<string>()
+            );
         }
         catch (Exception)
         {
@@ -170,7 +204,21 @@ public class CodeChallengeService : ICodeChallengeService
 
             // Return the updated challenge with relationships
             var updatedChallenge = await _unitOfWork.CodeChallenges.GetWithDetailsAsync(challenge.Id);
-            return _mapper.Map<ChallengeDetailDto>(updatedChallenge);
+            if (updatedChallenge == null)
+                return null;
+
+            return new ChallengeDetailDto(
+                updatedChallenge.Id,
+                updatedChallenge.Title,
+                updatedChallenge.Language.ToString(),
+                updatedChallenge.Difficulty.ToString(),
+                updatedChallenge.Prompt,
+                updatedChallenge.HasSolution,
+                updatedChallenge.OfficialSolution,
+                updatedChallenge.TestsJson,
+                updatedChallenge.Tags?.Where(ct => ct?.Tag?.Name != null).Select(ct => ct.Tag.Name).ToList() ?? new List<string>(),
+                updatedChallenge.Topics?.Where(ct => ct?.Topic?.Name != null).Select(ct => ct.Topic.Name).ToList() ?? new List<string>()
+            );
         }
         catch (Exception)
         {

@@ -247,7 +247,6 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -386,6 +385,119 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("LearningResources");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CorrectCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IncorrectCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("RandomOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TemplateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ThresholdWritten")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TimeLimitMin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TotalItems")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StartedAt");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PracticeSessions");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("AnsweredAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("ChallengeSolved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ChosenOptionsJson")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GivenText")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("IsCorrect")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ItemType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("MatchPercent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TimeMs")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId");
+
+                    b.HasIndex("TopicId");
+
+                    b.HasIndex("SessionId", "OrderIndex")
+                        .IsUnique();
+
+                    b.ToTable("PracticeSessionItems");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.Property<Guid>("Id")
@@ -481,11 +593,132 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("ResourceTopics");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ChallengesConfigJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("{}");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LevelsJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("[]");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QuestionsConfigJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("{}");
+
+                    b.Property<bool>("RandomOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("ThresholdWritten")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(80);
+
+                    b.Property<int?>("TimeLimitMin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TopicsJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("[]");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SessionTemplates");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplateItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ItemType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("TemplateId", "OrderIndex")
+                        .IsUnique();
+
+                    b.ToTable("SessionTemplateItems");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplateTopic", b =>
+                {
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("TemplateId", "TopicId");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("SessionTemplateTopics");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -750,6 +983,43 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSession", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.SessionTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionItem", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.PracticeSession", "Session")
+                        .WithMany("SessionItems")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
@@ -810,6 +1080,36 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplateItem", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.SessionTemplate", "Template")
+                        .WithMany("TemplateItems")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplateTopic", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.SessionTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Template");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.CodeChallenge", b =>
                 {
                     b.Navigation("Attempts");
@@ -831,11 +1131,21 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("TopicLinks");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSession", b =>
+                {
+                    b.Navigation("SessionItems");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.Navigation("Options");
 
                     b.Navigation("ResourceLinks");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplate", b =>
+                {
+                    b.Navigation("TemplateItems");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>

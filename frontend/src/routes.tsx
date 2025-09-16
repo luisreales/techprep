@@ -50,10 +50,6 @@ export const AppRoutes: React.FC = () => {
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
-        path="/admin/import"
-        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
-      />
-      <Route
         path="/admin/challenges"
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
@@ -63,6 +59,22 @@ export const AppRoutes: React.FC = () => {
       />
       <Route
         path="/admin/resources"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/session-templates"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/session-templates/new"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/session-templates/:id/edit"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/session-templates/:id/preview"
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route

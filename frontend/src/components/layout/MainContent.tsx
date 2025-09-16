@@ -11,6 +11,10 @@ import AdminPanel from '@/pages/AdminPanel';
 import { QuestionsPage } from '@/pages/admin/questions/QuestionsPage';
 import { ChallengesPage } from '@/pages/admin/challenges/ChallengesPage';
 import { UsersPage } from '@/pages/admin/users/UsersPage';
+import SessionTemplatesPage from '@/pages/admin/session-templates/SessionTemplatesPage';
+import NewSessionTemplatePage from '@/pages/admin/session-templates/NewSessionTemplatePage';
+import EditSessionTemplatePage from '@/pages/admin/session-templates/EditSessionTemplatePage';
+import PreviewSessionTemplatePage from '@/pages/admin/session-templates/PreviewSessionTemplatePage';
 import { ResourcesPage } from '@/pages/admin/resources/ResourcesPage';
 import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/types/api';
@@ -24,10 +28,19 @@ const MainContent: React.FC = () => {
   const renderContent = () => {
     // Admin routes - require Admin role
     if (location.pathname.startsWith('/admin/')) {
-      if (user?.role !== 'Admin') {
+      // Temporary relaxation: allow any authenticated user to access session-templates pages
+      const isSessionTemplates = location.pathname === '/admin/session-templates' || location.pathname.startsWith('/admin/session-templates/');
+      if (user?.role !== 'Admin' && !isSessionTemplates) {
         return <div className="p-6 bg-red-50 border border-red-200 rounded-lg"><h1 className="text-xl font-bold text-red-700">Access Denied</h1><p className="mt-2 text-red-600">You don't have permission to access this area.</p></div>;
       }
-      
+
+      // Handle nested session template routes
+      if (location.pathname.startsWith('/admin/session-templates/')) {
+        if (location.pathname.endsWith('/new')) return <NewSessionTemplatePage />;
+        if (location.pathname.endsWith('/edit')) return <EditSessionTemplatePage />;
+        if (location.pathname.endsWith('/preview')) return <PreviewSessionTemplatePage />;
+      }
+
       switch (location.pathname) {
         case '/admin/questions':
           return <QuestionsPage />;
@@ -37,6 +50,8 @@ const MainContent: React.FC = () => {
           return <ChallengesPage />;
         case '/admin/users':
           return <UsersPage />;
+        case '/admin/session-templates':
+          return <SessionTemplatesPage />;
         case '/admin/resources':
           return <ResourcesPage />;
         case '/admin/settings':

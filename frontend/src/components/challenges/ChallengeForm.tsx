@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { X, Plus, Trash2, Code2 } from 'lucide-react';
@@ -71,10 +71,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
     },
   });
 
-  const { fields: tagFields, append: appendTag, remove: removeTag } = useFieldArray({
-    control,
-    name: 'tags',
-  });
+  const watchTags = watch('tags') || [];
 
   const watchedTestsJson = watch('testsJson');
 
@@ -157,9 +154,18 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
   };
 
   const addTagFromInput = (tagName: string) => {
-    if (tagName && !tagFields.some(field => field.value === tagName)) {
-      appendTag(tagName);
-    }
+    if (!tagName) return;
+    if (!Array.isArray(watchTags)) return;
+    if (watchTags.includes(tagName)) return;
+    const next = [...watchTags, tagName];
+    setValue('tags', next as any, { shouldDirty: true, shouldValidate: true });
+  };
+
+  const removeTagAt = (index: number) => {
+    if (!Array.isArray(watchTags)) return;
+    const next = watchTags.slice();
+    next.splice(index, 1);
+    setValue('tags', next as any, { shouldDirty: true, shouldValidate: true });
   };
 
   if (!isOpen) return null;
@@ -254,7 +260,7 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                           className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         >
                           <option value="">Select language...</option>
-                          <option value="C#">C#</option>
+                          <option value="CSharp">C#</option>
                           <option value="JavaScript">JavaScript</option>
                           <option value="TypeScript">TypeScript</option>
                           <option value="Python">Python</option>
@@ -308,15 +314,15 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                       </label>
                       <div className="space-y-2">
                         <div className="flex flex-wrap gap-2">
-                          {tagFields.map((field, index) => (
+                          {watchTags.map((tag: string, index: number) => (
                             <div
-                              key={field.id}
+                              key={`${tag}-${index}`}
                               className="flex items-center gap-1 bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded-full"
                             >
-                              <span>{field.value}</span>
+                              <span>{tag}</span>
                               <button
                                 type="button"
-                                onClick={() => removeTag(index)}
+                                onClick={() => removeTagAt(index)}
                                 className="text-blue-600 hover:text-blue-800"
                               >
                                 <X className="h-3 w-3" />
@@ -324,20 +330,60 @@ export const ChallengeForm: React.FC<ChallengeFormProps> = ({
                             </div>
                           ))}
                         </div>
-                        <div className="flex flex-wrap gap-2">
-                          {availableTags
-                            .filter(tag => !tagFields.some(field => field.value === tag.name))
-                            .map((tag) => (
-                              <button
-                                key={tag.id}
-                                type="button"
-                                onClick={() => addTagFromInput(tag.name)}
-                                className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
-                              >
-                                + {tag.name}
-                              </button>
-                            ))}
+
+                        {/* Tag Input */}
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            placeholder="Add a tag..."
+                            className="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                const value = e.currentTarget.value.trim();
+                                if (value) {
+                                  addTagFromInput(value);
+                                  e.currentTarget.value = '';
+                                }
+                              }
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              const input = (e.currentTarget.previousElementSibling as HTMLInputElement);
+                              const value = input.value.trim();
+                              if (value) {
+                                addTagFromInput(value);
+                                input.value = '';
+                              }
+                            }}
+                            className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            Add
+                          </button>
                         </div>
+
+                        {/* Available Tags */}
+                        {availableTags.length > 0 && (
+                          <div>
+                            <p className="text-xs text-gray-500 mb-1">Quick add:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {availableTags
+                                .filter(tag => !watchTags.includes(tag.name))
+                                .map((tag) => (
+                                  <button
+                                    key={tag.id}
+                                    type="button"
+                                    onClick={() => addTagFromInput(tag.name)}
+                                    className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
+                                  >
+                                    + {tag.name}
+                                  </button>
+                                ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -46,6 +46,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       studentOnly: true
     },
     {
+      to: '/sessions',
+      icon: 'play_lesson',
+      label: 'Sessions',
+      studentOnly: true
+    },
+    {
       to: '/profile',
       icon: 'person',
       label: 'Profile',
@@ -71,12 +77,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       adminOnly: true
     },
     {
-      to: '/admin/import',
-      icon: 'upload_file',
-      label: 'Import Excel',
-      adminOnly: true
-    },
-    {
       to: '/admin/challenges',
       icon: 'code',
       label: 'Challenges',
@@ -92,6 +92,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       to: '/admin/resources',
       icon: 'library_books',
       label: 'Admin Resources',
+      adminOnly: true
+    },
+    {
+      to: '/admin/session-templates',
+      icon: 'assignment',
+      label: 'Session Templates',
       adminOnly: true
     },
     {

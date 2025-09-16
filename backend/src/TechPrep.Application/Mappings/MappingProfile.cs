@@ -50,14 +50,14 @@ public class MappingProfile : Profile
 
         // Code Challenge mappings
         CreateMap<CodeChallenge, ChallengeListItemDto>()
-            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => 
-                src.Tags.Select(ct => ct.Tag.Name)));
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
+                src.Tags != null ? src.Tags.Where(ct => ct != null && ct.Tag != null && ct.Tag.Name != null).Select(ct => ct.Tag.Name) : new List<string>()));
 
         CreateMap<CodeChallenge, ChallengeDetailDto>()
-            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src => 
-                src.Tags.Select(ct => ct.Tag.Name)))
-            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src => 
-                src.Topics.Select(ct => ct.Topic.Name)));
+            .ForMember(dest => dest.Tags, opt => opt.MapFrom(src =>
+                src.Tags != null ? src.Tags.Where(ct => ct != null && ct.Tag != null && ct.Tag.Name != null).Select(ct => ct.Tag.Name) : new List<string>()))
+            .ForMember(dest => dest.Topics, opt => opt.MapFrom(src =>
+                src.Topics != null ? src.Topics.Where(ct => ct != null && ct.Topic != null && ct.Topic.Name != null).Select(ct => ct.Topic.Name) : new List<string>()));
 
         CreateMap<ChallengeCreateDto, CodeChallenge>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())

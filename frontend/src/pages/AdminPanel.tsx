@@ -1,6 +1,31 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { adminUsersApi } from '@/services/admin/usersApi';
+import { questionsApi } from '@/services/admin/questionsApi';
+import { topicsApi } from '@/services/admin/topicsApi';
 
 const AdminPanel: React.FC = () => {
+  // Fetch totals
+  const { data: usersData } = useQuery({
+    queryKey: ['admin','users','count'],
+    queryFn: () => adminUsersApi.getUsers({ page: 1, pageSize: 1 }),
+  });
+  const { data: questionsData } = useQuery({
+    queryKey: ['admin','questions','count'],
+    queryFn: () => questionsApi.list({ page: 1, limit: 1 }),
+  });
+  const { data: topicsData } = useQuery({
+    queryKey: ['admin','topics','count'],
+    queryFn: () => topicsApi.list(),
+  });
+
+  const totalUsers = usersData?.total ?? usersData?.items?.length ?? 0;
+  const totalQuestions = questionsData?.data?.total ?? 0;
+  const totalTopics = topicsData?.data?.length ?? 0;
+  // Sessions total not implemented yet; placeholder 0
+  const totalSessions = 0;
+
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
@@ -14,10 +39,10 @@ const AdminPanel: React.FC = () => {
       {/* Admin Statistics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { icon: 'people', value: '1,234', label: 'Total Users', iconBg: 'bg-blue-100', iconColor: 'text-blue-600' },
-          { icon: 'quiz', value: '567', label: 'Questions', iconBg: 'bg-green-100', iconColor: 'text-green-600' },
-          { icon: 'category', value: '25', label: 'Topics', iconBg: 'bg-purple-100', iconColor: 'text-purple-600' },
-          { icon: 'assignment', value: '8,901', label: 'Sessions', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' }
+          { icon: 'people', value: totalUsers.toLocaleString(), label: 'Total Users', iconBg: 'bg-blue-100', iconColor: 'text-blue-600' },
+          { icon: 'quiz', value: totalQuestions.toLocaleString(), label: 'Questions', iconBg: 'bg-green-100', iconColor: 'text-green-600' },
+          { icon: 'category', value: totalTopics.toLocaleString(), label: 'Topics', iconBg: 'bg-purple-100', iconColor: 'text-purple-600' },
+          { icon: 'assignment', value: totalSessions.toLocaleString(), label: 'Sessions', iconBg: 'bg-orange-100', iconColor: 'text-orange-600' }
         ].map((stat) => (
           <div key={stat.label} className="bg-[var(--card-background)] rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
             <div className={`flex items-center justify-center w-12 h-12 rounded-full mb-3 ${stat.iconBg}`}>
@@ -42,9 +67,9 @@ const AdminPanel: React.FC = () => {
           <p className="text-[var(--text-secondary)] mb-4 text-sm">
             Manage user accounts, roles, and permissions.
           </p>
-          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+          <Link to="/admin/users" className="block text-center w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
             Manage Users
-          </button>
+          </Link>
         </div>
 
         {/* Question Management */}
@@ -58,9 +83,9 @@ const AdminPanel: React.FC = () => {
           <p className="text-[var(--text-secondary)] mb-4 text-sm">
             Create, edit, and organize practice questions.
           </p>
-          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+          <Link to="/admin/questions" className="block text-center w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
             Manage Questions
-          </button>
+          </Link>
         </div>
 
         {/* Import/Export */}
@@ -74,9 +99,9 @@ const AdminPanel: React.FC = () => {
           <p className="text-[var(--text-secondary)] mb-4 text-sm">
             Bulk import questions from Excel or export data.
           </p>
-          <button className="w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
-            Import/Export
-          </button>
+          <Link to="/admin/import" className="block text-center w-full px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200">
+            Import Questions
+          </Link>
         </div>
 
         {/* Analytics */}

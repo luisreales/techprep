@@ -111,15 +111,20 @@ export const ChallengesPage: React.FC = () => {
   };
 
   const handleSubmitForm = async (data: ChallengeCreate | ChallengeUpdate) => {
-    if (editingChallenge) {
-      await updateChallenge.mutateAsync({
-        id: editingChallenge.id,
-        payload: data as ChallengeUpdate,
-      });
-    } else {
-      await createChallenge.mutateAsync(data as ChallengeCreate);
+    try {
+      if (editingChallenge) {
+        await updateChallenge.mutateAsync({
+          id: editingChallenge.id,
+          payload: data as ChallengeUpdate,
+        });
+      } else {
+        await createChallenge.mutateAsync(data as ChallengeCreate);
+      }
+      setShowForm(false);
+    } catch (e: any) {
+      const msg = e?.response?.data?.message || e?.message || 'Failed to save challenge';
+      alert(msg);
     }
-    setShowForm(false);
   };
 
   const handleFilterChange = (key: keyof ChallengeListParams, value: any) => {
