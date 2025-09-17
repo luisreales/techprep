@@ -101,6 +101,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       adminOnly: true
     },
     {
+      to: '/admin/logs',
+      icon: 'description',
+      label: 'System Logs',
+      adminOnly: true
+    },
+    {
+      to: '/admin/maintenance',
+      icon: 'build',
+      label: 'Maintenance',
+      adminOnly: true
+    },
+    {
+      to: '/admin/health',
+      icon: 'health_and_safety',
+      label: 'Health Status',
+      adminOnly: true
+    },
+    {
       to: '/admin/settings',
       icon: 'settings',
       label: 'Settings',
@@ -131,15 +149,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center gap-3 p-6 border-b border-[var(--border-color)]">
-            <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">
+          <div className="flex items-center gap-2 p-4 border-b border-[var(--border-color)]">
+            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600">
               TechPrep
             </span>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4">
-            <ul className="space-y-2">
+          <nav className="flex-1 p-3 overflow-y-auto">
+            <ul className="space-y-1">
               {navItems.map((item) => {
                 // Filter based on user role
                 if (item.adminOnly && user?.role !== 'Admin') return null;
@@ -151,13 +169,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     <Link 
                       to={item.to}
                       onClick={onClose}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
                         isActive 
-                          ? 'bg-[var(--primary-color-light)] text-[var(--primary-color)] font-bold shadow-sm'
+                          ? 'bg-[var(--primary-color-light)] text-[var(--primary-color)] font-semibold shadow-sm'
                           : 'hover:bg-gray-50 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                       }`}
                     >
-                      <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                      <span className="material-symbols-outlined text-lg">{item.icon}</span>
                       {item.label}
                     </Link>
                   </li>
@@ -167,12 +185,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </nav>
 
           {/* Logout Button */}
-          <div className="p-4 border-t border-[var(--border-color)]">
+          <div className="p-3 border-t border-[var(--border-color)]">
             <button 
               onClick={handleLogout}
-              className="flex w-full items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium transition-all duration-200"
+              className="flex w-full items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium transition-all duration-200"
             >
-              <span className="material-symbols-outlined text-xl">logout</span>
+              <span className="material-symbols-outlined text-lg">logout</span>
               Logout
             </button>
           </div>

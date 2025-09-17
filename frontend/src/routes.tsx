@@ -82,6 +82,22 @@ export const AppRoutes: React.FC = () => {
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
+        path="/admin/logs"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/maintenance"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/health"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/import"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
         path="/help"
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
