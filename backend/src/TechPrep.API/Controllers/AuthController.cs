@@ -20,12 +20,14 @@ public class AuthController : ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly IConfiguration _config;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, ILogger<AuthController> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _config = config;
+        _logger = logger;
     }
 
     [HttpGet("me")]
@@ -52,9 +54,14 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
+        _logger.LogInformation("User registration attempt for email: {Email} from IP: {RemoteIpAddress}",
+            request.Email, HttpContext.Connection.RemoteIpAddress);
+
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
         {
+            _logger.LogWarning("Registration failed - email already exists: {Email} from IP: {RemoteIpAddress}",
+                request.Email, HttpContext.Connection.RemoteIpAddress);
             return BadRequest(new { message = "Email already registered." });
         }
 
@@ -71,9 +78,14 @@ public class AuthController : ControllerBase
         {
             // Assign Student role to new users
             await _userManager.AddToRoleAsync(user, "Student");
+
+            _logger.LogInformation("User registration successful for: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
+                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
         }
         if (!result.Succeeded)
         {
+            _logger.LogError("User registration failed for email: {Email} - Errors: {Errors} from IP: {RemoteIpAddress}",
+                request.Email, string.Join("; ", result.Errors.Select(e => e.Description)), HttpContext.Connection.RemoteIpAddress);
             return BadRequest(new { message = string.Join("; ", result.Errors.Select(e => e.Description)) });
         }
 
@@ -92,15 +104,22 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
+        _logger.LogInformation("Login attempt for email: {Email} from IP: {RemoteIpAddress}",
+            request.Email, HttpContext.Connection.RemoteIpAddress);
+
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
+            _logger.LogWarning("Failed login attempt - user not found for email: {Email} from IP: {RemoteIpAddress}",
+                request.Email, HttpContext.Connection.RemoteIpAddress);
             return Unauthorized(new { message = "Invalid credentials." });
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
         if (!result.Succeeded)
         {
+            _logger.LogWarning("Failed login attempt - invalid password for user: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
+                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
             return Unauthorized(new { message = "Invalid credentials." });
         }
 
@@ -113,6 +132,10 @@ public class AuthController : ControllerBase
             LastName = user.LastName,
             Role = user.Role == UserRole.Admin ? "Admin" : "Student"
         };
+
+        _logger.LogInformation("Successful login for user: {Email} (ID: {UserId}, Role: {Role}) from IP: {RemoteIpAddress}",
+            user.Email, user.Id, user.Role, HttpContext.Connection.RemoteIpAddress);
+
         return Ok(response);
     }
 

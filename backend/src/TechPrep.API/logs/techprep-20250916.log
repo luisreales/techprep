@@ -1,1 +1,866 @@
 2025-09-16 10:35:32.085 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-16 16:31:05.390 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 16:32:03.460 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 16:32:07.784 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-16 16:32:14.823 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-16 16:56:45.896 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 16:59:57.214 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-16 17:01:54.276 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 17:02:32.882 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-16 17:02:33.499 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-16 17:02:33.614 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-16 17:03:16.172 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-16 17:23:08.743 -05:00 [ERR] Failed to create backup
+System.IO.IOException: Entries cannot be created while previously created entries are still open.
+   at System.IO.Compression.ZipArchive.AcquireArchiveStream(ZipArchiveEntry entry)
+   at System.IO.Compression.ZipArchive.DoCreateEntry(String entryName, Nullable`1 compressionLevel)
+   at System.IO.Compression.ZipArchive.CreateEntry(String entryName)
+   at TechPrep.API.Controllers.Admin.MaintenanceController.GenerateMockBackup() in /Users/luisreales/techprep/backend/src/TechPrep.API/Controllers/Admin/AdminMaintenanceController.cs:line 221
+   at TechPrep.API.Controllers.Admin.MaintenanceController.CreateBackup() in /Users/luisreales/techprep/backend/src/TechPrep.API/Controllers/Admin/AdminMaintenanceController.cs:line 31
+2025-09-16 17:46:43.587 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 17:48:44.951 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 17:49:32.831 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-16 17:50:47.075 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 17:50:47.691 -05:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address http://127.0.0.1:5000: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (48): Address already in use
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-09-16 17:51:17.648 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-16 17:51:35.106 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-16 17:51:35.250 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-16 17:51:35.350 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 17:51:35.354 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 17:51:35.355 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 17:51:35.356 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 17:51:35.363 -05:00 [INF] Read 55 lines from techprep-20250916.log
+2025-09-16 17:51:35.364 -05:00 [INF] ParseLogLines started with 55 lines
+2025-09-16 17:51:35.394 -05:00 [INF] ParseLogLines completed, parsed 25 entries
+2025-09-16 17:51:35.395 -05:00 [INF] Parsed 25 log entries from techprep-20250916.log
+2025-09-16 17:51:35.395 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 17:51:35.398 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-16 17:51:35.403 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 17:51:35.403 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 17:51:35.409 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 17:51:35.409 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 17:51:35.409 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 17:51:35.438 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 17:51:35.438 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 17:51:35.439 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 17:51:35.439 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 17:51:35.439 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 17:51:35.440 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 17:51:35.441 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 17:51:35.441 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 17:51:35.441 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 17:51:35.441 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 17:51:35.485 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 17:51:35.485 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 17:51:35.486 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 17:51:35.486 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 17:51:35.486 -05:00 [INF] Total parsed logs before filtering: 172
+2025-09-16 17:51:35.486 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 17:51:35.487 -05:00 [INF] Final filtered count: 172, Page: 1, PageSize: 50
+2025-09-16 17:51:35.488 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 17:51:42.888 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 17:51:42.890 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 17:51:42.891 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 17:51:42.891 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 17:51:42.921 -05:00 [INF] Read 88 lines from techprep-20250916.log
+2025-09-16 17:51:42.922 -05:00 [INF] ParseLogLines started with 88 lines
+2025-09-16 17:51:42.924 -05:00 [INF] ParseLogLines completed, parsed 58 entries
+2025-09-16 17:51:42.924 -05:00 [INF] Parsed 58 log entries from techprep-20250916.log
+2025-09-16 17:51:42.925 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 17:51:42.955 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 17:51:42.956 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 17:51:42.962 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 17:51:42.962 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 17:51:42.963 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 17:51:42.965 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 17:51:42.965 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 17:51:42.965 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 17:51:42.966 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 17:51:42.966 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 17:51:42.967 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 17:51:42.967 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 17:51:42.968 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 17:51:42.968 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 17:51:42.968 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 17:51:42.970 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 17:51:42.970 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 17:51:42.970 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 17:51:42.970 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 17:51:42.971 -05:00 [INF] Total parsed logs before filtering: 205
+2025-09-16 17:51:42.971 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 17:51:42.971 -05:00 [INF] Final filtered count: 205, Page: 1, PageSize: 50
+2025-09-16 17:51:42.971 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 17:51:53.293 -05:00 [INF] Admin logs requested with filters - Level: Information, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 17:51:53.293 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 17:51:53.294 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 17:51:53.294 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 17:51:53.446 -05:00 [INF] Read 120 lines from techprep-20250916.log
+2025-09-16 17:51:53.447 -05:00 [INF] ParseLogLines started with 120 lines
+2025-09-16 17:51:53.459 -05:00 [INF] ParseLogLines completed, parsed 90 entries
+2025-09-16 17:51:53.459 -05:00 [INF] Parsed 90 log entries from techprep-20250916.log
+2025-09-16 17:51:53.459 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 17:51:53.537 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 17:51:53.537 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 17:51:53.548 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 17:51:53.548 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 17:51:53.548 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 17:51:53.550 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 17:51:53.550 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 17:51:53.551 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 17:51:53.551 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 17:51:53.551 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 17:51:53.552 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 17:51:53.552 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 17:51:53.553 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 17:51:53.553 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 17:51:53.553 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 17:51:53.554 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 17:51:53.554 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 17:51:53.554 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 17:51:53.555 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 17:51:53.555 -05:00 [INF] Total parsed logs before filtering: 237
+2025-09-16 17:51:53.555 -05:00 [INF] Applying filters - Level: Information, Query: null
+2025-09-16 17:51:53.558 -05:00 [INF] Level filter (Information) applied: 237 → 78 logs
+2025-09-16 17:51:53.558 -05:00 [INF] Final filtered count: 78, Page: 1, PageSize: 50
+2025-09-16 17:51:53.558 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 17:59:06.248 -05:00 [INF] Admin logs requested with filters - Level: Information, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 17:59:06.249 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 17:59:06.250 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 17:59:06.250 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 17:59:06.420 -05:00 [INF] Read 153 lines from techprep-20250916.log
+2025-09-16 17:59:06.420 -05:00 [INF] ParseLogLines started with 153 lines
+2025-09-16 17:59:06.426 -05:00 [INF] ParseLogLines completed, parsed 123 entries
+2025-09-16 17:59:06.426 -05:00 [INF] Parsed 123 log entries from techprep-20250916.log
+2025-09-16 17:59:06.426 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 17:59:06.433 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 17:59:06.433 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 17:59:06.438 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 17:59:06.438 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 17:59:06.438 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 17:59:06.487 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 17:59:06.487 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 17:59:06.488 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 17:59:06.488 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 17:59:06.488 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 17:59:06.489 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 17:59:06.489 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 17:59:06.490 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 17:59:06.490 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 17:59:06.490 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 17:59:06.491 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 17:59:06.491 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 17:59:06.491 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 17:59:06.492 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 17:59:06.492 -05:00 [INF] Total parsed logs before filtering: 270
+2025-09-16 17:59:06.492 -05:00 [INF] Applying filters - Level: Information, Query: null
+2025-09-16 17:59:06.492 -05:00 [INF] Level filter (Information) applied: 270 → 111 logs
+2025-09-16 17:59:06.492 -05:00 [INF] Final filtered count: 111, Page: 1, PageSize: 50
+2025-09-16 17:59:06.492 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 17:59:24.894 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 17:59:24.895 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 17:59:24.895 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 17:59:24.895 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 17:59:24.999 -05:00 [INF] Read 186 lines from techprep-20250916.log
+2025-09-16 17:59:24.999 -05:00 [INF] ParseLogLines started with 186 lines
+2025-09-16 17:59:25.009 -05:00 [INF] ParseLogLines completed, parsed 156 entries
+2025-09-16 17:59:25.010 -05:00 [INF] Parsed 156 log entries from techprep-20250916.log
+2025-09-16 17:59:25.010 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 17:59:25.067 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 17:59:25.068 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 17:59:25.074 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 17:59:25.074 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 17:59:25.074 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 17:59:25.077 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 17:59:25.077 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 17:59:25.078 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 17:59:25.078 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 17:59:25.078 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 17:59:25.130 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 17:59:25.130 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 17:59:25.130 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 17:59:25.130 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 17:59:25.130 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 17:59:25.132 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 17:59:25.132 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 17:59:25.132 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 17:59:25.132 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 17:59:25.132 -05:00 [INF] Total parsed logs before filtering: 303
+2025-09-16 17:59:25.132 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 17:59:25.132 -05:00 [INF] Final filtered count: 303, Page: 1, PageSize: 50
+2025-09-16 17:59:25.132 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:00:43.187 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-16 18:00:43.269 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-16 18:03:46.726 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:03:46.727 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:03:46.729 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:03:46.729 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:03:46.799 -05:00 [INF] Read 220 lines from techprep-20250916.log
+2025-09-16 18:03:46.800 -05:00 [INF] ParseLogLines started with 220 lines
+2025-09-16 18:03:46.805 -05:00 [INF] ParseLogLines completed, parsed 190 entries
+2025-09-16 18:03:46.805 -05:00 [INF] Parsed 190 log entries from techprep-20250916.log
+2025-09-16 18:03:46.805 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:03:46.813 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:03:46.813 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:03:46.817 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:03:46.818 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:03:46.818 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:03:46.821 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:03:46.822 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:03:46.822 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:03:46.822 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:03:46.822 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:03:46.823 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:03:46.823 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:03:46.823 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:03:46.823 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:03:46.823 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:03:46.825 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:03:46.825 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:03:46.825 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:03:46.825 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:03:46.825 -05:00 [INF] Total parsed logs before filtering: 337
+2025-09-16 18:03:46.825 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:03:46.825 -05:00 [INF] Final filtered count: 337, Page: 1, PageSize: 50
+2025-09-16 18:03:46.825 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:04:27.976 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:04:27.979 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:04:27.980 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:04:27.980 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:04:28.030 -05:00 [INF] Read 252 lines from techprep-20250916.log
+2025-09-16 18:04:28.031 -05:00 [INF] ParseLogLines started with 252 lines
+2025-09-16 18:04:28.035 -05:00 [INF] ParseLogLines completed, parsed 222 entries
+2025-09-16 18:04:28.035 -05:00 [INF] Parsed 222 log entries from techprep-20250916.log
+2025-09-16 18:04:28.036 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:04:28.044 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:04:28.044 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:04:28.050 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:04:28.050 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:04:28.050 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:04:28.164 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:04:28.164 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:04:28.165 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:04:28.165 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:04:28.165 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:04:28.166 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:04:28.166 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:04:28.166 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:04:28.166 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:04:28.166 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:04:28.168 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:04:28.168 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:04:28.168 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:04:28.168 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:04:28.168 -05:00 [INF] Total parsed logs before filtering: 369
+2025-09-16 18:04:28.168 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:04:28.168 -05:00 [INF] Final filtered count: 369, Page: 1, PageSize: 50
+2025-09-16 18:04:28.168 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:04:37.182 -05:00 [INF] Admin logs requested with filters - Level: Warning, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:04:37.182 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:04:37.183 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:04:37.183 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:04:37.186 -05:00 [INF] Read 284 lines from techprep-20250916.log
+2025-09-16 18:04:37.186 -05:00 [INF] ParseLogLines started with 284 lines
+2025-09-16 18:04:37.191 -05:00 [INF] ParseLogLines completed, parsed 254 entries
+2025-09-16 18:04:37.191 -05:00 [INF] Parsed 254 log entries from techprep-20250916.log
+2025-09-16 18:04:37.191 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:04:37.248 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:04:37.248 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:04:37.253 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:04:37.253 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:04:37.253 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:04:37.254 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:04:37.254 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:04:37.255 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:04:37.255 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:04:37.255 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:04:37.256 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:04:37.256 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:04:37.256 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:04:37.256 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:04:37.256 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:04:37.257 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:04:37.257 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:04:37.258 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:04:37.258 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:04:37.258 -05:00 [INF] Total parsed logs before filtering: 401
+2025-09-16 18:04:37.258 -05:00 [INF] Applying filters - Level: Warning, Query: null
+2025-09-16 18:04:37.258 -05:00 [INF] Level filter (Warning) applied: 401 → 126 logs
+2025-09-16 18:04:37.258 -05:00 [INF] Final filtered count: 126, Page: 1, PageSize: 50
+2025-09-16 18:04:37.258 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:04:40.166 -05:00 [INF] Admin logs requested with filters - Level: Error, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:04:40.166 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:04:40.167 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:04:40.167 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:04:40.223 -05:00 [INF] Read 317 lines from techprep-20250916.log
+2025-09-16 18:04:40.223 -05:00 [INF] ParseLogLines started with 317 lines
+2025-09-16 18:04:40.234 -05:00 [INF] ParseLogLines completed, parsed 287 entries
+2025-09-16 18:04:40.234 -05:00 [INF] Parsed 287 log entries from techprep-20250916.log
+2025-09-16 18:04:40.234 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:04:40.245 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:04:40.245 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:04:40.252 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:04:40.252 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:04:40.252 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:04:40.254 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:04:40.254 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:04:40.254 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:04:40.254 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:04:40.254 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:04:40.256 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:04:40.256 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:04:40.256 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:04:40.256 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:04:40.256 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:04:40.258 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:04:40.258 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:04:40.258 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:04:40.258 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:04:40.258 -05:00 [INF] Total parsed logs before filtering: 434
+2025-09-16 18:04:40.258 -05:00 [INF] Applying filters - Level: Error, Query: null
+2025-09-16 18:04:40.258 -05:00 [INF] Level filter (Error) applied: 434 → 33 logs
+2025-09-16 18:04:40.258 -05:00 [INF] Final filtered count: 33, Page: 1, PageSize: 50
+2025-09-16 18:04:40.258 -05:00 [INF] Returning 33 items for page 1
+2025-09-16 18:05:01.168 -05:00 [INF] Admin logs requested with filters - Level: Information, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:05:01.168 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:05:01.169 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:05:01.169 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:05:01.368 -05:00 [INF] Read 350 lines from techprep-20250916.log
+2025-09-16 18:05:01.369 -05:00 [INF] ParseLogLines started with 350 lines
+2025-09-16 18:05:01.381 -05:00 [INF] ParseLogLines completed, parsed 320 entries
+2025-09-16 18:05:01.381 -05:00 [INF] Parsed 320 log entries from techprep-20250916.log
+2025-09-16 18:05:01.381 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:05:01.469 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:05:01.470 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:05:01.513 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:05:01.513 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:05:01.513 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:05:01.515 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:05:01.515 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:05:01.516 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:05:01.516 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:05:01.516 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:05:01.517 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:05:01.517 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:05:01.517 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:05:01.517 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:05:01.517 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:05:01.519 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:05:01.519 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:05:01.519 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:05:01.519 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:05:01.519 -05:00 [INF] Total parsed logs before filtering: 467
+2025-09-16 18:05:01.519 -05:00 [INF] Applying filters - Level: Information, Query: null
+2025-09-16 18:05:01.519 -05:00 [INF] Level filter (Information) applied: 467 → 308 logs
+2025-09-16 18:05:01.519 -05:00 [INF] Final filtered count: 308, Page: 1, PageSize: 50
+2025-09-16 18:05:01.520 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:07:36.837 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:07:36.837 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:07:36.838 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:07:36.838 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:07:36.958 -05:00 [INF] Read 383 lines from techprep-20250916.log
+2025-09-16 18:07:36.959 -05:00 [INF] ParseLogLines started with 383 lines
+2025-09-16 18:07:36.969 -05:00 [INF] ParseLogLines completed, parsed 353 entries
+2025-09-16 18:07:36.969 -05:00 [INF] Parsed 353 log entries from techprep-20250916.log
+2025-09-16 18:07:36.969 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:07:36.978 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:07:36.979 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:07:36.984 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:07:36.984 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:07:36.985 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:07:36.987 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:07:36.987 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:07:36.988 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:07:36.988 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:07:36.988 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:07:36.989 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:07:36.989 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:07:36.990 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:07:36.990 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:07:36.990 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:07:37.021 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:07:37.022 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:07:37.022 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:07:37.022 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:07:37.022 -05:00 [INF] Total parsed logs before filtering: 500
+2025-09-16 18:07:37.022 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:07:37.022 -05:00 [INF] Final filtered count: 500, Page: 1, PageSize: 50
+2025-09-16 18:07:37.022 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:07:37.025 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:07:37.025 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:07:37.025 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:07:37.025 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:07:37.031 -05:00 [INF] Read 415 lines from techprep-20250916.log
+2025-09-16 18:07:37.031 -05:00 [INF] ParseLogLines started with 415 lines
+2025-09-16 18:07:37.039 -05:00 [INF] ParseLogLines completed, parsed 385 entries
+2025-09-16 18:07:37.039 -05:00 [INF] Parsed 385 log entries from techprep-20250916.log
+2025-09-16 18:07:37.039 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:07:37.073 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:07:37.073 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:07:37.078 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:07:37.078 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:07:37.078 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:07:37.080 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:07:37.080 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:07:37.080 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:07:37.080 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:07:37.080 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:07:37.082 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:07:37.082 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:07:37.082 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:07:37.082 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:07:37.082 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:07:37.084 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:07:37.084 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:07:37.084 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:07:37.084 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:07:37.084 -05:00 [INF] Total parsed logs before filtering: 532
+2025-09-16 18:07:37.084 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:07:37.084 -05:00 [INF] Final filtered count: 532, Page: 1, PageSize: 50
+2025-09-16 18:07:37.085 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:10:49.457 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:10:49.459 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:10:49.461 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:10:49.461 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:10:49.618 -05:00 [INF] Read 447 lines from techprep-20250916.log
+2025-09-16 18:10:49.619 -05:00 [INF] ParseLogLines started with 447 lines
+2025-09-16 18:10:49.629 -05:00 [INF] ParseLogLines completed, parsed 417 entries
+2025-09-16 18:10:49.630 -05:00 [INF] Parsed 417 log entries from techprep-20250916.log
+2025-09-16 18:10:49.630 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:10:49.714 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:10:49.714 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:10:49.722 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:10:49.723 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:10:49.723 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:10:49.724 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:10:49.724 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:10:49.725 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:10:49.725 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:10:49.725 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:10:49.726 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:10:49.726 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:10:49.727 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:10:49.727 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:10:49.727 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:10:49.728 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:10:49.729 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:10:49.729 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:10:49.729 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:10:49.729 -05:00 [INF] Total parsed logs before filtering: 564
+2025-09-16 18:10:49.729 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:10:49.730 -05:00 [INF] Final filtered count: 564, Page: 1, PageSize: 50
+2025-09-16 18:10:49.731 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:14:19.619 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:14:19.620 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:14:19.622 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:14:19.622 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:14:19.749 -05:00 [INF] Read 479 lines from techprep-20250916.log
+2025-09-16 18:14:19.749 -05:00 [INF] ParseLogLines started with 479 lines
+2025-09-16 18:14:19.765 -05:00 [INF] ParseLogLines completed, parsed 449 entries
+2025-09-16 18:14:19.766 -05:00 [INF] Parsed 449 log entries from techprep-20250916.log
+2025-09-16 18:14:19.766 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:14:19.799 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:14:19.799 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:14:19.812 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:14:19.812 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:14:19.812 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:14:19.814 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:14:19.814 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:14:19.816 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:14:19.816 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:14:19.817 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:14:19.818 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:14:19.818 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:14:19.819 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:14:19.819 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:14:19.819 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:14:19.822 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:14:19.823 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:14:19.825 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:14:19.825 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:14:19.825 -05:00 [INF] Total parsed logs before filtering: 596
+2025-09-16 18:14:19.825 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:14:19.826 -05:00 [INF] Final filtered count: 596, Page: 1, PageSize: 50
+2025-09-16 18:14:19.827 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:15:12.158 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:15:12.159 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:15:12.160 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:15:12.161 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:15:12.242 -05:00 [INF] Read 511 lines from techprep-20250916.log
+2025-09-16 18:15:12.242 -05:00 [INF] ParseLogLines started with 511 lines
+2025-09-16 18:15:12.260 -05:00 [INF] ParseLogLines completed, parsed 481 entries
+2025-09-16 18:15:12.260 -05:00 [INF] Parsed 481 log entries from techprep-20250916.log
+2025-09-16 18:15:12.260 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:15:12.319 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:15:12.319 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:15:12.336 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:15:12.336 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:15:12.336 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:15:12.338 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:15:12.338 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:15:12.340 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:15:12.340 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:15:12.340 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:15:12.341 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:15:12.341 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:15:12.343 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:15:12.343 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:15:12.343 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:15:12.345 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:15:12.345 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:15:12.346 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:15:12.346 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:15:12.346 -05:00 [INF] Total parsed logs before filtering: 628
+2025-09-16 18:15:12.346 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:15:12.347 -05:00 [INF] Final filtered count: 628, Page: 1, PageSize: 50
+2025-09-16 18:15:12.348 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:15:45.302 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:15:45.303 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:15:45.303 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:15:45.304 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:15:45.676 -05:00 [INF] Read 543 lines from techprep-20250916.log
+2025-09-16 18:15:45.677 -05:00 [INF] ParseLogLines started with 543 lines
+2025-09-16 18:15:45.697 -05:00 [INF] ParseLogLines completed, parsed 513 entries
+2025-09-16 18:15:45.697 -05:00 [INF] Parsed 513 log entries from techprep-20250916.log
+2025-09-16 18:15:45.698 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:15:45.706 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:15:45.706 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:15:45.722 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:15:45.722 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:15:45.722 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:15:45.724 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:15:45.724 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:15:45.726 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:15:45.726 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:15:45.726 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:15:45.727 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:15:45.727 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:15:45.728 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:15:45.728 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:15:45.728 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:15:45.730 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:15:45.731 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:15:45.732 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:15:45.732 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:15:45.732 -05:00 [INF] Total parsed logs before filtering: 660
+2025-09-16 18:15:45.732 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:15:45.732 -05:00 [INF] Final filtered count: 660, Page: 1, PageSize: 50
+2025-09-16 18:15:45.733 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:18:41.353 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:18:41.354 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:18:41.355 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:18:41.355 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:18:41.408 -05:00 [INF] Read 575 lines from techprep-20250916.log
+2025-09-16 18:18:41.408 -05:00 [INF] ParseLogLines started with 575 lines
+2025-09-16 18:18:41.423 -05:00 [INF] ParseLogLines completed, parsed 545 entries
+2025-09-16 18:18:41.423 -05:00 [INF] Parsed 545 log entries from techprep-20250916.log
+2025-09-16 18:18:41.423 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:18:41.432 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:18:41.433 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:18:41.448 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:18:41.448 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:18:41.448 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:18:41.450 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:18:41.450 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:18:41.452 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:18:41.452 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:18:41.452 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:18:41.454 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:18:41.454 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:18:41.456 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:18:41.456 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:18:41.456 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:18:41.458 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:18:41.458 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:18:41.459 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:18:41.460 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:18:41.460 -05:00 [INF] Total parsed logs before filtering: 692
+2025-09-16 18:18:41.460 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:18:41.460 -05:00 [INF] Final filtered count: 692, Page: 1, PageSize: 50
+2025-09-16 18:18:41.460 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:20:15.183 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:20:15.184 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:20:15.185 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:20:15.185 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:20:15.363 -05:00 [INF] Read 607 lines from techprep-20250916.log
+2025-09-16 18:20:15.364 -05:00 [INF] ParseLogLines started with 607 lines
+2025-09-16 18:20:15.377 -05:00 [INF] ParseLogLines completed, parsed 577 entries
+2025-09-16 18:20:15.377 -05:00 [INF] Parsed 577 log entries from techprep-20250916.log
+2025-09-16 18:20:15.377 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:20:15.388 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:20:15.388 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:20:15.404 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:20:15.404 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:20:15.404 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:20:15.406 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:20:15.406 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:20:15.409 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:20:15.409 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:20:15.409 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:20:15.411 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:20:15.411 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:20:15.411 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:20:15.411 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:20:15.411 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:20:15.412 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:20:15.412 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:20:15.413 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:20:15.413 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:20:15.414 -05:00 [INF] Total parsed logs before filtering: 724
+2025-09-16 18:20:15.414 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:20:15.414 -05:00 [INF] Final filtered count: 724, Page: 1, PageSize: 50
+2025-09-16 18:20:15.414 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:27:22.723 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:27:22.725 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:27:22.727 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:27:22.727 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:27:23.083 -05:00 [INF] Read 639 lines from techprep-20250916.log
+2025-09-16 18:27:23.083 -05:00 [INF] ParseLogLines started with 639 lines
+2025-09-16 18:27:23.093 -05:00 [INF] ParseLogLines completed, parsed 609 entries
+2025-09-16 18:27:23.093 -05:00 [INF] Parsed 609 log entries from techprep-20250916.log
+2025-09-16 18:27:23.093 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:27:23.231 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:27:23.231 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:27:23.269 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:27:23.269 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:27:23.269 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:27:23.273 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:27:23.273 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:27:23.276 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:27:23.277 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:27:23.277 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:27:23.278 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:27:23.278 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:27:23.280 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:27:23.280 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:27:23.280 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:27:23.284 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:27:23.284 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:27:23.290 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:27:23.290 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:27:23.291 -05:00 [INF] Total parsed logs before filtering: 756
+2025-09-16 18:27:23.291 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:27:23.293 -05:00 [INF] Final filtered count: 756, Page: 1, PageSize: 50
+2025-09-16 18:27:23.297 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:32:17.308 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:32:17.309 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:32:17.309 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:32:17.309 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:32:17.520 -05:00 [INF] Read 671 lines from techprep-20250916.log
+2025-09-16 18:32:17.520 -05:00 [INF] ParseLogLines started with 671 lines
+2025-09-16 18:32:17.547 -05:00 [INF] ParseLogLines completed, parsed 641 entries
+2025-09-16 18:32:17.548 -05:00 [INF] Parsed 641 log entries from techprep-20250916.log
+2025-09-16 18:32:17.548 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:32:17.582 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:32:17.583 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:32:17.602 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:32:17.602 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:32:17.602 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:32:17.604 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:32:17.604 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:32:17.606 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:32:17.606 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:32:17.606 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:32:17.608 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:32:17.608 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:32:17.609 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:32:17.609 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:32:17.609 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:32:17.611 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:32:17.611 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:32:17.612 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:32:17.612 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:32:17.613 -05:00 [INF] Total parsed logs before filtering: 788
+2025-09-16 18:32:17.613 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:32:17.613 -05:00 [INF] Final filtered count: 788, Page: 1, PageSize: 50
+2025-09-16 18:32:17.614 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:40:10.842 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:40:10.843 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:40:10.847 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:40:10.847 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:40:11.163 -05:00 [INF] Read 703 lines from techprep-20250916.log
+2025-09-16 18:40:11.163 -05:00 [INF] ParseLogLines started with 703 lines
+2025-09-16 18:40:11.189 -05:00 [INF] ParseLogLines completed, parsed 673 entries
+2025-09-16 18:40:11.189 -05:00 [INF] Parsed 673 log entries from techprep-20250916.log
+2025-09-16 18:40:11.189 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:40:11.220 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:40:11.221 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:40:11.236 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:40:11.236 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:40:11.236 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:40:11.239 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:40:11.239 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:40:11.241 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:40:11.241 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:40:11.241 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:40:11.242 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:40:11.243 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:40:11.243 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:40:11.243 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:40:11.243 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:40:11.245 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:40:11.245 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:40:11.246 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:40:11.246 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:40:11.246 -05:00 [INF] Total parsed logs before filtering: 820
+2025-09-16 18:40:11.246 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:40:11.246 -05:00 [INF] Final filtered count: 820, Page: 1, PageSize: 50
+2025-09-16 18:40:11.247 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 18:40:15.076 -05:00 [ERR] Failed to create backup
+System.IO.IOException: Entries cannot be created while previously created entries are still open.
+   at System.IO.Compression.ZipArchive.AcquireArchiveStream(ZipArchiveEntry entry)
+   at System.IO.Compression.ZipArchive.DoCreateEntry(String entryName, Nullable`1 compressionLevel)
+   at System.IO.Compression.ZipArchive.CreateEntry(String entryName)
+   at TechPrep.API.Controllers.Admin.MaintenanceController.GenerateMockBackup() in /Users/luisreales/techprep/backend/src/TechPrep.API/Controllers/Admin/AdminMaintenanceController.cs:line 221
+   at TechPrep.API.Controllers.Admin.MaintenanceController.CreateBackup() in /Users/luisreales/techprep/backend/src/TechPrep.API/Controllers/Admin/AdminMaintenanceController.cs:line 31
+2025-09-16 18:44:23.805 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 18:44:23.806 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 18:44:23.808 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 18:44:23.808 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 18:44:24.247 -05:00 [INF] Read 742 lines from techprep-20250916.log
+2025-09-16 18:44:24.248 -05:00 [INF] ParseLogLines started with 742 lines
+2025-09-16 18:44:24.270 -05:00 [INF] ParseLogLines completed, parsed 706 entries
+2025-09-16 18:44:24.270 -05:00 [INF] Parsed 706 log entries from techprep-20250916.log
+2025-09-16 18:44:24.270 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 18:44:24.313 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 18:44:24.313 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 18:44:24.330 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 18:44:24.330 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 18:44:24.330 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 18:44:24.332 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 18:44:24.332 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 18:44:24.334 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 18:44:24.335 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 18:44:24.335 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 18:44:24.337 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 18:44:24.337 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 18:44:24.340 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 18:44:24.340 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 18:44:24.340 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 18:44:24.342 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 18:44:24.342 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 18:44:24.343 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 18:44:24.343 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 18:44:24.343 -05:00 [INF] Total parsed logs before filtering: 853
+2025-09-16 18:44:24.344 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 18:44:24.344 -05:00 [INF] Final filtered count: 853, Page: 1, PageSize: 50
+2025-09-16 18:44:24.344 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 19:51:57.060 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 19:51:57.067 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 19:51:57.070 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 19:51:57.070 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 19:51:57.228 -05:00 [INF] Read 774 lines from techprep-20250916.log
+2025-09-16 19:51:57.230 -05:00 [INF] ParseLogLines started with 774 lines
+2025-09-16 19:51:57.279 -05:00 [INF] ParseLogLines completed, parsed 738 entries
+2025-09-16 19:51:57.279 -05:00 [INF] Parsed 738 log entries from techprep-20250916.log
+2025-09-16 19:51:57.279 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 19:51:57.302 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 19:51:57.302 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 19:51:57.347 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 19:51:57.360 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 19:51:57.361 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 19:51:57.383 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 19:51:57.384 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 19:51:57.388 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 19:51:57.389 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 19:51:57.389 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 19:51:57.395 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 19:51:57.396 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 19:51:57.402 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 19:51:57.402 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 19:51:57.402 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 19:51:57.409 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 19:51:57.410 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 19:51:57.414 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 19:51:57.414 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 19:51:57.415 -05:00 [INF] Total parsed logs before filtering: 885
+2025-09-16 19:51:57.416 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 19:51:57.417 -05:00 [INF] Final filtered count: 885, Page: 1, PageSize: 50
+2025-09-16 19:51:57.417 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 20:17:45.364 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 20:17:45.366 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 20:17:45.369 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 20:17:45.370 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 20:17:45.550 -05:00 [INF] Read 806 lines from techprep-20250916.log
+2025-09-16 20:17:45.551 -05:00 [INF] ParseLogLines started with 806 lines
+2025-09-16 20:17:45.577 -05:00 [INF] ParseLogLines completed, parsed 770 entries
+2025-09-16 20:17:45.577 -05:00 [INF] Parsed 770 log entries from techprep-20250916.log
+2025-09-16 20:17:45.577 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 20:17:45.587 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 20:17:45.587 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 20:17:45.609 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 20:17:45.609 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 20:17:45.609 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 20:17:45.612 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 20:17:45.612 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 20:17:45.614 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 20:17:45.614 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 20:17:45.614 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 20:17:45.616 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 20:17:45.616 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 20:17:45.616 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 20:17:45.616 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 20:17:45.616 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 20:17:45.618 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 20:17:45.618 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 20:17:45.620 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 20:17:45.620 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 20:17:45.620 -05:00 [INF] Total parsed logs before filtering: 917
+2025-09-16 20:17:45.620 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 20:17:45.620 -05:00 [INF] Final filtered count: 917, Page: 1, PageSize: 50
+2025-09-16 20:17:45.624 -05:00 [INF] Returning 50 items for page 1
+2025-09-16 20:29:17.242 -05:00 [INF] Admin logs requested with filters - Level: null, Query: null, DateFrom: null, DateTo: null, LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs
+2025-09-16 20:29:17.243 -05:00 [INF] ReadLogFiles started - LogsPath: /Users/luisreales/techprep/backend/src/TechPrep.API/logs, Exists: true
+2025-09-16 20:29:17.243 -05:00 [INF] Found 8 log files: techprep-20250916.log, techprep-20250915.log, techprep-20250914.log, techprep-20250913.log, techprep-20250912.log, techprep-20250911.log, techprep-20250910.log, techprep-20250909.log
+2025-09-16 20:29:17.243 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250916.log
+2025-09-16 20:29:17.344 -05:00 [INF] Read 838 lines from techprep-20250916.log
+2025-09-16 20:29:17.344 -05:00 [INF] ParseLogLines started with 838 lines
+2025-09-16 20:29:17.369 -05:00 [INF] ParseLogLines completed, parsed 802 entries
+2025-09-16 20:29:17.369 -05:00 [INF] Parsed 802 log entries from techprep-20250916.log
+2025-09-16 20:29:17.369 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250915.log
+2025-09-16 20:29:17.378 -05:00 [INF] Read 547 lines from techprep-20250915.log
+2025-09-16 20:29:17.379 -05:00 [INF] ParseLogLines started with 547 lines
+2025-09-16 20:29:17.401 -05:00 [INF] ParseLogLines completed, parsed 93 entries
+2025-09-16 20:29:17.401 -05:00 [INF] Parsed 93 log entries from techprep-20250915.log
+2025-09-16 20:29:17.402 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250914.log
+2025-09-16 20:29:17.453 -05:00 [INF] Read 102 lines from techprep-20250914.log
+2025-09-16 20:29:17.453 -05:00 [INF] ParseLogLines started with 102 lines
+2025-09-16 20:29:17.455 -05:00 [INF] ParseLogLines completed, parsed 24 entries
+2025-09-16 20:29:17.455 -05:00 [INF] Parsed 24 log entries from techprep-20250914.log
+2025-09-16 20:29:17.455 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250913.log
+2025-09-16 20:29:17.456 -05:00 [INF] Read 59 lines from techprep-20250913.log
+2025-09-16 20:29:17.456 -05:00 [INF] ParseLogLines started with 59 lines
+2025-09-16 20:29:17.457 -05:00 [INF] ParseLogLines completed, parsed 8 entries
+2025-09-16 20:29:17.457 -05:00 [INF] Parsed 8 log entries from techprep-20250913.log
+2025-09-16 20:29:17.457 -05:00 [INF] Reading log file: /Users/luisreales/techprep/backend/src/TechPrep.API/logs/techprep-20250912.log
+2025-09-16 20:29:17.459 -05:00 [INF] Read 70 lines from techprep-20250912.log
+2025-09-16 20:29:17.459 -05:00 [INF] ParseLogLines started with 70 lines
+2025-09-16 20:29:17.460 -05:00 [INF] ParseLogLines completed, parsed 22 entries
+2025-09-16 20:29:17.461 -05:00 [INF] Parsed 22 log entries from techprep-20250912.log
+2025-09-16 20:29:17.461 -05:00 [INF] Total parsed logs before filtering: 949
+2025-09-16 20:29:17.461 -05:00 [INF] Applying filters - Level: null, Query: null
+2025-09-16 20:29:17.461 -05:00 [INF] Final filtered count: 949, Page: 1, PageSize: 50
+2025-09-16 20:29:17.461 -05:00 [INF] Returning 50 items for page 1

@@ -29,6 +29,9 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
     public DbSet<SessionTemplateTopic> SessionTemplateTopics { get; set; } = null!;
     public DbSet<PracticeSession> PracticeSessions { get; set; } = null!;
     public DbSet<PracticeSessionItem> PracticeSessionItems { get; set; } = null!;
+
+    // Settings
+    public DbSet<AppSetting> AppSettings { get; set; } = null!;
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -295,6 +298,19 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
                   .WithMany()
                   .HasForeignKey(e => e.TopicId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // Settings configuration
+        builder.Entity<AppSetting>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Key).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Value).HasMaxLength(1000);
+            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.UpdatedAt).IsRequired();
+            entity.Property(e => e.UpdatedBy).HasMaxLength(100);
+            entity.HasIndex(e => e.Key).IsUnique();
         });
     }
 }

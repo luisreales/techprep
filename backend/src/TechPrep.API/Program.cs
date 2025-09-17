@@ -32,6 +32,10 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<ICodeChallengeService, CodeChallengeService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserAdminService, UserAdminService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
+
+// Add memory cache for settings
+builder.Services.AddMemoryCache();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -205,6 +209,10 @@ using (var scope = app.Services.CreateScope())
     // Seeder topics/questions
     var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<TechPrep.Core.Entities.User>>();
     await TechPrep.Infrastructure.Data.SeedData.SeedAsync(db, userManager);
+
+    // Seed default settings
+    var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService>();
+    await ((SettingsService)settingsService).SeedDefaultSettingsAsync();
 }
 
 if (app.Environment.IsDevelopment())

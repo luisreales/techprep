@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TechPrep.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+251f07da0709217f246c71a72c18bf2dc2255002")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12737100e146111f6abca38d0be86976dcf9d4e9")]
 [assembly: System.Reflection.AssemblyProductAttribute("TechPrep.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TechPrep.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
