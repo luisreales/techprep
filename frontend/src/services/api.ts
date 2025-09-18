@@ -40,16 +40,34 @@ export const apiClient = {
     firstName: string;
     lastName: string;
   }) {
-    const { data } = await http.post<ApiResponse>("/auth/register", user);
-    return data;
+    try {
+      const { data } = await http.post<AuthOk>("/auth/register", user);
+      return data; // AuthOk
+    } catch (err) {
+      const axErr = err as AxiosError<BackendError>;
+      if (axErr.response?.data?.message) {
+        return axErr.response.data; // BackendError { message }
+      }
+      // Fallback unexpected
+      return { message: 'Network error occurred' };
+    }
   },
   async refreshToken(refreshToken: string) {
     const { data } = await http.post<ApiResponse>("/auth/refresh", { refreshToken });
     return data;
   },
   async forgotPassword(email: string) {
-    const { data } = await http.post<ApiResponse>("/auth/forgot-password", { email });
-    return data;
+    try {
+      const { data } = await http.post<{ message: string }>("/auth/forgot-password", { email });
+      return data; // { message: "If the email exists, a reset link will be sent." }
+    } catch (err) {
+      const axErr = err as AxiosError<BackendError>;
+      if (axErr.response?.data?.message) {
+        return axErr.response.data; // BackendError { message }
+      }
+      // Fallback unexpected
+      return { message: 'Network error occurred' };
+    }
   },
   async resetPassword(token: string, password: string) {
     const { data } = await http.post<ApiResponse>("/auth/reset-password", { token, password });
@@ -73,12 +91,16 @@ export const apiClient = {
   },
 
   // Sessions
-  async startSession(payload: { topicId: number; mode: string; questionCount: number }) {
-    const { data } = await http.post<ApiResponse<Session>>('/sessions', payload);
+  async createSession(payload: { topicId?: number; level?: string; mode: string; questionCount: number }) {
+    const { data } = await http.post<ApiResponse<{ sessionId: string; questionCount: number }>>('/sessions', payload);
     return data;
   },
-  async submitAnswer(sessionId: string, answer: SessionAnswer) {
+  async submitAnswer(sessionId: string, answer: { questionId: string; answer: string; timeSpentMs: number; matchPercentage?: number }) {
     const { data } = await http.post<ApiResponse>(`/sessions/${sessionId}/answers`, answer);
+    return data;
+  },
+  async finishSession(sessionId: string) {
+    const { data } = await http.post<ApiResponse>(`/sessions/${sessionId}/finish`);
     return data;
   },
   async getSessionSummary(sessionId: string) {

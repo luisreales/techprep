@@ -1,5 +1,6 @@
 /Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/appsettings.Development.json
 /Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/appsettings.json
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/TechPrep.API.staticwebassets.runtime.json
 /Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/TechPrep.API.staticwebassets.endpoints.json
 /Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/TechPrep.API
 /Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/TechPrep.API.deps.json
@@ -167,3 +168,9 @@
 /Users/luisreales/techprep/backend/src/TechPrep.API/obj/Debug/net8.0/TechPrep.API.pdb
 /Users/luisreales/techprep/backend/src/TechPrep.API/obj/Debug/net8.0/TechPrep.API.genruntimeconfig.cache
 /Users/luisreales/techprep/backend/src/TechPrep.API/obj/Debug/net8.0/ref/TechPrep.API.dll
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/appsettings.Production.json
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/BouncyCastle.Cryptography.dll
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/MailKit.dll
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/MimeKit.dll
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/luisreales/techprep/backend/src/TechPrep.API/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll

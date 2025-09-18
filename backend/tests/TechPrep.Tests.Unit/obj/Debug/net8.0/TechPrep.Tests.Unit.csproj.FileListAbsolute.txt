@@ -155,7 +155,6 @@
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Diagnostics.EventLog.Messages.dll
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Diagnostics.EventLog.dll
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/runtimes/win/lib/net7.0/System.Drawing.Common.dll
-/Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/runtimes/win/lib/net7.0/System.Security.Cryptography.Pkcs.dll
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/TechPrep.Application.dll
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/TechPrep.Core.dll
@@ -175,3 +174,7 @@
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/obj/Debug/net8.0/TechPrep.Tests.Unit.pdb
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/obj/Debug/net8.0/TechPrep.Tests.Unit.genruntimeconfig.cache
 /Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/obj/Debug/net8.0/ref/TechPrep.Tests.Unit.dll
+/Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/BouncyCastle.Cryptography.dll
+/Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/MailKit.dll
+/Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/MimeKit.dll
+/Users/luisreales/techprep/backend/tests/TechPrep.Tests.Unit/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll

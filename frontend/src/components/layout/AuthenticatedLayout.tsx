@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
-import TopNavbar from './TopNavbar';
+import TopBar from './TopBar';
 import MainContent from './MainContent';
 
 const AuthenticatedLayout: React.FC = () => {
@@ -28,7 +28,7 @@ const AuthenticatedLayout: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col lg:pl-64">
         {/* Top Navbar */}
-        <TopNavbar onMenuToggle={toggleSidebar} />
+        <TopBar onMenuToggle={toggleSidebar} />
 
         {/* Main Content Area */}
         <MainContent />

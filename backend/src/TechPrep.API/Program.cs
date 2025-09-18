@@ -8,6 +8,7 @@ using TechPrep.Infrastructure.Repositories;
 using TechPrep.Application.Interfaces;
 using TechPrep.Application.Services;
 using TechPrep.Application.Mappings;
+using TechPrep.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<ICodeChallengeService, CodeChallengeService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Add memory cache for settings
 builder.Services.AddMemoryCache();
@@ -78,6 +80,7 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredLength = 6;
         options.User.RequireUniqueEmail = true;
+        options.SignIn.RequireConfirmedEmail = true;
     })
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<TechPrepDbContext>()
@@ -223,6 +226,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("FrontendDev");          // <-- place CORS very early
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

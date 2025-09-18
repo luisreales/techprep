@@ -9,10 +9,91 @@
   --primary-color: #137fec;
 }
 
+/* Light Theme (Default) */
+:root,
+html[data-theme="light"],
+body[data-theme="light"] {
+  --primary-color: #4f46e5;
+  --primary-color-light: #e0e7ff;
+  --background-color: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --card-background: #ffffff;
+  --border-color: #e2e8f0;
+  --accent-color: #10b981;
+  --hover-background: #f1f5f9;
+  --input-background: #ffffff;
+  --input-border: #d1d5db;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme */
+html[data-theme="dark"],
+body[data-theme="dark"] {
+  --primary-color: #6366f1;
+  --primary-color-light: #312e81;
+  --background-color: #0f172a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --card-background: #1e293b;
+  --border-color: #334155;
+  --accent-color: #10b981;
+  --hover-background: #334155;
+  --input-background: #1e293b;
+  --input-border: #475569;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Blue Theme */
+html[data-theme="blue"],
+body[data-theme="blue"] {
+  --primary-color: #2563eb;
+  --primary-color-light: #dbeafe;
+  --background-color: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --card-background: #ffffff;
+  --border-color: #e2e8f0;
+  --accent-color: #2563eb;
+  --hover-background: #eff6ff;
+  --input-background: #ffffff;
+  --input-border: #d1d5db;
+  --shadow-color: rgba(37, 99, 235, 0.1);
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
   margin: 0;
   padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Force theme updates on all elements */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Theme-aware utility classes */
+.theme-text-primary {
+  color: var(--text-primary) !important;
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.theme-bg-card {
+  background-color: var(--card-background) !important;
+}
+
+.theme-bg-hover {
+  background-color: var(--hover-background) !important;
+}
+
+.theme-border {
+  border-color: var(--border-color) !important;
 }
 
 /* Material Symbols setup */

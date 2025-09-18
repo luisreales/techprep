@@ -1,12 +1,20 @@
 {
   "Version": 1,
-  "Hash": "F0xHFD0OsdtBRfHP7oTaSSqBy93SOao5Krm75vEbg7g=",
+  "Hash": "YuVrfeGTwn+uTU8Y4yG2QZaFepiJgrqliQIiXoAJzLI=",
   "Source": "TechPrep.API",
   "BasePath": "_content/TechPrep.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "TechPrep.API/wwwroot",
+      "Source": "TechPrep.API",
+      "ContentRoot": "/Users/luisreales/techprep/backend/src/TechPrep.API/wwwroot/",
+      "BasePath": "_content/TechPrep.API",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [],
   "Endpoints": []
 }

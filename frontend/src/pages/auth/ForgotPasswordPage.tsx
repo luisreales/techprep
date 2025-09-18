@@ -16,10 +16,11 @@ export const ForgotPasswordPage: React.FC = () => {
 
     const response = await apiClient.forgotPassword(email);
 
-    if (response.success) {
-      setMessage('If an account exists for this email, a reset link has been sent.');
+    // The API now returns { message: "..." } directly on success
+    if (response.message) {
+      setMessage(response.message);
     } else {
-      setError(response.error?.message || 'Request failed');
+      setError('Request failed');
     }
 
     setIsLoading(false);

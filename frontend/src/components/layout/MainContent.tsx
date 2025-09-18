@@ -2,10 +2,11 @@ import React from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import Practice from '@/pages/Practice';
+import Sessions from '@/pages/Sessions';
 import Challenges from '@/pages/Challenges';
 import ChallengeDetail from '@/pages/ChallengeDetail';
 import Resources from '@/pages/Resources';
-import Profile from '@/pages/Profile';
+import ProfilePage from '@/pages/profile/ProfilePage';
 import Help from '@/pages/Help';
 import AdminPanel from '@/pages/AdminPanel';
 import { QuestionsPage } from '@/pages/admin/questions/QuestionsPage';
@@ -92,12 +93,14 @@ const MainContent: React.FC = () => {
         return <Dashboard />;
       case '/practice':
         return <Practice />;
+      case '/sessions':
+        return <Sessions />;
       case '/challenges':
         return <Challenges />;
       case '/resources':
         return <Resources />;
       case '/profile':
-        return <Profile />;
+        return <ProfilePage />;
       case '/help':
         return <Help />;
       case '/admin':

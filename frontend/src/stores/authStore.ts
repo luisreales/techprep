@@ -131,33 +131,25 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true, error: null });
 
         try {
-          const response = (await apiClient.register(userData)) as BackendError | ApiResponse<RegisterSuccessData>;
+          const response = (await apiClient.register(userData)) as BackendError | { message: string };
 
           if (isBackendError(response)) {
             set({ isLoading: false, error: response.message });
             return false;
           }
 
-          if (response.success && response.data) {
-            const { user, accessToken, refreshToken } = response.data;
-
-            apiClient.setToken(accessToken);
-
+          // Registration successful - now requires email confirmation
+          if (response.message) {
             set({
-              user,
-              accessToken,
-              refreshToken,
-              isAuthenticated: true,
               isLoading: false,
               error: null,
             });
-
             return true;
           }
 
           set({
             isLoading: false,
-            error: response.error?.message ?? 'Registration failed',
+            error: 'Registration failed',
           });
           return false;
         } catch (err) {

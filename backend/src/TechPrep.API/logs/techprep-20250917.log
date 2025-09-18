@@ -95,3 +95,391 @@
 2025-09-17 09:56:00.251 -05:00 [INF] Applying filters - Level: null, Query: null
 2025-09-17 09:56:00.251 -05:00 [INF] Final filtered count: 1024, Page: 1, PageSize: 50
 2025-09-17 09:56:00.251 -05:00 [INF] Returning 50 items for page 1
+2025-09-17 10:40:33.088 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 10:52:46.596 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 10:55:31.249 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 10:55:31.981 -05:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address http://127.0.0.1:5000: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (48): Address already in use
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-09-17 10:57:00.657 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 10:57:27.090 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 10:58:39.909 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-17 10:58:40.009 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-17 10:58:40.355 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-17 10:58:40.453 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 10:58:46.254 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 11:04:02.393 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 11:04:17.546 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 11:04:49.131 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-17 11:04:49.213 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 11:41:12.385 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 11:42:53.854 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 11:43:47.589 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 11:45:15.697 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 11:45:22.200 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 11:45:22.271 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-17 11:45:22.368 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-17 11:45:48.961 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-17 11:45:49.046 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 11:58:22.974 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 12:00:39.205 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 12:00:40.085 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-17 12:00:40.168 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 12:03:52.713 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:03:55.237 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:04:09.450 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:04:12.052 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:04:14.336 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:05:42.505 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:06:23.123 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-17 12:06:23.186 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-17 12:06:28.825 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:06:44.153 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:07:01.742 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:10:16.784 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:10:19.656 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:10:40.038 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:10:46.129 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:29:18.464 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 12:29:33.076 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 12:29:46.187 -05:00 [INF] Profile updated for user "337098ce-c3c9-433f-9041-d1fc0c97fdb3" (admin@techprep.com)
+2025-09-17 14:49:20.655 -05:00 [INF] User registration attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 14:49:20.752 -05:00 [INF] User registration successful for: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 14:49:25.904 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-17 14:49:25.955 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-17 14:50:20.432 -05:00 [INF] User registration attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 14:50:20.433 -05:00 [WRN] Registration failed - email already exists: luisreales@hotmail.com from IP: ::1
+2025-09-17 18:11:10.939 -05:00 [INF] User registration attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 18:11:10.944 -05:00 [WRN] Registration failed - email already exists: luisreales@hotmail.com from IP: ::1
+2025-09-17 18:58:17.625 -05:00 [INF] User registration attempt for email: test@example.com from IP: ::1
+2025-09-17 18:58:17.732 -05:00 [INF] User registration successful for: test@example.com (ID: "33bdc768-0e62-4ab9-8e33-fe3429931e1e") from IP: ::1
+2025-09-17 18:58:49.027 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 19:15:10.018 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 19:15:10.146 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 19:15:10.146 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs7hDr43m%2fLUGjal1fbssy%2bMcKnkXzD%2bMMa4sU2rJuv1E9OnxSY4AvcuK8dkrUXFsZbMy%2feH8gx8QmCf6JyoBnLZdsrMfYbSlsZCyL5K5JbBU6KNiO%2bagcbchgwaOz5cO5Lb9sR183u5j9ymSkC9giFTaBh4vfKi9zFD3LMb2wwnTle0yBW5dm79hVe7yFS3tlwZgFqe6bAt8Q0GSHl5aSsJ&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 19:15:10.152 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 19:15:22.308 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 19:15:22.309 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs6gSOcJ%2f6be6ST5dCfXC5Wu7vjLHuluRUO0AHlpZMF0FfD1NbHb6uS9QyBLs2FlCcjSZP3KLzBRnxRaSaOdcmVErZJR5mqxk0eWRLFkj4bI9C1usPUqc7Qf0QEk7a2BuVViNtnft38KWQDzcAOS%2bH0MAVDgL0DCjzroluCJNqAJcDExfo%2fonlHsuWvMGpnKqUu3Jjza2DZc%2bcLEFBN%2bgYnM&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 19:15:22.309 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:11:41.722 -05:00 [INF] User registration attempt for email: newuser@example.com from IP: ::1
+2025-09-17 20:11:41.964 -05:00 [INF] EMAIL (Development Mode) - To: newuser@example.com, Subject: Confirm your TechPrep account
+2025-09-17 20:11:41.964 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Welcome to TechPrep!</h2>
+                <p>Thank you for registering with TechPrep. To complete your registration, please confirm your email address by clicking the link below:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/confirm-email?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs6%2fCqWhbIe0eHUJpIn63N00BhMDzUbdVPjv130fJXYBfCl7v4HrM4fITtYXIrUVgrdaPB%2fKHtPbRadknMMrt%2b3%2bY88lOKXslZYfJtSbt1XnVV9fN8Tv1Z9dXJyxfLzROuPqxCL8a0ljhaSo4kkyyfucKjeyc7tJWWu2Uh9zVYTwreWpgD669QsO0nIsHv7L3RNYlFjJxEjiPQAE1QxGkq0m2xSeu62EpTDCTzhejoZjqw%3d%3d&email=newuser%40example.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Confirm Email Address
+                    </a>
+                </div>
+                <p>If you didn't create this account, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:11:41.964 -05:00 [INF] User registration successful for: newuser@example.com (ID: "eebe2767-a61c-4193-998c-5ce31a1ccce4") - Email confirmation sent from IP: ::1
+2025-09-17 20:12:36.143 -05:00 [INF] EMAIL (Development Mode) - To: newuser@example.com, Subject: Welcome to TechPrep!
+2025-09-17 20:12:36.143 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Welcome to TechPrep, New!</h2>
+                <p>Your account has been successfully verified. You're now ready to start your technical interview preparation journey!</p>
+                <h3>What you can do now:</h3>
+                <ul>
+                    <li>Practice with our extensive question bank</li>
+                    <li>Take mock interviews</li>
+                    <li>Track your progress</li>
+                    <li>Access learning resources</li>
+                </ul>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/dashboard' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Get Started
+                    </a>
+                </div>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:12:36.144 -05:00 [INF] Email confirmed successfully for user: newuser@example.com (ID: "eebe2767-a61c-4193-998c-5ce31a1ccce4") from IP: ::1
+2025-09-17 20:13:06.069 -05:00 [INF] EMAIL (Development Mode) - To: newuser@example.com, Subject: Reset your TechPrep password
+2025-09-17 20:13:06.070 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs7wT7p%2fJW%2fm8zRk78AlpW%2fjX2r26P0iKqhKFwI2coKUeETe%2blW%2fRFLPnrHr32DJNagpddJuDl5iqXsoDJBBhHGMkKGHB7YZLYpUDTKLmgLiCoujCV2keNNz9xoruiqW4ZvsCMaKjyG781UHV7WrbBTkvmN9ElzqO92KOTzk3xCryDg1JhXSttDroaNBLsSE3%2bmHPBkt%2b1hBYgxzhNTA7reE&email=newuser%40example.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:13:06.070 -05:00 [INF] Password reset email sent for user: newuser@example.com (ID: "eebe2767-a61c-4193-998c-5ce31a1ccce4") from IP: ::1
+2025-09-17 20:15:31.807 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 20:15:31.808 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs4Ft97jv%2b3N%2b04NWieQX%2fq06Qihfn%2bIFoD2bXF3hZC4ASHcv9%2bvSu%2feYey14YB%2b4ULLPsd8n5HpwSZM3Q5G5fDU%2fU2dQp8AlDfR4hKF54v6TW4LxiArdvqv0GfOY0B1ZyC0aTASqt1D3KOr%2f5IEa0mjZpKK6L0i5p8cBUaX%2bFvXpI1YET0fPZidvakG8UPe%2fRQw%2fJLJZPA449foMOZvX%2b1d&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:15:31.809 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:15:43.827 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 20:15:43.827 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs4YqJ7s3J6R4gquP4vyh6bLfDKhR5EdZbKHZE4%2fWe5bPNQbMQ%2b%2bHGZGXy5myGCd0XFjsUofxsg30w3K0t0g34PHm7h%2bppNJDCBlInaMIH8g2iJqDU%2bok1TU22%2feBoIlYRywBc5tZJ%2bR0PGVV3aBgLVPPDdAkJjx0v1z8X82CZONfD8XDUVkfofIo6pqfIWhs1yKphghLo0DCJ5vfxn1O%2bG7&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:15:43.827 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:21:16.386 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 20:21:16.387 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs7YD7fsxMiIUwI9RqEAQ7Ti7hS8dcP%2bQiQBHbSUOC4TJ4CDvvJUjECvIxUHsPHwofFYFh6I4JqkKvyodCmiJg%2fwjpxFhle%2blcHBQ9jhKL5t27xZmAs%2fDgWUjDNc9pZ1Xnan7eg3tiD4DXr4wPzriBuqaS1p6hIoD2mE1w7Le6jsxxPZlXGMiA%2ffGq%2fkIv%2f3sz4NoWwxquQ7MoqBJRpEO51I&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:21:16.387 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:21:31.329 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 20:21:31.329 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs6XjRB4MTHBj5I8djqfzlZuX1rfWs5ZPLzr1oLkTM0%2fW7Azr5rJKWWtTReLRiiQ%2fE8nndJBKy%2fK0O33PONW27nZPNSmHTJYG%2fVdSwmo8EVdU9Zeb8BnlEYfcgD8KaUtJyaDjEnIsdwlddcx7RinSSnE3spnNh5125P3wjTUQjsQWCwlyQVfZNciyKCRBqHz52Q1ulJEypFPk%2fyGY%2feMOF28&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:21:31.329 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:21:40.698 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 20:21:40.698 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs6bbeo9%2f4gxV6uVxh7PbfVgSWsXpUxSIQC6E1evEl22ADwy9pONTjN8wpI0IWKM1FvyUcQnz%2bZB7vc%2flghD%2fr%2b3zIigSLE2F4V6b2RyKtsNsqKskrXnJWwzzVPtJK72%2bNpyGOfKOjepNvna8kqgDsG2p4UwDmYj3muskEd0H7mjMD6Zu1GAbeW2LTuSuLCtrNO%2f2CnFzBMpHOkXrbXdL1%2fy&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:21:40.698 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:21:48.247 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 20:21:48.248 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs7Q1un4aIX6pOvsRwn8kDKCmrpB3d4mUjtXqL6MaR2cHrQDffjoHhirY%2fhvsCDZYDcF575NNOUZjO0HN1g5Di9eEdWXLhpirYZBKR3Z6r9GgTP%2b1dCsLKvZERHoGk%2bFTsvlUQX0H4KOlVMN1i1KZkI67xzQjWTgebxjwCVks7snVDOgpjstsNPQaf0TRWh0kbFt8pG%2bS9glaomiMQJo%2bx2S&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 20:21:48.248 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 20:22:45.677 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-17 20:22:45.774 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-17 20:22:45.913 -05:00 [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. If the 'Distinct' operator is used after 'OrderBy', then make sure to use the 'OrderBy' operator after 'Distinct' as the ordering would otherwise get erased.
+2025-09-17 20:22:45.990 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 22:03:37.625 -05:00 [INF] EMAIL (Development Mode) - To: luisreales@hotmail.com, Subject: Reset your TechPrep password
+2025-09-17 22:03:37.626 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Password Reset Request</h2>
+                <p>You requested a password reset for your TechPrep account. Click the link below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/reset-password?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs4JtMKQg1Z3UNSCGH15Wy8hYBw8fdmz%2b5Fm1WJVYPDFnercYqLKY5gWQb0zekFfXTXt91smMrwtt8dO3IkEnokSA9PvSN6VhI4H%2fP2CwrMR9q%2ft%2faczhxIT0sOQA7w6%2f5qTuTcdfqv3R3XwublzYujOJt6%2bevFsWBd7g4ZYfDlwaQkw2QujHtRjYRX4K6MgYHfjp4Qp3xzmgC9q3K9sSph3&email=luisreales%40hotmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Reset Password
+                    </a>
+                </div>
+                <p>This link will expire in 24 hours for security reasons.</p>
+                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 22:03:37.626 -05:00 [INF] Password reset email sent for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 22:20:22.110 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 22:27:39.487 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 22:27:39.563 -05:00 [INF] Login attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 22:27:39.585 -05:00 [WRN] Failed login attempt - invalid password for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 22:27:57.322 -05:00 [INF] Login attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 22:27:57.357 -05:00 [WRN] Failed login attempt - invalid password for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 22:27:58.203 -05:00 [INF] Login attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 22:27:58.204 -05:00 [WRN] Failed login attempt - invalid password for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 22:28:01.358 -05:00 [INF] Login attempt for email: luisreales@hotmail.com from IP: ::1
+2025-09-17 22:28:01.359 -05:00 [WRN] Failed login attempt - invalid password for user: luisreales@hotmail.com (ID: "cb6e9694-6d6d-4623-b79a-aa762b592820") from IP: ::1
+2025-09-17 22:28:07.404 -05:00 [INF] Login attempt for email: admin@techprep.com from IP: ::1
+2025-09-17 22:28:07.502 -05:00 [INF] Successful login for user: admin@techprep.com (ID: "337098ce-c3c9-433f-9041-d1fc0c97fdb3", Role: "Admin") from IP: ::1
+2025-09-17 22:30:09.546 -05:00 [INF] User registration attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 22:30:09.738 -05:00 [INF] EMAIL (Development Mode) - To: lrealesg@gmail.com, Subject: Confirm your TechPrep account
+2025-09-17 22:30:09.739 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Welcome to TechPrep!</h2>
+                <p>Thank you for registering with TechPrep. To complete your registration, please confirm your email address by clicking the link below:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/confirm-email?token=CfDJ8Ohah5IQ89NJs5d%2fN8BoAs46DrO6NLwmarrh3izTv%2fmT3giAHmeex%2fIxAP%2f6gaYc9E1t%2b5bvG7TgOyzdWo40yQ4Q73dcXjAKT7gjU33vIY63Z0sCaJaEGmvsaY5xreWhmi1zigx2VxykTtPoSuIjf5ZZUbbpTBY2YDcjUf9NprrglgP%2fzJluTbNLshLJNMefPRj8wlIDeTkc7SvrR75gjzJQ2kNq7Bm9%2bvBBF3yTWonblHp8zCb376uGb7EBuw%2bjYg%3d%3d&email=lrealesg%40gmail.com' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Confirm Email Address
+                    </a>
+                </div>
+                <p>If you didn't create this account, you can safely ignore this email.</p>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 22:30:09.739 -05:00 [INF] User registration successful for: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38") - Email confirmation sent from IP: ::1
+2025-09-17 22:30:54.250 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 22:30:54.261 -05:00 [WRN] Failed login attempt - invalid password for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38") from IP: ::1
+2025-09-17 22:31:26.139 -05:00 [INF] EMAIL (Development Mode) - To: lrealesg@gmail.com, Subject: Welcome to TechPrep!
+2025-09-17 22:31:26.139 -05:00 [INF] EMAIL Body: 
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #4f46e5;'>Welcome to TechPrep, Luis!</h2>
+                <p>Your account has been successfully verified. You're now ready to start your technical interview preparation journey!</p>
+                <h3>What you can do now:</h3>
+                <ul>
+                    <li>Practice with our extensive question bank</li>
+                    <li>Take mock interviews</li>
+                    <li>Track your progress</li>
+                    <li>Access learning resources</li>
+                </ul>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='http://localhost:3000/dashboard' style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;'>
+                        Get Started
+                    </a>
+                </div>
+                <p>Best regards,<br>The TechPrep Team</p>
+            </div>
+2025-09-17 22:31:26.140 -05:00 [INF] Email confirmed successfully for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38") from IP: ::1
+2025-09-17 22:31:37.134 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 22:31:37.189 -05:00 [INF] Successful login for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38", Role: "Student") from IP: ::1
+2025-09-17 22:32:06.612 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 22:32:06.668 -05:00 [INF] Successful login for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38", Role: "Student") from IP: ::1
+2025-09-17 22:32:33.353 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 22:32:33.411 -05:00 [INF] Successful login for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38", Role: "Student") from IP: ::1
+2025-09-17 23:05:13.101 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 23:05:13.159 -05:00 [INF] Successful login for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38", Role: "Student") from IP: ::1
+2025-09-17 23:05:41.793 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 23:05:41.848 -05:00 [INF] Successful login for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38", Role: "Student") from IP: ::1
+ed when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 23:01:11.419 -05:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address http://127.0.0.1:5000: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (48): Address already in use
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-09-17 23:14:33.587 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 23:16:23.548 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 23:18:33.457 -05:00 [WRN] Failed to determine the https port for redirect.
+2025-09-17 23:20:57.224 -05:00 [INF] Login attempt for email: lrealesg@gmail.com from IP: ::1
+2025-09-17 23:20:57.302 -05:00 [INF] Successful login for user: lrealesg@gmail.com (ID: "d4a93ee2-7b77-4341-8013-0ec6f6b1db38", Role: "Student") from IP: ::1
+2025-09-17 23:27:46.089 -05:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-09-17 23:58:06.781 -05:00 [WRN] The 'TemplateStatus' property 'Status' on entity type 'SessionTemplate' is configured with a database-generated default, but has no configured sentinel value. The database-generated default will always be used for inserts when the property has the value '0', since this is the CLR default for the 'TemplateStatus' type. Consider using a nullable type, using a nullable backing field, or setting the sentinel value for the property to ensure the database default is used when, and only when, appropriate. See https://aka.ms/efcore-docs-default-values for more information.
+2025-09-17 23:58:07.279 -05:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address http://127.0.0.1:5000: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Address already in use
+ ---> System.Net.Sockets.SocketException (48): Address already in use
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindAsync(ListenOptions[] listenOptions, AddressBindContext context, Func`2 useHttps, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__15_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)

@@ -4,6 +4,7 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { ResetPage } from '@/pages/auth/ResetPage';
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
+import { ConfirmEmailPage } from '@/pages/auth/ConfirmEmailPage';
 import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -13,8 +14,9 @@ export const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/reset" element={<ResetPage />} />
+      <Route path="/reset-password" element={<ResetPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/confirm-email" element={<ConfirmEmailPage />} />
       
       {/* Protected Routes - All use the same AuthenticatedLayout */}
       <Route

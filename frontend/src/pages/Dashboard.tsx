@@ -99,12 +99,12 @@ const Dashboard: React.FC = () => {
                   </div>
                   <p className="text-sm text-indigo-800/80">Jump into a new session based on your goals.</p>
                 </Link>
-                <Link to="/topics" className="text-left p-4 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-200">
+                <Link to="/sessions" className="text-left p-4 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-200">
                   <div className="flex items-center gap-3 mb-1">
                     <span className="material-symbols-outlined text-2xl text-[var(--text-secondary)]">search</span>
-                    <h3 className="font-bold text-lg text-[var(--text-primary)]">Browse Topics</h3>
+                    <h3 className="font-bold text-lg text-[var(--text-primary)]">Browse Sessions</h3>
                   </div>
-                  <p className="text-sm text-[var(--text-secondary)]">Explore all available topics and resources.</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Explore all available practice sessions.</p>
                 </Link>
               </div>
             </div>

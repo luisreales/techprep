@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TechPrep.Infrastructure.Data;
 
 namespace TechPrep.API.Controllers.Admin;

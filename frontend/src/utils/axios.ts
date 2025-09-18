@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const http = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:5000/api',
+  baseURL: 'http://localhost:5000/api', // Direct backend URL to bypass proxy issues
 });
 
 // Attempt to read an access token from multiple common locations

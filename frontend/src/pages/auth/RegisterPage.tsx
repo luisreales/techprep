@@ -22,6 +22,7 @@ type RegisterForm = z.infer<typeof schema>;
 
 export const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const { register: registerUser, isLoading, error, isAuthenticated, clearError } =
     useAuthStore();
   const {
@@ -36,12 +37,16 @@ export const RegisterPage: React.FC = () => {
 
   const onSubmit = async (values: RegisterForm) => {
     clearError();
-    await registerUser({
+    const success = await registerUser({
       email: values.email,
       password: values.password,
       firstName: values.firstName,
       lastName: values.lastName,
     });
+
+    if (success) {
+      setRegistrationSuccess(true);
+    }
   };
 
   const rootStyle: React.CSSProperties = {
@@ -66,17 +71,49 @@ export const RegisterPage: React.FC = () => {
               </span>
             </div>
             <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
-              Create your account
+              {registrationSuccess ? 'Check your email!' : 'Create your account'}
             </h2>
             <p className="text-sm text-[var(--text-secondary)]">
-              Or{' '}
-              <Link to="/login" className="font-medium text-[var(--primary-color)] hover:text-[var(--primary-color)]/80 transition-colors">
-                sign in to your account
-              </Link>
+              {registrationSuccess ? (
+                'We sent you a confirmation link to complete your registration.'
+              ) : (
+                <>
+                  Or{' '}
+                  <Link to="/login" className="font-medium text-[var(--primary-color)] hover:text-[var(--primary-color)]/80 transition-colors">
+                    sign in to your account
+                  </Link>
+                </>
+              )}
             </p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {registrationSuccess ? (
+            <div className="text-center space-y-4">
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="material-symbols-outlined text-green-600 text-3xl">mark_email_read</span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <p className="text-[var(--text-primary)] font-medium">
+                  Registration successful!
+                </p>
+                <p className="text-sm text-[var(--text-secondary)]">
+                  Please check your email and click the confirmation link to activate your account.
+                  After confirming, you'll be able to sign in.
+                </p>
+              </div>
+              <div className="pt-4">
+                <Link
+                  to="/login"
+                  className="w-full bg-[var(--primary-color)] text-white py-3 px-4 rounded-lg font-medium hover:bg-[var(--primary-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary-color)] transition-all duration-200 inline-block text-center"
+                >
+                  Continue to Login
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -182,6 +219,7 @@ export const RegisterPage: React.FC = () => {
               {isLoading ? 'Creating account...' : 'Create account'}
             </button>
           </form>
+          )}
         </div>
       </div>
     </div>

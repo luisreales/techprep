@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { http } from '@/utils/axios';
 
 export const ResetPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const rootStyle: React.CSSProperties = {
     '--primary-color': '#4f46e5',
@@ -17,9 +22,48 @@ export const ResetPage: React.FC = () => {
     '--accent-color': '#10b981',
   } as React.CSSProperties;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement reset password functionality
+    setError('');
+
+    // Validation
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    const token = searchParams.get('token');
+    const email = searchParams.get('email');
+
+    if (!token || !email) {
+      setError('Invalid reset link. Token and email are required.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await http.post(`/auth/reset-password?email=${encodeURIComponent(email)}`, {
+        token,
+        password
+      });
+
+      setSuccess(true);
+
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Password reset failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,14 +77,32 @@ export const ResetPage: React.FC = () => {
               </span>
             </div>
             <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
-              Reset your password
+              {success ? 'Password Reset Successful!' : 'Reset your password'}
             </h2>
             <p className="text-sm text-[var(--text-secondary)]">
-              Enter your new password below
+              {success ? 'Your password has been reset. Redirecting to login...' : 'Enter your new password below'}
             </p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          {success ? (
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="material-symbols-outlined text-green-600 text-2xl">check_circle</span>
+                </div>
+              </div>
+              <p className="text-[var(--text-secondary)] mb-6">
+                Redirecting you to the login page...
+              </p>
+              <Link
+                to="/login"
+                className="w-full bg-[var(--primary-color)] text-white py-3 px-4 rounded-lg font-medium hover:bg-[var(--primary-color)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary-color)] transition-all duration-200 inline-block text-center"
+              >
+                Continue to Login
+              </Link>
+            </div>
+          ) : (
+            <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-[var(--text-primary)] mb-2">
                 New Password
@@ -71,6 +133,12 @@ export const ResetPage: React.FC = () => {
               />
             </div>
 
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
             <button 
               type="submit" 
               disabled={isLoading} 
@@ -88,6 +156,7 @@ export const ResetPage: React.FC = () => {
               </Link>
             </div>
           </form>
+          )}
         </div>
       </div>
     </div>

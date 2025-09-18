@@ -11,82 +11,116 @@ interface CurrentSession {
   currentQuestionIndex: number;
   answers: Record<string, any>;
   startTime: Date;
+  sessionName?: string;
 }
 
 const Practice: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  
+
+  // Immediate redirect if no session data
+  const passedSessionData = location.state?.sessionData;
+  if (!passedSessionData) {
+    navigate('/sessions', { replace: true });
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-[var(--text-secondary)]">
+            Redirecting to sessions...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const [session, setSession] = useState<CurrentSession | null>(null);
   const [currentAnswer, setCurrentAnswer] = useState<any>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [writtenAnswer, setWrittenAnswer] = useState('');
   const [feedback, setFeedback] = useState<{ isCorrect?: boolean; matchPercentage?: number; message?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
 
-  // Mock questions for demonstration
-  const mockQuestions: Question[] = [
-    {
-      id: '1',
-      topicId: 1,
-      topicName: 'Data Structures',
-      text: 'What is the Big O notation for the best-case time complexity of Bubble Sort?',
-      type: QuestionType.SingleChoice,
-      level: DifficultyLevel.Intermediate,
-      options: [
-        { id: '1a', text: 'O(n²)', isCorrect: false, orderIndex: 0 },
-        { id: '1b', text: 'O(n log n)', isCorrect: false, orderIndex: 1 },
-        { id: '1c', text: 'O(n)', isCorrect: true, orderIndex: 2 }
-      ],
-      learningResources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '2',
-      topicId: 2,
-      topicName: 'Programming Concepts',
-      text: 'Which of the following are examples of linear data structures?',
-      type: QuestionType.MultiChoice,
-      level: DifficultyLevel.Basic,
-      options: [
-        { id: '2a', text: 'Array', isCorrect: true, orderIndex: 0 },
-        { id: '2b', text: 'Tree', isCorrect: false, orderIndex: 1 },
-        { id: '2c', text: 'Stack', isCorrect: true, orderIndex: 2 },
-        { id: '2d', text: 'Graph', isCorrect: false, orderIndex: 3 }
-      ],
-      learningResources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '3',
-      topicId: 3,
-      topicName: 'JavaScript',
-      text: 'Explain the difference between `let`, `const`, and `var` in JavaScript.',
-      type: QuestionType.Written,
-      level: DifficultyLevel.Intermediate,
-      officialAnswer: 'var is function-scoped and can be redeclared, let is block-scoped and cannot be redeclared, const is block-scoped and immutable',
-      options: [],
-      learningResources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+  const createSessionAndFetchQuestions = async (passedSessionData: any, mode: PracticeMode) => {
+    try {
+      setIsLoadingQuestions(true);
+
+      // Create a session in the backend
+      const sessionResponse = await apiClient.createSession({
+        topicId: passedSessionData.topicId,
+        level: passedSessionData.difficulty.toLowerCase(),
+        mode: mode === PracticeMode.Study ? 'Study' : 'Interview',
+        questionCount: passedSessionData.questionCount
+      });
+
+      if (!sessionResponse.success || !sessionResponse.data) {
+        throw new Error('Failed to create session');
+      }
+
+      const realSessionId = sessionResponse.data.sessionId;
+
+      // Fetch questions based on session data
+      const questionsResponse = await apiClient.getQuestions({
+        topicId: passedSessionData.topicId,
+        level: passedSessionData.difficulty.toLowerCase()
+      });
+
+      if (questionsResponse.success && questionsResponse.data) {
+        // Limit to the number of questions specified in the session
+        const limitedQuestions = questionsResponse.data.slice(0, passedSessionData.questionCount);
+        return { questions: limitedQuestions, sessionId: realSessionId };
+      }
+
+      return { questions: [], sessionId: realSessionId };
+    } catch (error) {
+      console.error('Failed to create session or fetch questions:', error);
+      return { questions: [], sessionId: null };
+    } finally {
+      setIsLoadingQuestions(false);
     }
-  ];
+  };
 
   useEffect(() => {
-    // Initialize session with mock data
-    const sessionData: CurrentSession = {
-      sessionId: 'mock-session-' + Date.now(),
-      mode: location.state?.mode || PracticeMode.Study,
-      questions: mockQuestions,
-      currentQuestionIndex: 0,
-      answers: {},
-      startTime: new Date()
+    const initializeSession = async () => {
+      try {
+        const providedSessionId = location.state?.sessionId;
+        const mode = location.state?.mode || PracticeMode.Study;
+
+        let questions: Question[] = [];
+        let realSessionId = providedSessionId || 'session-' + Date.now();
+        let sessionName = passedSessionData.name || 'Practice Session';
+
+        console.log('Creating session with data:', passedSessionData);
+        // Create session and fetch real questions from the database
+        const result = await createSessionAndFetchQuestions(passedSessionData, mode);
+        questions = result.questions;
+        if (result.sessionId) {
+          realSessionId = result.sessionId;
+        }
+        console.log('Session created, got questions:', questions.length);
+
+        // Initialize session with data
+        const sessionData: CurrentSession = {
+          sessionId: realSessionId,
+          mode,
+          questions,
+          currentQuestionIndex: 0,
+          answers: {},
+          startTime: new Date(),
+          sessionName
+        };
+        setSession(sessionData);
+      } catch (error) {
+        console.error('Error initializing session:', error);
+        setIsLoadingQuestions(false);
+        // Redirect to sessions on error
+        navigate('/sessions');
+      }
     };
-    setSession(sessionData);
-  }, [location.state]);
+
+    initializeSession();
+  }, [location.state, navigate, passedSessionData]);
 
   const currentQuestion = session?.questions[session.currentQuestionIndex];
 
@@ -134,15 +168,45 @@ const Practice: React.FC = () => {
   };
 
   const handleSubmitAnswer = async () => {
-    if (!session || !currentQuestion) return;
+    if (!session || !currentQuestion || !currentAnswer) return;
 
     setIsLoading(true);
-    
+
     try {
-      // Mock API call - replace with actual API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store answer in session
+      // Calculate time spent on this question
+      const timeSpent = Date.now() - session.startTime.getTime();
+
+      // Prepare answer data
+      let answerString = '';
+      let matchPercentage: number | undefined;
+
+      if (currentQuestion.type === QuestionType.SingleChoice) {
+        answerString = currentAnswer as string;
+        const selectedOption = currentQuestion.options.find(opt => opt.id === currentAnswer);
+        matchPercentage = selectedOption?.isCorrect ? 100 : 0;
+      } else if (currentQuestion.type === QuestionType.MultiChoice) {
+        answerString = (currentAnswer as string[]).join(',');
+        const correctOptions = currentQuestion.options.filter(opt => opt.isCorrect).map(opt => opt.id);
+        const selectedOptions = currentAnswer as string[];
+        const isFullyCorrect = correctOptions.length === selectedOptions.length &&
+          correctOptions.every(id => selectedOptions.includes(id));
+        matchPercentage = isFullyCorrect ? 100 : 0;
+      } else if (currentQuestion.type === QuestionType.Written) {
+        answerString = currentAnswer as string;
+        // For written answers, we'll use a placeholder match percentage
+        // In a real implementation, this would be calculated by the backend text matching engine
+        matchPercentage = 65; // Placeholder
+      }
+
+      // Submit answer to backend
+      await apiClient.submitAnswer(session.sessionId, {
+        questionId: currentQuestion.id,
+        answer: answerString,
+        timeSpentMs: timeSpent,
+        matchPercentage
+      });
+
+      // Store answer in local session state
       const updatedSession = {
         ...session,
         answers: {
@@ -151,23 +215,29 @@ const Practice: React.FC = () => {
         }
       };
       setSession(updatedSession);
-      
-      // Show feedback for written answers in study mode
-      if (currentQuestion.type === QuestionType.Written && session.mode === PracticeMode.Study) {
-        setFeedback({
-          isCorrect: false,
-          matchPercentage: 65,
-          message: 'Your explanation covers some key points but is missing details about block scope vs. function scope.'
-        });
+
+      // Show feedback for study mode
+      if (session.mode === PracticeMode.Study) {
+        if (currentQuestion.type === QuestionType.Written) {
+          setFeedback({
+            isCorrect: false,
+            matchPercentage: matchPercentage,
+            message: 'Your explanation covers some key points but could be more comprehensive.'
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to submit answer:', error);
+      setFeedback({
+        isCorrect: false,
+        message: 'Failed to save answer. Please try again.'
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (!session) return;
 
     if (session.currentQuestionIndex < session.questions.length - 1) {
@@ -175,15 +245,22 @@ const Practice: React.FC = () => {
         ...session,
         currentQuestionIndex: session.currentQuestionIndex + 1
       });
-      
+
       // Reset answer state
       setCurrentAnswer(null);
       setSelectedOptions([]);
       setWrittenAnswer('');
       setFeedback(null);
     } else {
-      // Session complete, navigate to results
-      navigate('/session-results', { state: { session } });
+      // Session complete, finish session in backend and navigate to results
+      try {
+        await apiClient.finishSession(session.sessionId);
+        navigate('/session-results', { state: { session } });
+      } catch (error) {
+        console.error('Failed to finish session:', error);
+        // Still navigate to results even if backend call fails
+        navigate('/session-results', { state: { session } });
+      }
     }
   };
 
@@ -299,9 +376,39 @@ const Practice: React.FC = () => {
     );
   };
 
-  if (!session) {
+  if (!session || isLoadingQuestions) {
     return (
-      <div className="flex items-center justify-center min-h-screen">Loading...</div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary-color)] mx-auto mb-4"></div>
+          <p className="text-[var(--text-secondary)]">
+            {isLoadingQuestions ? 'Loading practice questions...' : 'Initializing session...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if no questions available
+  if (session.questions.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-8 text-center">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="material-symbols-outlined text-gray-400 text-2xl">quiz</span>
+          </div>
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">No Questions Available</h3>
+          <p className="text-[var(--text-secondary)] mb-6">
+            No questions found for this topic and difficulty level. Please try a different session.
+          </p>
+          <button
+            onClick={() => navigate('/sessions')}
+            className="px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200"
+          >
+            Back to Sessions
+          </button>
+        </div>
+      </div>
     );
   }
 
@@ -310,8 +417,15 @@ const Practice: React.FC = () => {
         <div className="max-w-2xl mx-auto">
           {/* Progress Header */}
           <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-6 mb-8">
-            <div className="flex justify-between text-sm text-[var(--text-secondary)] mb-4">
-              <span>Question {session.currentQuestionIndex + 1} of {session.questions.length}</span>
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-1">
+                  {session.sessionName}
+                </h2>
+                <span className="text-sm text-[var(--text-secondary)]">
+                  Question {session.currentQuestionIndex + 1} of {session.questions.length}
+                </span>
+              </div>
               <span className="px-3 py-1 bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-full font-medium">
                 {session.mode === PracticeMode.Study ? 'Study Mode' : 'Interview Mode'}
               </span>

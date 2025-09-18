@@ -10,6 +10,7 @@ using TechPrep.Core.Entities;
 using TechPrep.Core.Enums;
 using TechPrep.API.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
+using TechPrep.Application.Services;
 
 namespace TechPrep.API.Controllers;
 
@@ -21,13 +22,15 @@ public class AuthController : ControllerBase
     private readonly SignInManager<User> _signInManager;
     private readonly IConfiguration _config;
     private readonly ILogger<AuthController> _logger;
+    private readonly IEmailService _emailService;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, ILogger<AuthController> logger)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration config, ILogger<AuthController> logger, IEmailService emailService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _config = config;
         _logger = logger;
+        _emailService = emailService;
     }
 
     [HttpGet("me")]
@@ -74,14 +77,6 @@ public class AuthController : ControllerBase
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
-        if (result.Succeeded)
-        {
-            // Assign Student role to new users
-            await _userManager.AddToRoleAsync(user, "Student");
-
-            _logger.LogInformation("User registration successful for: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
-                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
-        }
         if (!result.Succeeded)
         {
             _logger.LogError("User registration failed for email: {Email} - Errors: {Errors} from IP: {RemoteIpAddress}",
@@ -89,16 +84,70 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = string.Join("; ", result.Errors.Select(e => e.Description)) });
         }
 
-        var token = await GenerateJwtTokenAsync(user);
-        var response = new AuthResponse
+        // Assign Student role to new users
+        await _userManager.AddToRoleAsync(user, "Student");
+
+        // Generate email confirmation token
+        var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var encodedToken = System.Web.HttpUtility.UrlEncode(emailConfirmationToken);
+        var encodedEmail = System.Web.HttpUtility.UrlEncode(user.Email!);
+        var frontendBaseUrl = _config["Frontend:BaseUrl"];
+        var confirmationLink = $"{frontendBaseUrl}/confirm-email?token={encodedToken}&email={encodedEmail}";
+
+        // Send confirmation email
+        try
         {
-            Token = token,
-            Email = user.Email!,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Role = user.Role == UserRole.Admin ? "Admin" : "Student"
-        };
-        return Ok(response);
+            await _emailService.SendEmailConfirmationAsync(user.Email!, confirmationLink);
+            _logger.LogInformation("User registration successful for: {Email} (ID: {UserId}) - Email confirmation sent from IP: {RemoteIpAddress}",
+                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send confirmation email for user: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
+                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
+        }
+
+        return Ok(new {
+            message = "Registration successful. Please check your email to confirm your account before logging in."
+        });
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, [FromQuery] string email)
+    {
+        if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+        {
+            return BadRequest(new { message = "Token and email are required." });
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return BadRequest(new { message = "Invalid email." });
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Email confirmation failed for user: {Email} (ID: {UserId}) - Errors: {Errors} from IP: {RemoteIpAddress}",
+                user.Email, user.Id, string.Join("; ", result.Errors.Select(e => e.Description)), HttpContext.Connection.RemoteIpAddress);
+            return BadRequest(new { message = "Email confirmation failed. The token may be invalid or expired." });
+        }
+
+        // Send welcome email
+        try
+        {
+            await _emailService.SendWelcomeEmailAsync(user.Email!, user.FirstName);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send welcome email for user: {Email} (ID: {UserId})", user.Email, user.Id);
+        }
+
+        _logger.LogInformation("Email confirmed successfully for user: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
+            user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
+
+        return Ok(new { message = "Email confirmed successfully. You can now log in." });
     }
 
     [HttpPost("login")]
@@ -152,11 +201,30 @@ public class AuthController : ControllerBase
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
+        {
+            // Always return success to prevent email enumeration
             return Ok(new { message = "If the email exists, a reset link will be sent." });
+        }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        // TODO: Send token via email. For now, return it in response for testing.
-        return Ok(new { message = "Password reset link sent.", token });
+        var encodedToken = System.Web.HttpUtility.UrlEncode(token);
+        var encodedEmail = System.Web.HttpUtility.UrlEncode(user.Email!);
+        var frontendBaseUrl = _config["Frontend:BaseUrl"];
+        var resetLink = $"{frontendBaseUrl}/reset-password?token={encodedToken}&email={encodedEmail}";
+
+        try
+        {
+            await _emailService.SendPasswordResetAsync(user.Email!, resetLink);
+            _logger.LogInformation("Password reset email sent for user: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
+                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send password reset email for user: {Email} (ID: {UserId}) from IP: {RemoteIpAddress}",
+                user.Email, user.Id, HttpContext.Connection.RemoteIpAddress);
+        }
+
+        return Ok(new { message = "If the email exists, a reset link will be sent." });
     }
 
     [HttpPost("reset-password")]

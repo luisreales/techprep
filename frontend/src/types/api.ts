@@ -18,6 +18,9 @@ export interface User {
   lastName: string;
   role: UserRole;
   matchingThreshold: number;
+  language?: string;
+  theme?: string;
+  avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -184,6 +187,24 @@ export interface AuthResponse {
 
 export interface RefreshTokenDto {
   refreshToken: string;
+}
+
+// Profile types
+export interface UserProfile {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string | null;
+  language: 'en' | 'es';
+  theme: 'light' | 'dark' | 'blue';
+}
+
+export interface UpdateProfileDto {
+  firstName: string;
+  lastName: string;
+  language: 'en' | 'es';
+  theme: 'light' | 'dark' | 'blue';
 }
 
 // types/api.ts
