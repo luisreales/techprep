@@ -364,9 +364,15 @@ export const ChallengesPage: React.FC = () => {
                   
                   {viewingChallenge.tags && viewingChallenge.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {viewingChallenge.tags.map((tag) => (
-                        <TagBadge key={tag} tag={tag} />
-                      ))}
+                      {viewingChallenge.tags.map((tag: any) => {
+                        // Handle both string tags and tag objects
+                        const tagName = typeof tag === 'string' ? tag : tag.name;
+                        const tagKey = typeof tag === 'string' ? tag : `${tag.id}-${tag.name}`;
+                        const tagColor = typeof tag === 'string' ? undefined : tag.color;
+                        return (
+                          <TagBadge key={tagKey} tag={tagName} color={tagColor} />
+                        );
+                      })}
                     </div>
                   )}
                 </div>

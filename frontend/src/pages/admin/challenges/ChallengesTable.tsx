@@ -114,9 +114,15 @@ export const ChallengesTable: React.FC<ChallengesTableProps> = ({
           }
           return (
             <div className="flex flex-wrap gap-1">
-              {tags.slice(0, 2).map((tag) => (
-                <TagBadge key={tag} tag={tag} />
-              ))}
+              {tags.slice(0, 2).map((tag: any) => {
+                // Handle both string tags and tag objects
+                const tagName = typeof tag === 'string' ? tag : tag.name;
+                const tagKey = typeof tag === 'string' ? tag : `${tag.id}-${tag.name}`;
+                const tagColor = typeof tag === 'string' ? undefined : tag.color;
+                return (
+                  <TagBadge key={tagKey} tag={tagName} color={tagColor} />
+                );
+              })}
               {tags.length > 2 && (
                 <span className="text-xs text-gray-500">
                   +{tags.length - 2}

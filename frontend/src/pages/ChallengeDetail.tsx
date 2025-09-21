@@ -292,9 +292,15 @@ const ChallengeDetail: React.FC = () => {
               <div className="flex items-center gap-3 mt-2">
                 <LanguageBadge language={challenge.language} />
                 <DifficultyBadge difficulty={challenge.difficulty} />
-                {challenge.tags.map((tag) => (
-                  <TagBadge key={tag} tag={tag} />
-                ))}
+                {challenge.tags.map((tag: any) => {
+                  // Handle both string tags and tag objects
+                  const tagName = typeof tag === 'string' ? tag : tag.name;
+                  const tagKey = typeof tag === 'string' ? tag : `${tag.id}-${tag.name}`;
+                  const tagColor = typeof tag === 'string' ? undefined : tag.color;
+                  return (
+                    <TagBadge key={tagKey} tag={tagName} color={tagColor} />
+                  );
+                })}
               </div>
             </div>
             

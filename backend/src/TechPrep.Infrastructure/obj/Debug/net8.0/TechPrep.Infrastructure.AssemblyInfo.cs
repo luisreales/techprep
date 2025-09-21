@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TechPrep.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9309ca727fa89068aebc85642cca2e3f84df7ed4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+574c32b180cc6f467bbc969d4d4412aecd921adc")]
 [assembly: System.Reflection.AssemblyProductAttribute("TechPrep.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TechPrep.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

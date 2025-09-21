@@ -110,16 +110,19 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
         <div>
           <label className="block text-xs font-medium text-gray-700 mb-2">Tags</label>
           <div className="flex flex-wrap gap-2">
-            {availableTags.map((tag) => {
-              const isSelected = filters.tags?.includes(tag) || false;
+            {availableTags.map((tag: any) => {
+              // Handle both string tags and tag objects
+              const tagName = typeof tag === 'string' ? tag : tag.name;
+              const tagKey = typeof tag === 'string' ? tag : `${tag.id}-${tag.name}`;
+              const isSelected = filters.tags?.includes(tagName) || false;
               return (
                 <button
-                  key={tag}
+                  key={tagKey}
                   onClick={() => {
                     const currentTags = filters.tags || [];
                     const newTags = isSelected
-                      ? currentTags.filter((t) => t !== tag)
-                      : [...currentTags, tag];
+                      ? currentTags.filter((t) => t !== tagName)
+                      : [...currentTags, tagName];
                     handleFilterChange('tags', newTags.length > 0 ? newTags : undefined);
                   }}
                   className={`px-2 py-1 rounded-full text-xs font-medium border transition-colors ${
@@ -128,7 +131,7 @@ export const ChallengeFilters: React.FC<ChallengeFiltersProps> = ({
                       : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
                   }`}
                 >
-                  {tag}
+                  {tagName}
                 </button>
               );
             })}

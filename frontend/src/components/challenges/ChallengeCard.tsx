@@ -49,9 +49,15 @@ export const ChallengeCard: React.FC<ChallengeCardProps> = ({
 
           {challenge.tags && challenge.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
-              {challenge.tags.slice(0, 3).map((tag) => (
-                <TagBadge key={tag} tag={tag} />
-              ))}
+              {challenge.tags.slice(0, 3).map((tag: any) => {
+                // Handle both string tags and tag objects
+                const tagName = typeof tag === 'string' ? tag : tag.name;
+                const tagKey = typeof tag === 'string' ? tag : `${tag.id}-${tag.name}`;
+                const tagColor = typeof tag === 'string' ? undefined : tag.color;
+                return (
+                  <TagBadge key={tagKey} tag={tagName} color={tagColor} />
+                );
+              })}
               {challenge.tags.length > 3 && (
                 <span className="text-xs text-gray-500">
                   +{challenge.tags.length - 3} more
