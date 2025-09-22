@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,10 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 // Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 // DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -36,10 +40,25 @@ builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// Practice Interview System Services
+builder.Services.AddScoped<IInterviewTemplateRepository, InterviewTemplateRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<ISessionAssignmentRepository, SessionAssignmentRepository>();
+builder.Services.AddScoped<IPracticeSessionRepository, PracticeSessionRepository>();
+builder.Services.AddScoped<IInterviewSessionNewRepository, InterviewSessionNewRepository>();
+builder.Services.AddScoped<ICreditLedgerRepository, CreditLedgerRepository>();
+
+builder.Services.AddScoped<IInterviewTemplateService, InterviewTemplateService>();
+builder.Services.AddScoped<ISessionAssignmentService, SessionAssignmentService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IPracticeSessionService, PracticeSessionService>();
+builder.Services.AddScoped<IInterviewSessionService, InterviewSessionService>();
+builder.Services.AddScoped<ICreditService, CreditService>();
+
 // Add memory cache for settings
 builder.Services.AddMemoryCache();
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile), typeof(PracticeInterviewMappingProfile));
 
 // DB (SQLite)
 // Build absolute path for the SQLite file so reads/writes go to a stable location
@@ -225,7 +244,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("FrontendDev");          // <-- place CORS very early
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection(); -- Remove HTTPS
 app.UseStaticFiles();
 
 app.UseAuthentication();

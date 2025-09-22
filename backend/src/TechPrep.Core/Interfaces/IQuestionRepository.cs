@@ -11,5 +11,11 @@ public interface IQuestionRepository : IGenericRepository<Question>
     Task<IEnumerable<Question>> GetByFiltersAsync(int? topicId, QuestionType? type, DifficultyLevel? level, int skip, int take);
     Task<Question?> GetWithOptionsAsync(Guid id);
     Task<IEnumerable<Question>> GetRandomQuestionsAsync(int? topicId, DifficultyLevel? level, int count);
-    Task<int> GetCountByFiltersAsync(int? topicId, QuestionType? type, DifficultyLevel? level);
+    Task<int> GetCountByFiltersAsync(
+        int? topicId,
+        QuestionType? type,
+        DifficultyLevel? level,
+        bool? usableInPractice = null,
+        bool? usableInInterview = null,
+        bool enforceInterviewCooldown = false);
 }

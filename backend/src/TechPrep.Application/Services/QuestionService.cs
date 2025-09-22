@@ -53,14 +53,22 @@ public class QuestionService : IQuestionService
         int? topicId = null,
         QuestionType? type = null,
         DifficultyLevel? level = null,
-        string? search = null)
+        string? search = null,
+        bool? usableInPractice = null,
+        bool? usableInInterview = null,
+        bool enforceInterviewCooldown = false)
     {
         try
         {
             Console.WriteLine($"[QUESTION SERVICE] GetQuestionsCountAsync called with topicId: {topicId}, type: {type}, level: {level}, search: {search}");
             
             var count = await _unitOfWork.Questions.GetCountByFiltersAsync(
-                topicId, type, level);
+                topicId,
+                type,
+                level,
+                usableInPractice,
+                usableInInterview,
+                enforceInterviewCooldown);
                 
             Console.WriteLine($"[QUESTION SERVICE] Repository returned count: {count}");
             return count;

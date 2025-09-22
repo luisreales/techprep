@@ -30,6 +30,23 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
     public DbSet<PracticeSession> PracticeSessions { get; set; } = null!;
     public DbSet<PracticeSessionItem> PracticeSessionItems { get; set; } = null!;
 
+    // Practice Interview System
+    public DbSet<Group> Groups { get; set; } = null!;
+    public DbSet<UserGroup> UserGroups { get; set; } = null!;
+    public DbSet<InterviewTemplate> InterviewTemplates { get; set; } = null!;
+    public DbSet<SessionAssignment> SessionAssignments { get; set; } = null!;
+    public DbSet<PracticeSessionNew> PracticeSessionsNew { get; set; } = null!;
+    public DbSet<InterviewSessionNew> InterviewSessionsNew { get; set; } = null!;
+    public DbSet<PracticeAnswer> PracticeAnswers { get; set; } = null!;
+    public DbSet<InterviewAnswerNew> InterviewAnswersNew { get; set; } = null!;
+    public DbSet<SessionAuditEvent> SessionAuditEvents { get; set; } = null!;
+    public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; } = null!;
+    public DbSet<UserSubscription> UserSubscriptions { get; set; } = null!;
+    public DbSet<CreditTopUp> CreditTopUps { get; set; } = null!;
+    public DbSet<CreditLedger> CreditLedgers { get; set; } = null!;
+    public DbSet<InterviewCertificate> InterviewCertificates { get; set; } = null!;
+    public DbSet<QuestionKeyword> QuestionKeywords { get; set; } = null!;
+
     // Settings
     public DbSet<AppSetting> AppSettings { get; set; } = null!;
     
@@ -311,6 +328,310 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.UpdatedAt).IsRequired();
             entity.Property(e => e.UpdatedBy).HasMaxLength(100);
             entity.HasIndex(e => e.Key).IsUnique();
+        });
+
+        // Practice Interview System configurations
+        ConfigurePracticeInterviewEntities(builder);
+    }
+
+    private void ConfigurePracticeInterviewEntities(ModelBuilder builder)
+    {
+        // Group configuration
+        builder.Entity<Group>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+
+            entity.HasMany(e => e.UserGroups)
+                  .WithOne(ug => ug.Group)
+                  .HasForeignKey(ug => ug.GroupId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // UserGroup configuration
+        builder.Entity<UserGroup>(entity =>
+        {
+            entity.HasKey(e => new { e.GroupId, e.UserId });
+            entity.Property(e => e.RoleInGroup).HasMaxLength(100);
+            entity.Property(e => e.JoinedAt).IsRequired();
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // InterviewTemplate configuration
+        builder.Entity<InterviewTemplate>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Kind).IsRequired();
+            entity.Property(e => e.VisibilityDefault).IsRequired();
+            entity.Property(e => e.SelectionCriteriaJson).IsRequired().HasDefaultValue("{}");
+            entity.Property(e => e.NavigationMode).IsRequired();
+            entity.Property(e => e.FeedbackMode).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+        });
+
+        // SessionAssignment configuration
+        builder.Entity<SessionAssignment>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.TemplateId).IsRequired();
+            entity.Property(e => e.Visibility).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+
+            entity.HasOne(e => e.Template)
+                  .WithMany(t => t.Assignments)
+                  .HasForeignKey(e => e.TemplateId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Group)
+                  .WithMany(g => g.Assignments)
+                  .HasForeignKey(e => e.GroupId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // PracticeSessionNew configuration
+        builder.Entity<PracticeSessionNew>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.Status).IsRequired();
+            entity.Property(e => e.StartedAt).IsRequired();
+            entity.Property(e => e.CurrentQuestionState).HasMaxLength(2000);
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Assignment)
+                  .WithMany(a => a.PracticeSessions)
+                  .HasForeignKey(e => e.AssignmentId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // InterviewSessionNew configuration
+        builder.Entity<InterviewSessionNew>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.AssignmentId).IsRequired();
+            entity.Property(e => e.Status).IsRequired();
+            entity.Property(e => e.StartedAt).IsRequired();
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Assignment)
+                  .WithMany(a => a.InterviewSessions)
+                  .HasForeignKey(e => e.AssignmentId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.ConsumedCredit)
+                  .WithMany()
+                  .HasForeignKey(e => e.ConsumedCreditLedgerId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // PracticeAnswer configuration
+        builder.Entity<PracticeAnswer>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.PracticeSessionId).IsRequired();
+            entity.Property(e => e.QuestionId).IsRequired();
+            entity.Property(e => e.SelectedOptionIds).HasMaxLength(1000);
+            entity.Property(e => e.GivenText).HasMaxLength(2000);
+            entity.Property(e => e.AnsweredAt).IsRequired();
+
+            entity.HasOne(e => e.PracticeSession)
+                  .WithMany(ps => ps.Answers)
+                  .HasForeignKey(e => e.PracticeSessionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Question)
+                  .WithMany()
+                  .HasForeignKey(e => e.QuestionId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // InterviewAnswerNew configuration
+        builder.Entity<InterviewAnswerNew>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.InterviewSessionId).IsRequired();
+            entity.Property(e => e.QuestionId).IsRequired();
+            entity.Property(e => e.SelectedOptionIds).HasMaxLength(1000);
+            entity.Property(e => e.GivenText).HasMaxLength(2000);
+            entity.Property(e => e.AnsweredAt).IsRequired();
+
+            entity.HasOne(e => e.InterviewSession)
+                  .WithMany(ses => ses.Answers)
+                  .HasForeignKey(e => e.InterviewSessionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Question)
+                  .WithMany()
+                  .HasForeignKey(e => e.QuestionId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // SessionAuditEvent configuration
+        builder.Entity<SessionAuditEvent>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.SessionType).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.SessionId).IsRequired();
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.EventType).IsRequired();
+            entity.Property(e => e.MetaJson).HasMaxLength(2000);
+            entity.Property(e => e.CreatedAt).IsRequired();
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => new { e.SessionType, e.SessionId });
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.CreatedAt);
+        });
+
+        // SubscriptionPlan configuration
+        builder.Entity<SubscriptionPlan>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.Price).HasPrecision(10, 2);
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+        });
+
+        // UserSubscription configuration
+        builder.Entity<UserSubscription>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.SubscriptionPlanId).IsRequired();
+            entity.Property(e => e.Status).IsRequired();
+            entity.Property(e => e.StartDate).IsRequired();
+            entity.Property(e => e.EndDate).IsRequired();
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt).IsRequired();
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.SubscriptionPlan)
+                  .WithMany(sp => sp.UserSubscriptions)
+                  .HasForeignKey(e => e.SubscriptionPlanId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // CreditTopUp configuration
+        builder.Entity<CreditTopUp>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.Amount).HasPrecision(10, 2);
+            entity.Property(e => e.CreatedAt).IsRequired();
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // CreditLedger configuration
+        builder.Entity<CreditLedger>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.TransactionType).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).IsRequired();
+
+            entity.HasOne(e => e.User)
+                  .WithMany()
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.SourceTopUp)
+                  .WithMany(ct => ct.CreditEntries)
+                  .HasForeignKey(e => e.SourceTopUpId)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(e => e.InterviewSession)
+                  .WithMany()
+                  .HasForeignKey(e => e.InterviewSessionId)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(e => e.UserId);
+            entity.HasIndex(e => e.CreatedAt);
+        });
+
+        // InterviewCertificate configuration
+        builder.Entity<InterviewCertificate>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.InterviewSessionId).IsRequired();
+            entity.Property(e => e.CertificateNumber).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.VerificationUrl).IsRequired().HasMaxLength(500);
+            entity.Property(e => e.QrCodeData).IsRequired().HasMaxLength(1000);
+            entity.Property(e => e.IssuedAt).IsRequired();
+
+            entity.HasOne(e => e.InterviewSession)
+                  .WithOne(ses => ses.Certificate)
+                  .HasForeignKey<InterviewCertificate>(e => e.InterviewSessionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => e.CertificateNumber).IsUnique();
+        });
+
+        // QuestionKeyword configuration
+        builder.Entity<QuestionKeyword>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.QuestionId).IsRequired();
+            entity.Property(e => e.Text).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Weight).HasPrecision(5, 2);
+
+            entity.HasOne(e => e.Question)
+                  .WithMany(q => q.Keywords)
+                  .HasForeignKey(e => e.QuestionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Update Question entity with new fields
+        builder.Entity<Question>(entity =>
+        {
+            entity.Property(e => e.UsableInPractice).IsRequired().HasDefaultValue(true);
+            entity.Property(e => e.UsableInInterview).IsRequired().HasDefaultValue(true);
+            entity.Property(e => e.Difficulty).HasMaxLength(50);
+            entity.Property(e => e.EstimatedTimeSec).HasDefaultValue(60);
+            entity.Property(e => e.InterviewCooldownDays).HasDefaultValue(0);
+
+            entity.HasIndex(e => e.UsableInPractice);
+            entity.HasIndex(e => e.UsableInInterview);
+            entity.HasIndex(e => e.LastUsedInInterviewAt);
         });
     }
 }

@@ -101,6 +101,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       adminOnly: true
     },
     {
+      to: '/admin/practice-interview/templates',
+      icon: 'fact_check',
+      label: 'Practice & Interview',
+      adminOnly: true
+    },
+    {
+      to: '/admin/practice-interview/assignments',
+      icon: 'group_work',
+      label: 'Assignments',
+      adminOnly: true
+    },
+    {
       to: '/admin/logs',
       icon: 'description',
       label: 'System Logs',

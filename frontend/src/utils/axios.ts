@@ -45,6 +45,6 @@ http.interceptors.request.use(
 
 // Helpful during local dev to confirm base URL
 try {
-  // eslint-disable-next-line no-console
+   
   console.log('axios baseURL:', http.defaults.baseURL);
 } catch {}

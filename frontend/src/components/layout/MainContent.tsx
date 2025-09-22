@@ -21,6 +21,10 @@ import SettingsPage from '@/pages/admin/SettingsPage';
 import AdminLogsPage from '@/pages/admin/AdminLogsPage';
 import AdminMaintenancePage from '@/pages/admin/AdminMaintenancePage';
 import AdminHealthPage from '@/pages/admin/AdminHealthPage';
+import TemplatesPage from '@/pages/admin/practice-interview/TemplatesPage';
+import TemplateFormPage from '@/pages/admin/practice-interview/TemplateFormPage';
+import AssignmentsPage from '@/pages/admin/practice-interview/AssignmentsPage';
+import AssignmentFormPage from '@/pages/admin/practice-interview/AssignmentFormPage';
 import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/types/api';
 
@@ -40,7 +44,9 @@ const MainContent: React.FC = () => {
         '/admin/logs',
         '/admin/maintenance',
         '/admin/health',
-        '/admin/settings'
+        '/admin/settings',
+        '/admin/practice-interview/templates',
+        '/admin/practice-interview/assignments'
       ];
       const isAllowedPage = allowedPages.some(page =>
         location.pathname === page || location.pathname.startsWith(page + '/')
@@ -57,6 +63,17 @@ const MainContent: React.FC = () => {
         if (location.pathname.endsWith('/preview')) return <PreviewSessionTemplatePage />;
       }
 
+      if (location.pathname.startsWith('/admin/practice-interview/templates/')) {
+        if (location.pathname.endsWith('/new')) return <TemplateFormPage />;
+        if (location.pathname.endsWith('/edit')) return <TemplateFormPage />;
+        if (location.pathname.endsWith('/preview')) return <TemplateFormPage />;
+      }
+
+      if (location.pathname.startsWith('/admin/practice-interview/assignments/')) {
+        if (location.pathname.endsWith('/new')) return <AssignmentFormPage />;
+        if (location.pathname.endsWith('/edit')) return <AssignmentFormPage />;
+      }
+
       switch (location.pathname) {
         case '/admin/questions':
           return <QuestionsPage />;
@@ -68,6 +85,10 @@ const MainContent: React.FC = () => {
           return <UsersPage />;
         case '/admin/session-templates':
           return <SessionTemplatesPage />;
+        case '/admin/practice-interview/templates':
+          return <TemplatesPage />;
+        case '/admin/practice-interview/assignments':
+          return <AssignmentsPage />;
         case '/admin/resources':
           return <ResourcesPage />;
         case '/admin/logs':

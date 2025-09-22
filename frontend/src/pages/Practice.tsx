@@ -1,57 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { QuestionType, DifficultyLevel, PracticeMode, Question, QuestionOption } from '@/types/api';
 import { apiClient } from '@/services/api';
-import { useAuthStore } from '@/stores/authStore';
+import { PracticeMode, Question, QuestionType, DifficultyLevel } from '@/types/api';
+
+const STORAGE_KEY = 'techprep.practice.sessionState';
+
+interface SessionTemplate {
+  id: string;
+  name: string;
+  description: string;
+  topicId: number;
+  topicName: string;
+  questionCount: number;
+  difficulty: DifficultyLevel;
+  estimatedTime: number;
+}
 
 interface CurrentSession {
   sessionId: string;
   mode: PracticeMode;
   questions: Question[];
   currentQuestionIndex: number;
-  answers: Record<string, any>;
+  answers: Record<string, string | string[]>;
   startTime: Date;
-  sessionName?: string;
+  sessionName: string;
 }
 
-const Practice: React.FC = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user } = useAuthStore();
+interface LocationState {
+  sessionId?: string;
+  mode?: PracticeMode;
+  sessionData?: SessionTemplate;
+}
 
-  // Immediate redirect if no session data
-  const passedSessionData = location.state?.sessionData;
-  if (!passedSessionData) {
-    navigate('/sessions', { replace: true });
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <p className="text-[var(--text-secondary)]">
-            Redirecting to sessions...
-          </p>
-        </div>
-      </div>
-    );
+interface StoredPracticeState {
+  sessionData: SessionTemplate;
+  mode: PracticeMode;
+  sessionId?: string;
+}
+
+const readStoredSessionState = (): StoredPracticeState | null => {
+  if (typeof window === 'undefined') {
+    return null;
   }
 
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return null;
+    }
+    return JSON.parse(raw) as StoredPracticeState;
+  }
+  catch {
+    return null;
+  }
+};
+
+
+const Practice: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = (location.state as LocationState) ?? {};
+  const storedState = useMemo(readStoredSessionState, []);
+
+  const [sessionTemplate, setSessionTemplate] = useState<SessionTemplate | null>(() =>
+    locationState.sessionData ?? storedState?.sessionData ?? null
+  );
+
+  const [sessionMode, setSessionMode] = useState<PracticeMode>(() =>
+    locationState.mode ?? storedState?.mode ?? PracticeMode.Study
+  );
+
+  const [requestedSessionId, setRequestedSessionId] = useState<string | undefined>(() =>
+    locationState.sessionId ?? storedState?.sessionId
+  );
+
   const [session, setSession] = useState<CurrentSession | null>(null);
-  const [currentAnswer, setCurrentAnswer] = useState<any>(null);
+  const [currentAnswer, setCurrentAnswer] = useState<string | string[] | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [writtenAnswer, setWrittenAnswer] = useState('');
   const [feedback, setFeedback] = useState<{ isCorrect?: boolean; matchPercentage?: number; message?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(true);
 
-  const createSessionAndFetchQuestions = async (passedSessionData: any, mode: PracticeMode) => {
+  const createSessionAndFetchQuestions = useCallback(async (sessionData: SessionTemplate, mode: PracticeMode) => {
     try {
       setIsLoadingQuestions(true);
 
       // Create a session in the backend
       const sessionResponse = await apiClient.createSession({
-        topicId: passedSessionData.topicId,
-        level: passedSessionData.difficulty.toLowerCase(),
+        topicId: sessionData.topicId,
+        level: sessionData.difficulty.toLowerCase(),
         mode: mode === PracticeMode.Study ? 'Study' : 'Interview',
-        questionCount: passedSessionData.questionCount
+        questionCount: sessionData.questionCount
       });
 
       if (!sessionResponse.success || !sessionResponse.data) {
@@ -62,13 +102,13 @@ const Practice: React.FC = () => {
 
       // Fetch questions based on session data
       const questionsResponse = await apiClient.getQuestions({
-        topicId: passedSessionData.topicId,
-        level: passedSessionData.difficulty.toLowerCase()
+        topicId: sessionData.topicId,
+        level: sessionData.difficulty.toLowerCase()
       });
 
       if (questionsResponse.success && questionsResponse.data) {
         // Limit to the number of questions specified in the session
-        const limitedQuestions = questionsResponse.data.slice(0, passedSessionData.questionCount);
+        const limitedQuestions = questionsResponse.data.slice(0, sessionData.questionCount);
         return { questions: limitedQuestions, sessionId: realSessionId };
       }
 
@@ -79,28 +119,67 @@ const Practice: React.FC = () => {
     } finally {
       setIsLoadingQuestions(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (sessionTemplate) {
+      const payload: StoredPracticeState = {
+        sessionData: sessionTemplate,
+        mode: sessionMode,
+        sessionId: requestedSessionId,
+      };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } else {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
+  }, [sessionTemplate, sessionMode, requestedSessionId]);
+
+  useEffect(() => {
+    if (locationState.sessionData) {
+      setSessionTemplate(locationState.sessionData);
+    }
+
+    if (locationState.mode) {
+      setSessionMode(locationState.mode);
+    }
+
+    if (locationState.sessionId) {
+      setRequestedSessionId(locationState.sessionId);
+    }
+  }, [locationState.sessionData, locationState.mode, locationState.sessionId]);
 
   useEffect(() => {
     const initializeSession = async () => {
+      if (!sessionTemplate) {
+        setSession(null);
+        setIsLoadingQuestions(false);
+        return;
+      }
+
       try {
-        const providedSessionId = location.state?.sessionId;
-        const mode = location.state?.mode || PracticeMode.Study;
+        const mode = sessionMode || PracticeMode.Study;
+        const providedSessionId = requestedSessionId;
+
+        if (session && session.sessionId === providedSessionId && session.mode === mode) {
+          return;
+        }
 
         let questions: Question[] = [];
-        let realSessionId = providedSessionId || 'session-' + Date.now();
-        let sessionName = passedSessionData.name || 'Practice Session';
+        let realSessionId = providedSessionId || `session-${Date.now()}`;
+        const sessionName = sessionTemplate.name || 'Practice Session';
 
-        console.log('Creating session with data:', passedSessionData);
-        // Create session and fetch real questions from the database
-        const result = await createSessionAndFetchQuestions(passedSessionData, mode);
+        console.log('Creating session with data:', sessionTemplate);
+        const result = await createSessionAndFetchQuestions(sessionTemplate, mode);
         questions = result.questions;
         if (result.sessionId) {
           realSessionId = result.sessionId;
         }
         console.log('Session created, got questions:', questions.length);
 
-        // Initialize session with data
         const sessionData: CurrentSession = {
           sessionId: realSessionId,
           mode,
@@ -108,21 +187,26 @@ const Practice: React.FC = () => {
           currentQuestionIndex: 0,
           answers: {},
           startTime: new Date(),
-          sessionName
+          sessionName,
         };
         setSession(sessionData);
+        setRequestedSessionId(realSessionId);
+        if (sessionMode !== mode) {
+          setSessionMode(mode);
+        }
       } catch (error) {
         console.error('Error initializing session:', error);
         setIsLoadingQuestions(false);
-        // Redirect to sessions on error
         navigate('/sessions');
       }
     };
 
     initializeSession();
-  }, [location.state, navigate, passedSessionData]);
+  }, [createSessionAndFetchQuestions, navigate, requestedSessionId, sessionMode, sessionTemplate, session]);
 
-  const currentQuestion = session?.questions[session.currentQuestionIndex];
+  const currentQuestion = session
+    ? session.questions[session.currentQuestionIndex]
+    : undefined;
 
   const handleSingleChoice = (optionId: string) => {
     setSelectedOptions([optionId]);
@@ -375,6 +459,25 @@ const Practice: React.FC = () => {
       </div>
     );
   };
+
+  if (!sessionTemplate) {
+    return (
+      <div className="max-w-xl mx-auto">
+        <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-8 text-center">
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Select a Practice Session</h3>
+          <p className="text-[var(--text-secondary)] mb-6">
+            Choose a session from the practice catalog to get started.
+          </p>
+          <button
+            onClick={() => navigate('/sessions', { replace: true })}
+            className="px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200"
+          >
+            Browse Sessions
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!session || isLoadingQuestions) {
     return (

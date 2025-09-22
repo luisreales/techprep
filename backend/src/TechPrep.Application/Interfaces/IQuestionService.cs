@@ -17,7 +17,10 @@ public interface IQuestionService
         int? topicId = null,
         QuestionType? type = null,
         DifficultyLevel? level = null,
-        string? search = null);
+        string? search = null,
+        bool? usableInPractice = null,
+        bool? usableInInterview = null,
+        bool enforceInterviewCooldown = false);
     
     Task<QuestionDto?> GetQuestionByIdAsync(Guid id);
     Task<QuestionDto> CreateQuestionAsync(CreateQuestionDto createQuestionDto);

@@ -91,7 +91,13 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
             .ToListAsync();
     }
 
-    public async Task<int> GetCountByFiltersAsync(int? topicId, QuestionType? type, DifficultyLevel? level)
+    public async Task<int> GetCountByFiltersAsync(
+        int? topicId,
+        QuestionType? type,
+        DifficultyLevel? level,
+        bool? usableInPractice = null,
+        bool? usableInInterview = null,
+        bool enforceInterviewCooldown = false)
     {
         var query = _dbSet.AsQueryable();
 
@@ -103,6 +109,19 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
 
         if (level.HasValue)
             query = query.Where(q => q.Level == level.Value);
+
+        if (usableInPractice.HasValue)
+            query = query.Where(q => q.UsableInPractice == usableInPractice.Value);
+
+        if (usableInInterview.HasValue)
+            query = query.Where(q => q.UsableInInterview == usableInInterview.Value);
+
+        if (enforceInterviewCooldown)
+        {
+            var utcNow = DateTime.UtcNow;
+            query = query.Where(q => !q.LastUsedInInterviewAt.HasValue ||
+                utcNow >= q.LastUsedInInterviewAt.Value.AddDays(q.InterviewCooldownDays));
+        }
 
         return await query.CountAsync();
     }

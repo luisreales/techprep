@@ -11,6 +11,8 @@ import type {
   Resource,
 } from '@/types';
 
+export const api = http;
+
 export const apiClient = {
   setToken(token: string | null) {
     if (token) {

@@ -21,6 +21,46 @@
       "sourceFileMap": {
         "/Views": "${workspaceFolder}/src/TechPrep.API/Views"
       }
+    },
+    {
+      "name": "Run Script: dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/frontend"
+    },
+    {
+      "name": "Launch Backend API (Port 5000)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/backend/src/TechPrep.API/bin/Debug/net8.0/TechPrep.API.dll",
+      "args": ["--urls", "http://localhost:5000"],
+      "cwd": "${workspaceFolder}/backend/src/TechPrep.API",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Launch Frontend Dev Server (Port 3000)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev -- --port 3000",
+      "cwd": "${workspaceFolder}/frontend",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Launch Full Stack",
+      "configurations": [
+        "Launch Backend API (Port 5000)",
+        "Launch Frontend Dev Server (Port 3000)"
+      ],
+      "stopAll": true,
+      "preLaunchTask": "build"
     }
   ]
 }

@@ -292,6 +292,111 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("CodeChallenges");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.CreditLedger", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("BalanceAfter")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Credits")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("InterviewSessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("SourceTopUpId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("InterviewSessionId");
+
+                    b.HasIndex("SourceTopUpId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CreditLedgers");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.CreditTopUp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Credits")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CreditTopUps");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("OrgId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -329,6 +434,88 @@ namespace TechPrep.Infrastructure.Migrations
                     b.HasIndex("SessionId");
 
                     b.ToTable("InterviewAnswer");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswerNew", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("AnsweredAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GivenText")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("InterviewSessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("IsCorrect")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("Score")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SelectedOptionIds")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TimeSpentSec")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InterviewSessionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("InterviewAnswersNew");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewCertificate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CertificateNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("InterviewSessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsValid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("IssuedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QrCodeData")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VerificationUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CertificateNumber")
+                        .IsUnique();
+
+                    b.HasIndex("InterviewSessionId")
+                        .IsUnique();
+
+                    b.ToTable("InterviewCertificates");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewSession", b =>
@@ -376,6 +563,142 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("InterviewSession");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewSessionNew", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CertificateIssued")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ConsumedCreditLedgerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CurrentQuestionIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SubmittedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TotalTimeSec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId");
+
+                    b.HasIndex("ConsumedCreditLedgerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("InterviewSessionsNew");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AllowPause")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("BlockCopyPaste")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CertificationEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CooldownHours")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FeedbackMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("InterviewCost")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MaxAttempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MaxBacktracks")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NavigationMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PerQuestionTimeSec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ProctoringEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("RequireFullscreen")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SelectionCriteriaJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("{}");
+
+                    b.Property<bool>("ShowGlossary")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowHints")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowSources")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TotalTimeSec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("TrackFocusLoss")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("VisibilityDefault")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterviewTemplates");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.LearningResource", b =>
                 {
                     b.Property<int>("Id")
@@ -421,6 +744,47 @@ namespace TechPrep.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LearningResources");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeAnswer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("AnsweredAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GivenText")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("PracticeSessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Score")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SelectedOptionIds")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TimeSpentSec")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PracticeSessionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("PracticeAnswers");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.PracticeSession", b =>
@@ -536,6 +900,52 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("PracticeSessionItems");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionNew", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("AssignmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CurrentQuestionIndex")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CurrentQuestionState")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PausedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("SubmittedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TotalTimeSec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PracticeSessionsNew");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.Property<Guid>("Id")
@@ -543,6 +953,23 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Difficulty")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EstimatedTimeSec")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(60);
+
+                    b.Property<int>("InterviewCooldownDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime?>("LastUsedInInterviewAt")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Level")
@@ -564,11 +991,55 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("UsableInInterview")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("UsableInPractice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
                     b.HasKey("Id");
+
+                    b.HasIndex("LastUsedInInterviewAt");
 
                     b.HasIndex("TopicId");
 
+                    b.HasIndex("UsableInInterview");
+
+                    b.HasIndex("UsableInPractice");
+
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.QuestionKeyword", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Weight")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionKeywords");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.QuestionOption", b =>
@@ -629,6 +1100,99 @@ namespace TechPrep.Infrastructure.Migrations
                     b.HasIndex("TopicId");
 
                     b.ToTable("ResourceTopics");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CertificationEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CooldownHoursBetweenAttempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("MaxAttempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TemplateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Visibility")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("WindowEnd")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("WindowStart")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SessionAssignments");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionAuditEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EventType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("InterviewSessionNewId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("SessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SessionType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("InterviewSessionNewId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("SessionType", "SessionId");
+
+                    b.ToTable("SessionAuditEvents");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplate", b =>
@@ -743,6 +1307,42 @@ namespace TechPrep.Infrastructure.Migrations
                     b.HasIndex("TopicId");
 
                     b.ToTable("SessionTemplateTopics");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SubscriptionPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("InterviewCreditsPerMonth")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SubscriptionPlans");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>
@@ -896,6 +1496,64 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.UserGroup", b =>
+                {
+                    b.Property<int>("GroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleInGroup")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGroups");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.UserSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SubscriptionPlanId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscriptionPlanId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSubscriptions");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -996,6 +1654,42 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.CreditLedger", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.InterviewSessionNew", "InterviewSession")
+                        .WithMany()
+                        .HasForeignKey("InterviewSessionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TechPrep.Core.Entities.CreditTopUp", "SourceTopUp")
+                        .WithMany("CreditEntries")
+                        .HasForeignKey("SourceTopUpId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InterviewSession");
+
+                    b.Navigation("SourceTopUp");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.CreditTopUp", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswer", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Question", "Question")
@@ -1015,6 +1709,36 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Session");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswerNew", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.InterviewSessionNew", "InterviewSession")
+                        .WithMany("Answers")
+                        .HasForeignKey("InterviewSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("InterviewSession");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewCertificate", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.InterviewSessionNew", "InterviewSession")
+                        .WithOne("Certificate")
+                        .HasForeignKey("TechPrep.Core.Entities.InterviewCertificate", "InterviewSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InterviewSession");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewSession", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
@@ -1030,6 +1754,51 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewSessionNew", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.SessionAssignment", "Assignment")
+                        .WithMany("InterviewSessions")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.CreditLedger", "ConsumedCredit")
+                        .WithMany()
+                        .HasForeignKey("ConsumedCreditLedgerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("ConsumedCredit");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeAnswer", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.PracticeSessionNew", "PracticeSession")
+                        .WithMany("Answers")
+                        .HasForeignKey("PracticeSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PracticeSession");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.PracticeSession", b =>
@@ -1069,6 +1838,24 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionNew", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.SessionAssignment", "Assignment")
+                        .WithMany("PracticeSessions")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
@@ -1078,6 +1865,17 @@ namespace TechPrep.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Topic");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.QuestionKeyword", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Question", "Question")
+                        .WithMany("Keywords")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.QuestionOption", b =>
@@ -1129,6 +1927,46 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionAssignment", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Group", "Group")
+                        .WithMany("Assignments")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TechPrep.Core.Entities.InterviewTemplate", "Template")
+                        .WithMany("Assignments")
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Template");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionAuditEvent", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.InterviewSessionNew", null)
+                        .WithMany("AuditEvents")
+                        .HasForeignKey("InterviewSessionNewId");
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplateItem", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.SessionTemplate", "Template")
@@ -1159,6 +1997,44 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.UserGroup", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Group", "Group")
+                        .WithMany("UserGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.UserSubscription", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.SubscriptionPlan", "SubscriptionPlan")
+                        .WithMany("UserSubscriptions")
+                        .HasForeignKey("SubscriptionPlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SubscriptionPlan");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.CodeChallenge", b =>
                 {
                     b.Navigation("Attempts");
@@ -1168,9 +2044,35 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topics");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.CreditTopUp", b =>
+                {
+                    b.Navigation("CreditEntries");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Group", b =>
+                {
+                    b.Navigation("Assignments");
+
+                    b.Navigation("UserGroups");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewSession", b =>
                 {
                     b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewSessionNew", b =>
+                {
+                    b.Navigation("Answers");
+
+                    b.Navigation("AuditEvents");
+
+                    b.Navigation("Certificate");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.InterviewTemplate", b =>
+                {
+                    b.Navigation("Assignments");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.LearningResource", b =>
@@ -1185,16 +2087,35 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("SessionItems");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionNew", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
+                    b.Navigation("Keywords");
+
                     b.Navigation("Options");
 
                     b.Navigation("ResourceLinks");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.SessionAssignment", b =>
+                {
+                    b.Navigation("InterviewSessions");
+
+                    b.Navigation("PracticeSessions");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.SessionTemplate", b =>
                 {
                     b.Navigation("TemplateItems");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.SubscriptionPlan", b =>
+                {
+                    b.Navigation("UserSubscriptions");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.Tag", b =>
