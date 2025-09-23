@@ -1,17 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useProfile } from '@/hooks/useProfile';
 import { UserRole } from '@/types/api';
 
 interface TopBarProps {
   onMenuToggle: () => void;
+  onCollapseToggle?: () => void;
+  isSidebarCollapsed?: boolean;
+  showCollapseToggle?: boolean;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onMenuToggle }) => {
+const TopBar: React.FC<TopBarProps> = ({
+  onMenuToggle,
+  onCollapseToggle,
+  isSidebarCollapsed = false,
+  showCollapseToggle
+}) => {
   const { user, logout } = useAuthStore();
   const { data: profile } = useProfile();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -69,6 +78,7 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuToggle }) => {
 
   // Get avatar source (profile avatar or fallback to initials)
   const avatarSrc = profile?.avatarUrl;
+  const collapseButtonVisible = (showCollapseToggle ?? false) || location.pathname.startsWith('/admin/question-bank');
 
   return (
     <header className="bg-[var(--card-background)] shadow-sm sticky top-0 z-30 border-b border-[var(--border-color)]">
@@ -83,7 +93,18 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuToggle }) => {
           </button>
 
           {/* Welcome message */}
-          <div className="flex items-center">
+          <div className="flex items-center gap-3">
+            {collapseButtonVisible && onCollapseToggle && (
+              <button
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:bg-gray-50 rounded-lg transition-colors"
+                onClick={onCollapseToggle}
+              >
+                <span className="material-symbols-outlined text-base">
+                  {isSidebarCollapsed ? 'chevron_right' : 'chevron_left'}
+                </span>
+                <span>{isSidebarCollapsed ? 'Expand Menu' : 'Collapse Menu'}</span>
+              </button>
+            )}
             <h1 className="text-xl font-bold text-[var(--text-primary)] lg:text-2xl">
               {profile?.firstName || user?.firstName ? `Welcome Back, ${profile?.firstName || user?.firstName}!` : 'Welcome Back!'}
             </h1>

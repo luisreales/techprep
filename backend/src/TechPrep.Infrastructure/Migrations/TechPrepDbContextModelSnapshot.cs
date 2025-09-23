@@ -181,6 +181,99 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("AppSettings");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.CertificateTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BodyHtml")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CssStyles")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FontFamily")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FooterHtml")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HeaderHtml")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Orientation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PageSize")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrimaryColor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SecondaryColor")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ShowDuration")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowIntegrityStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowQrCode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowTopicBreakdown")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ShowVerificationUrl")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CertificateTemplate");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.ChallengeAttempt", b =>
                 {
                     b.Property<Guid>("Id")
@@ -377,22 +470,32 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("OrgId")
+                    b.Property<int?>("OrganizationId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("Groups");
                 });
@@ -479,14 +582,29 @@ namespace TechPrep.Infrastructure.Migrations
 
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewCertificate", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("CertificateNumber")
+                    b.Property<string>("CertificateId")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("HasIntegrityViolations")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IntegrityNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IntegrityViolationsCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("InterviewSessionId")
                         .HasColumnType("TEXT");
@@ -497,9 +615,67 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("IssuedByUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MaxScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PdfFileName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PdfFilePath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("PdfFileSize")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("QrCodeData")
                         .IsRequired()
                         .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RevocationReason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ScorePercentage")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SkillsAssessedJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TemplateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TopicsJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VerificationHash")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VerificationUrl")
@@ -509,11 +685,17 @@ namespace TechPrep.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CertificateNumber")
+                    b.HasIndex("CertificateId")
                         .IsUnique();
 
                     b.HasIndex("InterviewSessionId")
                         .IsUnique();
+
+                    b.HasIndex("IssuedByUserId");
+
+                    b.HasIndex("TemplateId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("InterviewCertificates");
                 });
@@ -744,6 +926,30 @@ namespace TechPrep.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LearningResources");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Organization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Organization");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.PracticeAnswer", b =>
@@ -1449,6 +1655,9 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("OrganizationId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
 
@@ -1493,6 +1702,8 @@ namespace TechPrep.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("OrganizationId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -1504,14 +1715,20 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("AddedByUserId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RoleInGroup")
-                        .HasMaxLength(100)
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("AddedByUserId");
 
                     b.HasIndex("UserId");
 
@@ -1690,6 +1907,23 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.Group", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Organization", "Organization")
+                        .WithMany("Groups")
+                        .HasForeignKey("OrganizationId");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewAnswer", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Question", "Question")
@@ -1730,13 +1964,35 @@ namespace TechPrep.Infrastructure.Migrations
 
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewCertificate", b =>
                 {
-                    b.HasOne("TechPrep.Core.Entities.InterviewSessionNew", "InterviewSession")
+                    b.HasOne("TechPrep.Core.Entities.InterviewSessionNew", "Session")
                         .WithOne("Certificate")
                         .HasForeignKey("TechPrep.Core.Entities.InterviewCertificate", "InterviewSessionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("InterviewSession");
+                    b.HasOne("TechPrep.Core.Entities.User", "IssuedByUser")
+                        .WithMany()
+                        .HasForeignKey("IssuedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.CertificateTemplate", "Template")
+                        .WithMany("Certificates")
+                        .HasForeignKey("TemplateId");
+
+                    b.HasOne("TechPrep.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IssuedByUser");
+
+                    b.Navigation("Session");
+
+                    b.Navigation("Template");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.InterviewSession", b =>
@@ -1930,7 +2186,7 @@ namespace TechPrep.Infrastructure.Migrations
             modelBuilder.Entity("TechPrep.Core.Entities.SessionAssignment", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Group", "Group")
-                        .WithMany("Assignments")
+                        .WithMany("SessionAssignments")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -1997,8 +2253,19 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("Topic");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.User", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.Organization", null)
+                        .WithMany("Users")
+                        .HasForeignKey("OrganizationId");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.UserGroup", b =>
                 {
+                    b.HasOne("TechPrep.Core.Entities.User", "AddedByUser")
+                        .WithMany()
+                        .HasForeignKey("AddedByUserId");
+
                     b.HasOne("TechPrep.Core.Entities.Group", "Group")
                         .WithMany("UserGroups")
                         .HasForeignKey("GroupId")
@@ -2010,6 +2277,8 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AddedByUser");
 
                     b.Navigation("Group");
 
@@ -2035,6 +2304,11 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.CertificateTemplate", b =>
+                {
+                    b.Navigation("Certificates");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.CodeChallenge", b =>
                 {
                     b.Navigation("Attempts");
@@ -2051,7 +2325,7 @@ namespace TechPrep.Infrastructure.Migrations
 
             modelBuilder.Entity("TechPrep.Core.Entities.Group", b =>
                 {
-                    b.Navigation("Assignments");
+                    b.Navigation("SessionAssignments");
 
                     b.Navigation("UserGroups");
                 });
@@ -2080,6 +2354,13 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("QuestionLinks");
 
                     b.Navigation("TopicLinks");
+                });
+
+            modelBuilder.Entity("TechPrep.Core.Entities.Organization", b =>
+                {
+                    b.Navigation("Groups");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.PracticeSession", b =>

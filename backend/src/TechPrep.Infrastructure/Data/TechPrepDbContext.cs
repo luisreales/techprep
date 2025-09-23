@@ -355,7 +355,7 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
         builder.Entity<UserGroup>(entity =>
         {
             entity.HasKey(e => new { e.GroupId, e.UserId });
-            entity.Property(e => e.RoleInGroup).HasMaxLength(100);
+            entity.Property(e => e.Role).HasConversion<string>().HasMaxLength(50);
             entity.Property(e => e.JoinedAt).IsRequired();
 
             entity.HasOne(e => e.User)
@@ -394,7 +394,7 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
                   .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(e => e.Group)
-                  .WithMany(g => g.Assignments)
+                  .WithMany(g => g.SessionAssignments)
                   .HasForeignKey(e => e.GroupId)
                   .OnDelete(DeleteBehavior.Cascade);
 
@@ -592,18 +592,18 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
         builder.Entity<InterviewCertificate>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.InterviewSessionId).IsRequired();
-            entity.Property(e => e.CertificateNumber).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.SessionId).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.CertificateId).IsRequired().HasMaxLength(100);
             entity.Property(e => e.VerificationUrl).IsRequired().HasMaxLength(500);
             entity.Property(e => e.QrCodeData).IsRequired().HasMaxLength(1000);
             entity.Property(e => e.IssuedAt).IsRequired();
 
-            entity.HasOne(e => e.InterviewSession)
-                  .WithOne(ses => ses.Certificate)
+            entity.HasOne(e => e.Session)
+                  .WithOne(s => s.Certificate)
                   .HasForeignKey<InterviewCertificate>(e => e.InterviewSessionId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasIndex(e => e.CertificateNumber).IsUnique();
+            entity.HasIndex(e => e.CertificateId).IsUnique();
         });
 
         // QuestionKeyword configuration

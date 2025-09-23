@@ -112,6 +112,26 @@ export const AppRoutes: React.FC = () => {
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />
       <Route
+        path="/admin/question-bank"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/groups"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/credits"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/proctoring"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
+        path="/admin/analytics"
+        element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
+      />
+      <Route
         path="/admin/logs"
         element={isAuthenticated ? <AuthenticatedLayout /> : <Navigate to="/login" replace />}
       />

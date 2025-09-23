@@ -28,4 +28,6 @@ public interface IQuestionService
     Task<bool> DeleteQuestionAsync(Guid id);
     Task<int> BulkDeleteQuestionsAsync(List<Guid> ids);
     Task<byte[]> ExportQuestionsAsync(List<Guid>? ids = null);
+    Task<QuestionDto?> GetQuestionByTextAsync(string questionText);
+    Task<QuestionDto?> DuplicateQuestionAsync(Guid id);
 }

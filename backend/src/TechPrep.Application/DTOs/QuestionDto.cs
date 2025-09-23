@@ -15,6 +15,7 @@ public class QuestionDto
     public IEnumerable<LearningResourceDto> LearningResources { get; set; } = new List<LearningResourceDto>();
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public QuestionStatsDto Stats { get; set; } = new();
 }
 
 public class QuestionOptionDto
@@ -31,4 +32,13 @@ public class LearningResourceDto
     public string Title { get; set; } = string.Empty;
     public string Url { get; set; } = string.Empty;
     public string? Description { get; set; }
+}
+
+public class QuestionStatsDto
+{
+    public int TotalAttempts { get; set; }
+    public int CorrectAttempts { get; set; }
+    public double AverageScore { get; set; }
+    public double AverageTimeSpent { get; set; }
+    public double DifficultyRating { get; set; }
 }

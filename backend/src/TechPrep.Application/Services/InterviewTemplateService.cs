@@ -11,16 +11,16 @@ namespace TechPrep.Application.Services;
 
 public class InterviewTemplateService : IInterviewTemplateService
 {
-    private readonly IInterviewTemplateRepository _templateRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IQuestionService _questionService;
     private readonly IMapper _mapper;
 
     public InterviewTemplateService(
-        IInterviewTemplateRepository templateRepository,
+        IUnitOfWork unitOfWork,
         IQuestionService questionService,
         IMapper mapper)
     {
-        _templateRepository = templateRepository;
+        _unitOfWork = unitOfWork;
         _questionService = questionService;
         _mapper = mapper;
     }
@@ -33,8 +33,8 @@ public class InterviewTemplateService : IInterviewTemplateService
         try
         {
             var templates = kind.HasValue
-                ? await _templateRepository.GetByKindAsync(kind.Value)
-                : await _templateRepository.GetAllAsync();
+                ? await _unitOfWork.InterviewTemplates.GetByKindAsync(kind.Value)
+                : await _unitOfWork.InterviewTemplates.GetAllAsync();
 
             var totalCount = templates.Count();
             var pagedTemplates = templates
@@ -73,7 +73,7 @@ public class InterviewTemplateService : IInterviewTemplateService
     {
         try
         {
-            var template = await _templateRepository.GetWithDetailsAsync(id);
+            var template = await _unitOfWork.InterviewTemplates.GetWithDetailsAsync(id);
             if (template == null)
             {
                 return ApiResponse<TemplateDto>.ErrorResponse(
@@ -106,7 +106,8 @@ public class InterviewTemplateService : IInterviewTemplateService
             template.CreatedAt = DateTime.UtcNow;
             template.UpdatedAt = DateTime.UtcNow;
 
-            await _templateRepository.AddAsync(template);
+            await _unitOfWork.InterviewTemplates.AddAsync(template);
+            await _unitOfWork.SaveChangesAsync();
 
             var templateDto = _mapper.Map<TemplateDto>(template);
             return ApiResponse<TemplateDto>.SuccessResponse(templateDto, "Template created successfully");
@@ -124,7 +125,7 @@ public class InterviewTemplateService : IInterviewTemplateService
     {
         try
         {
-            var template = await _templateRepository.GetByIdAsync(id);
+            var template = await _unitOfWork.InterviewTemplates.GetByIdAsync(id);
             if (template == null)
             {
                 return ApiResponse<TemplateDto>.ErrorResponse(
@@ -140,7 +141,8 @@ public class InterviewTemplateService : IInterviewTemplateService
             _mapper.Map(updateDto, template);
             template.UpdatedAt = DateTime.UtcNow;
 
-            _templateRepository.Update(template);
+            _unitOfWork.InterviewTemplates.Update(template);
+            await _unitOfWork.SaveChangesAsync();
 
             var templateDto = _mapper.Map<TemplateDto>(template);
             return ApiResponse<TemplateDto>.SuccessResponse(templateDto, "Template updated successfully");
@@ -158,7 +160,7 @@ public class InterviewTemplateService : IInterviewTemplateService
     {
         try
         {
-            var template = await _templateRepository.GetWithDetailsAsync(id);
+            var template = await _unitOfWork.InterviewTemplates.GetWithDetailsAsync(id);
             if (template == null)
             {
                 return ApiResponse<object>.ErrorResponse(
@@ -174,7 +176,8 @@ public class InterviewTemplateService : IInterviewTemplateService
                     "Cannot delete template with active assignments");
             }
 
-            _templateRepository.Delete(template);
+            _unitOfWork.InterviewTemplates.Delete(template);
+            await _unitOfWork.SaveChangesAsync();
 
             return ApiResponse<object>.SuccessResponse(null, "Template deleted successfully");
         }
@@ -191,7 +194,7 @@ public class InterviewTemplateService : IInterviewTemplateService
     {
         try
         {
-            var original = await _templateRepository.GetByIdAsync(id);
+            var original = await _unitOfWork.InterviewTemplates.GetByIdAsync(id);
             if (original == null)
             {
                 return ApiResponse<TemplateDto>.ErrorResponse(
@@ -205,7 +208,8 @@ public class InterviewTemplateService : IInterviewTemplateService
             cloned.CreatedAt = DateTime.UtcNow;
             cloned.UpdatedAt = DateTime.UtcNow;
 
-            await _templateRepository.AddAsync(cloned);
+            await _unitOfWork.InterviewTemplates.AddAsync(cloned);
+            await _unitOfWork.SaveChangesAsync();
 
             var templateDto = _mapper.Map<TemplateDto>(cloned);
             return ApiResponse<TemplateDto>.SuccessResponse(templateDto, "Template cloned successfully");
@@ -223,7 +227,7 @@ public class InterviewTemplateService : IInterviewTemplateService
     {
         try
         {
-            var template = await _templateRepository.GetByIdAsync(templateId);
+            var template = await _unitOfWork.InterviewTemplates.GetByIdAsync(templateId);
             if (template == null)
             {
                 return ApiResponse<int>.ErrorResponse(
@@ -294,7 +298,7 @@ public class InterviewTemplateService : IInterviewTemplateService
         {
             return ApiResponse<TemplateDto>.ErrorResponse(
                 "INVALID_SELECTION",
-                "Template must select at least one question");
+                "Template must select at least one question. Please set the number of Single Choice, Multiple Choice, or Written questions.");
         }
 
         if (template.Selection.CountSingle < 0 || template.Selection.CountMulti < 0 || template.Selection.CountWritten < 0)

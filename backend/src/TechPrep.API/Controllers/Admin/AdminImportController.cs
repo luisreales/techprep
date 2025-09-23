@@ -55,15 +55,15 @@ public class ImportController : ControllerBase
             }
 
             // Validate file type and size
-            var allowedExtensions = new[] { ".xlsx", ".xls" };
+            var allowedExtensions = new[] { ".xlsx", ".xls", ".csv" };
             var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            
+
             if (!allowedExtensions.Contains(fileExtension))
             {
                 return BadRequest(new
                 {
                     success = false,
-                    message = "Invalid file format. Only Excel files (.xlsx, .xls) are allowed."
+                    message = "Invalid file format. Only Excel (.xlsx, .xls) and CSV (.csv) files are allowed."
                 });
             }
 
@@ -99,25 +99,41 @@ public class ImportController : ControllerBase
             using (var stream = new MemoryStream())
             {
                 await file.CopyToAsync(stream);
-                using var package = new ExcelPackage(stream);
-                var worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                
-                if (worksheet == null)
+
+                List<List<string>> allRows;
+
+                if (fileExtension == ".csv")
                 {
-                    return BadRequest(new
+                    // Handle CSV files
+                    stream.Position = 0;
+                    using var reader = new StreamReader(stream);
+                    var csvContent = await reader.ReadToEndAsync();
+                    allRows = ParseCsvContent(csvContent);
+                }
+                else
+                {
+                    // Handle Excel files
+                    using var package = new ExcelPackage(stream);
+                    var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+
+                    if (worksheet == null)
                     {
-                        success = false,
-                        message = "No worksheet found in Excel file"
-                    });
+                        return BadRequest(new
+                        {
+                            success = false,
+                            message = "No worksheet found in Excel file"
+                        });
+                    }
+
+                    allRows = ParseExcelWorksheet(worksheet);
                 }
 
-                var rowCount = worksheet.Dimension?.Rows ?? 0;
-                if (rowCount < 2) // Header + at least 1 data row
+                if (allRows.Count < 2) // Header + at least 1 data row
                 {
                     return BadRequest(new
                     {
                         success = false,
-                        message = "Excel file must contain header row and at least one data row"
+                        message = "File must contain header row and at least one data row"
                     });
                 }
 
@@ -128,18 +144,19 @@ public class ImportController : ControllerBase
                 var multiChoiceCount = 0;
                 var writtenCount = 0;
 
-                for (int row = 2; row <= Math.Min(rowCount, 52); row++) // Limit to 50 data rows + header for preview
+                for (int row = 1; row < Math.Min(allRows.Count, 51); row++) // Limit to 50 data rows + header for preview
                 {
                     totalRows++;
+                    var currentRow = allRows[row];
                     var rowData = new ExcelRowData
                     {
-                        Topic = worksheet.Cells[row, 1].Text?.Trim() ?? "",
-                        Level = worksheet.Cells[row, 2].Text?.Trim()?.ToLower() ?? "basic",
-                        Type = worksheet.Cells[row, 3].Text?.Trim()?.ToLower() ?? "single_choice",
-                        Text = worksheet.Cells[row, 4].Text?.Trim() ?? "",
-                        Options = worksheet.Cells[row, 5].Text?.Trim() ?? "",
-                        Correct = worksheet.Cells[row, 6].Text?.Trim() ?? "",
-                        OfficialAnswer = worksheet.Cells[row, 7].Text?.Trim() ?? ""
+                        Topic = GetCellValue(currentRow, 0),
+                        Level = GetCellValue(currentRow, 1)?.ToLower() ?? "basic",
+                        Type = GetCellValue(currentRow, 2)?.ToLower() ?? "single_choice",
+                        Text = GetCellValue(currentRow, 3),
+                        Options = GetCellValue(currentRow, 4),
+                        Correct = GetCellValue(currentRow, 5),
+                        OfficialAnswer = GetCellValue(currentRow, 6)
                     };
 
                     var errors = new List<object>();
@@ -258,6 +275,15 @@ public class ImportController : ControllerBase
                 Console.WriteLine($"[COMMIT] Processing row: {row.Text}");
                 try
                 {
+                    // Check for duplicate question by text
+                    var existingQuestion = await _questionService.GetQuestionByTextAsync(row.Text);
+                    if (existingQuestion != null)
+                    {
+                        Console.WriteLine($"[COMMIT] Skipping duplicate question: {row.Text}");
+                        skipped++;
+                        continue;
+                    }
+
                     // Convert ExcelRowData to CreateQuestionDto
                     var createQuestionDto = new CreateQuestionDto
                     {
@@ -271,11 +297,11 @@ public class ImportController : ControllerBase
                     };
 
                     Console.WriteLine($"[COMMIT] Calling _questionService.CreateQuestionAsync for: {createQuestionDto.Text}");
-                    
+
                     // Call the question service to create the question
                     var createdQuestion = await _questionService.CreateQuestionAsync(createQuestionDto);
                     inserted++;
-                    
+
                     Console.WriteLine($"[COMMIT] Successfully created question with ID: {createdQuestion.Id}");
                 }
                 catch (Exception ex)
@@ -530,5 +556,69 @@ public class ImportController : ControllerBase
             "advanced" => DifficultyLevel.Advanced,
             _ => throw new ArgumentException($"Invalid difficulty level: {level}")
         };
+    }
+
+    private List<List<string>> ParseCsvContent(string csvContent)
+    {
+        var rows = new List<List<string>>();
+        var lines = csvContent.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var line in lines)
+        {
+            var cells = new List<string>();
+            var currentCell = "";
+            var inQuotes = false;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+
+                if (c == '"')
+                {
+                    inQuotes = !inQuotes;
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    cells.Add(currentCell.Trim());
+                    currentCell = "";
+                }
+                else
+                {
+                    currentCell += c;
+                }
+            }
+
+            // Add the last cell
+            cells.Add(currentCell.Trim());
+            rows.Add(cells);
+        }
+
+        return rows;
+    }
+
+    private List<List<string>> ParseExcelWorksheet(OfficeOpenXml.ExcelWorksheet worksheet)
+    {
+        var rows = new List<List<string>>();
+        var rowCount = worksheet.Dimension?.Rows ?? 0;
+
+        for (int row = 1; row <= rowCount; row++)
+        {
+            var cells = new List<string>();
+            for (int col = 1; col <= 7; col++) // 7 columns expected
+            {
+                cells.Add(worksheet.Cells[row, col].Text?.Trim() ?? "");
+            }
+            rows.Add(cells);
+        }
+
+        return rows;
+    }
+
+    private string GetCellValue(List<string> row, int columnIndex)
+    {
+        if (columnIndex < 0 || columnIndex >= row.Count)
+            return "";
+
+        return row[columnIndex]?.Trim() ?? "";
     }
 }

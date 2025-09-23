@@ -46,14 +46,17 @@ export const TemplateFormPage: React.FC = () => {
   const navigate = useNavigate();
   const isEditing = !!id;
 
-  const { data: template, isLoading } = useTemplate(id ? parseInt(id) : 0);
+  const templateId = id && !isNaN(parseInt(id)) ? parseInt(id) : 0;
+  const { data: template, isLoading, error } = useTemplate(templateId);
   const createMutation = useCreateTemplate();
   const updateMutation = useUpdateTemplate();
   const { data: topicsData = [], isLoading: topicsLoading } = useTopicsQuery();
 
   const [activeTab, setActiveTab] = useState('basic');
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
+
+  const { control, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
       name: '',
       kind: TemplateKind.Practice,
@@ -89,33 +92,37 @@ export const TemplateFormPage: React.FC = () => {
   useEffect(() => {
     if (template?.data && isEditing) {
       const t = template.data;
-      setValue('name', t.name);
-      setValue('kind', t.kind);
-      setValue('visibilityDefault', t.visibilityDefault);
-      setValue('topics', t.selection.byTopics || []);
-      setValue('levels', t.selection.levels || []);
-      setValue('countSingle', t.selection.countSingle ?? 0);
-      setValue('countMulti', t.selection.countMulti ?? 0);
-      setValue('countWritten', t.selection.countWritten ?? 0);
-      setValue('totalSec', t.timers.totalSec);
-      setValue('perQuestionSec', t.timers.perQuestionSec);
-      setValue('navigationMode', t.navigation.mode);
-      setValue('allowPause', t.navigation.allowPause);
-      setValue('maxBacktracks', t.navigation.maxBacktracks);
-      setValue('feedbackMode', t.feedback.mode);
-      setValue('showHints', t.aids.showHints);
-      setValue('showSources', t.aids.showSources);
-      setValue('showGlossary', t.aids.showGlossary);
-      setValue('maxAttempts', t.attempts.max);
-      setValue('cooldownHours', t.attempts.cooldownHours);
-      setValue('requireFullscreen', t.integrity.requireFullscreen);
-      setValue('blockCopyPaste', t.integrity.blockCopyPaste);
-      setValue('trackFocusLoss', t.integrity.trackFocusLoss);
-      setValue('proctoring', t.integrity.proctoring);
-      setValue('certificationEnabled', t.certification.enabled);
-      setValue('interviewCost', t.credits.interviewCost);
+
+      // Use reset to populate all form fields at once
+      reset({
+        name: t.name,
+        kind: t.kind,
+        visibilityDefault: t.visibilityDefault,
+        topics: t.selection.byTopics || [],
+        levels: t.selection.levels || [],
+        countSingle: t.selection.countSingle ?? 0,
+        countMulti: t.selection.countMulti ?? 0,
+        countWritten: t.selection.countWritten ?? 0,
+        totalSec: t.timers.totalSec,
+        perQuestionSec: t.timers.perQuestionSec,
+        navigationMode: t.navigation.mode,
+        allowPause: t.navigation.allowPause,
+        maxBacktracks: t.navigation.maxBacktracks,
+        feedbackMode: t.feedback.mode,
+        showHints: t.aids.showHints,
+        showSources: t.aids.showSources,
+        showGlossary: t.aids.showGlossary,
+        maxAttempts: t.attempts.max,
+        cooldownHours: t.attempts.cooldownHours,
+        requireFullscreen: t.integrity.requireFullscreen,
+        blockCopyPaste: t.integrity.blockCopyPaste,
+        trackFocusLoss: t.integrity.trackFocusLoss,
+        proctoring: t.integrity.proctoring,
+        certificationEnabled: t.certification.enabled,
+        interviewCost: t.credits.interviewCost
+      });
     }
-  }, [template, isEditing, setValue]);
+  }, [template, isEditing, reset]);
 
   // Apply Interview mode restrictions
   useEffect(() => {
@@ -128,63 +135,125 @@ export const TemplateFormPage: React.FC = () => {
     }
   }, [watchedKind, setValue]);
 
-  const onSubmit = async (data: FormData) => {
-    try {
-      const payload: CreateTemplateDto | UpdateTemplateDto = {
-        name: data.name,
-        kind: data.kind,
-        visibilityDefault: data.visibilityDefault,
-        selection: {
-          byTopics: data.topics,
-          levels: data.levels,
-          countSingle: Number(data.countSingle ?? 0),
-          countMulti: Number(data.countMulti ?? 0),
-          countWritten: Number(data.countWritten ?? 0)
-        },
-        timers: {
-          totalSec: data.totalSec,
-          perQuestionSec: data.perQuestionSec
-        },
-        navigation: {
-          mode: data.navigationMode,
-          allowPause: data.allowPause,
-          maxBacktracks: data.maxBacktracks
-        },
-        feedback: {
-          mode: data.feedbackMode
-        },
-        aids: {
-          showHints: data.showHints,
-          showSources: data.showSources,
-          showGlossary: data.showGlossary
-        },
-        attempts: {
-          max: Number(data.maxAttempts ?? 0),
-          cooldownHours: Number(data.cooldownHours ?? 0)
-        },
-        integrity: {
-          requireFullscreen: data.requireFullscreen,
-          blockCopyPaste: data.blockCopyPaste,
-          trackFocusLoss: data.trackFocusLoss,
-          proctoring: data.proctoring
-        },
-        certification: {
-          enabled: data.certificationEnabled
-        },
-        credits: {
-          interviewCost: Number(data.interviewCost ?? 0)
-        }
-      };
+  // Clear error message when form data changes
+  useEffect(() => {
+    if (submitError) {
+      setSubmitError(null);
+    }
+  }, [watch()]); // Watch all form data
 
-      if (isEditing && id) {
-        await updateMutation.mutateAsync({ id: parseInt(id), data: payload });
-      } else {
-        await createMutation.mutateAsync(payload);
+  // Watch for mutation errors and set submitError
+  useEffect(() => {
+    const mutationError = updateMutation.error || createMutation.error;
+    if (mutationError) {
+      handleError(mutationError);
+    }
+  }, [updateMutation.error, createMutation.error]);
+
+  const handleError = (error: any) => {
+    console.error('Failed to save template:', error);
+
+    // Extract error message from the API response
+    let errorMessage = 'Failed to save template. Please try again.';
+
+    // Handle different error response formats
+    if (error?.response?.data?.error?.message) {
+      // API error format: { error: { message: "..." } }
+      errorMessage = error.response.data.error.message;
+    } else if (error?.response?.data?.message) {
+      // Direct message format: { message: "..." }
+      errorMessage = error.response.data.message;
+    } else if (error?.data?.error?.message) {
+      // React Query wrapped error format
+      errorMessage = error.data.error.message;
+    } else if (error?.data?.message) {
+      // React Query wrapped message format
+      errorMessage = error.data.message;
+    } else if (error?.message) {
+      // Standard error object
+      errorMessage = error.message;
+    }
+
+    console.error('Error details:', {
+      error,
+      extractedMessage: errorMessage,
+      errorResponse: error?.response?.data,
+      errorData: error?.data
+    });
+
+    setSubmitError(errorMessage);
+  };
+
+  const onSubmit = (data: FormData) => {
+    setSubmitError(null); // Clear any previous errors
+
+    const payload: CreateTemplateDto | UpdateTemplateDto = {
+      name: data.name,
+      kind: data.kind,
+      visibilityDefault: data.visibilityDefault,
+      selection: {
+        byTopics: data.topics,
+        levels: data.levels,
+        countSingle: Number(data.countSingle ?? 0),
+        countMulti: Number(data.countMulti ?? 0),
+        countWritten: Number(data.countWritten ?? 0)
+      },
+      timers: {
+        totalSec: data.totalSec,
+        perQuestionSec: data.perQuestionSec
+      },
+      navigation: {
+        mode: data.navigationMode,
+        allowPause: data.allowPause,
+        maxBacktracks: data.maxBacktracks
+      },
+      feedback: {
+        mode: data.feedbackMode
+      },
+      aids: {
+        showHints: data.showHints,
+        showSources: data.showSources,
+        showGlossary: data.showGlossary
+      },
+      attempts: {
+        max: Number(data.maxAttempts ?? 0),
+        cooldownHours: Number(data.cooldownHours ?? 0)
+      },
+      integrity: {
+        requireFullscreen: data.requireFullscreen,
+        blockCopyPaste: data.blockCopyPaste,
+        trackFocusLoss: data.trackFocusLoss,
+        proctoring: data.proctoring
+      },
+      certification: {
+        enabled: data.certificationEnabled
+      },
+      credits: {
+        interviewCost: Number(data.interviewCost ?? 0)
       }
+    };
 
-      navigate('/admin/practice-interview/templates');
-    } catch (error) {
-      console.error('Failed to save template:', error);
+    if (isEditing && templateId) {
+      updateMutation.mutate(
+        { id: templateId, data: payload },
+        {
+          onSuccess: () => {
+            navigate('/admin/practice-interview/templates');
+          },
+          onError: (error) => {
+            handleError(error);
+          }
+        }
+      );
+    } else {
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          navigate('/admin/practice-interview/templates');
+        },
+        onError: (error) => {
+          handleError(error);
+        }
+      });
     }
   };
 
@@ -201,7 +270,23 @@ export const TemplateFormPage: React.FC = () => {
     return (
       <div className="p-6">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto" />
-        <p className="mt-2 text-center text-gray-600">Loading template...</p>
+        <p className="mt-2 text-center text-gray-600">Loading template {templateId}...</p>
+      </div>
+    );
+  }
+
+  if (error && isEditing) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-800">Failed to load template: {error.message}</p>
+          <button
+            onClick={() => navigate('/admin/practice-interview/templates')}
+            className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Back to Templates
+          </button>
+        </div>
       </div>
     );
   }
@@ -225,6 +310,35 @@ export const TemplateFormPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Error Message Display */}
+      {submitError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Error saving template</h3>
+              <p className="mt-1 text-sm text-red-700">{submitError}</p>
+            </div>
+            <div className="ml-auto pl-3">
+              <button
+                type="button"
+                onClick={() => setSubmitError(null)}
+                className="inline-flex rounded-md bg-red-50 p-1.5 text-red-500 hover:bg-red-100"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Tab Navigation */}
@@ -812,13 +926,18 @@ export const TemplateFormPage: React.FC = () => {
           >
             Cancel
           </button>
+
+
           <button
             type="submit"
             disabled={createMutation.isPending || updateMutation.isPending}
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            {createMutation.isPending || updateMutation.isPending ? 'Saving...' : 'Save Template'}
+{createMutation.isPending || updateMutation.isPending
+              ? (isEditing ? 'Updating...' : 'Creating...')
+              : (isEditing ? 'Update Template' : 'Create Template')
+            }
           </button>
         </div>
       </form>

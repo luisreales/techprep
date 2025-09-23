@@ -4,6 +4,7 @@ using TechPrep.Application.Interfaces;
 using TechPrep.Core.Entities;
 using TechPrep.Core.Interfaces;
 using TechPrep.Core.Enums;
+using System.Linq;
 
 namespace TechPrep.Application.Services;
 
@@ -217,6 +218,99 @@ public class QuestionService : IQuestionService
         }
     }
 
+    public async Task<QuestionDto?> DuplicateQuestionAsync(Guid id)
+    {
+        try
+        {
+            var originalQuestion = await _unitOfWork.Questions.GetWithOptionsAsync(id);
+
+            if (originalQuestion == null)
+            {
+                originalQuestion = await _unitOfWork.Questions.GetByIdAsync(id);
+
+                if (originalQuestion == null)
+                    return null;
+
+                var optionRepo = _unitOfWork.Repository<QuestionOption>();
+                var resourceRepo = _unitOfWork.Repository<QuestionResource>();
+
+                var originalOptions = await optionRepo.FindAsync(o => o.QuestionId == id);
+                var originalResources = await resourceRepo.FindAsync(r => r.QuestionId == id);
+
+                originalQuestion.Options = originalOptions.ToList();
+                originalQuestion.ResourceLinks = originalResources.ToList();
+            }
+
+            var duplicateQuestion = new Question
+            {
+                Id = Guid.NewGuid(),
+                TopicId = originalQuestion.TopicId,
+                Text = GenerateDuplicatedText(originalQuestion.Text),
+                Type = originalQuestion.Type,
+                Level = originalQuestion.Level,
+                OfficialAnswer = originalQuestion.OfficialAnswer,
+                UsableInPractice = originalQuestion.UsableInPractice,
+                UsableInInterview = originalQuestion.UsableInInterview,
+                Difficulty = originalQuestion.Difficulty,
+                EstimatedTimeSec = originalQuestion.EstimatedTimeSec,
+                InterviewCooldownDays = originalQuestion.InterviewCooldownDays,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            if (originalQuestion.Options.Any())
+            {
+                foreach (var option in originalQuestion.Options.OrderBy(o => o.OrderIndex))
+                {
+                    duplicateQuestion.Options.Add(new QuestionOption
+                    {
+                        Id = Guid.NewGuid(),
+                        QuestionId = duplicateQuestion.Id,
+                        Text = option.Text,
+                        IsCorrect = option.IsCorrect,
+                        OrderIndex = option.OrderIndex
+                    });
+                }
+            }
+
+            if (originalQuestion.ResourceLinks.Any())
+            {
+                foreach (var link in originalQuestion.ResourceLinks)
+                {
+                    duplicateQuestion.ResourceLinks.Add(new QuestionResource
+                    {
+                        QuestionId = duplicateQuestion.Id,
+                        ResourceId = link.ResourceId,
+                        Note = link.Note
+                    });
+                }
+            }
+
+            await _unitOfWork.Questions.AddAsync(duplicateQuestion);
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<QuestionDto>(duplicateQuestion);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[QUESTION SERVICE ERROR] DuplicateQuestionAsync failed: {ex.Message}");
+            return null;
+        }
+    }
+
+    private static string GenerateDuplicatedText(string originalText)
+    {
+        const string copySuffix = " (Copy)";
+        if (string.IsNullOrWhiteSpace(originalText))
+        {
+            return $"Untitled Question{copySuffix}";
+        }
+
+        return originalText.EndsWith(copySuffix, StringComparison.OrdinalIgnoreCase)
+            ? originalText
+            : string.Concat(originalText, copySuffix);
+    }
+
     public async Task<bool> DeleteQuestionAsync(Guid id)
     {
         try
@@ -289,6 +383,19 @@ public class QuestionService : IQuestionService
         catch (Exception)
         {
             return Array.Empty<byte>();
+        }
+    }
+
+    public async Task<QuestionDto?> GetQuestionByTextAsync(string questionText)
+    {
+        try
+        {
+            var question = await _unitOfWork.Questions.GetByTextAsync(questionText);
+            return question != null ? _mapper.Map<QuestionDto>(question) : null;
+        }
+        catch (Exception)
+        {
+            return null;
         }
     }
 }

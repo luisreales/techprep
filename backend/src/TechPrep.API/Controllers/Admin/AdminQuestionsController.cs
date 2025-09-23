@@ -38,7 +38,7 @@ public class QuestionsController : ControllerBase
                 data = new
                 {
                     questions = questions,
-                    total = totalCount,
+                    totalCount = totalCount,
                     page = page,
                     totalPages = totalPages
                 },
@@ -250,6 +250,40 @@ public class QuestionsController : ControllerBase
                 success = false,
                 message = "Failed to export questions",
                 error = new { code = "EXPORT_ERROR", message = ex.Message }
+            });
+        }
+    }
+
+    [HttpPost("{id}/duplicate")]
+    public async Task<IActionResult> Duplicate(Guid id)
+    {
+        try
+        {
+            var duplicatedQuestion = await _questionService.DuplicateQuestionAsync(id);
+            if (duplicatedQuestion == null)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Question not found",
+                    error = new { code = "NOT_FOUND", message = "Question with the specified ID was not found" }
+                });
+            }
+
+            return Ok(new
+            {
+                success = true,
+                data = duplicatedQuestion,
+                message = "Question duplicated successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = "Failed to duplicate question",
+                error = new { code = "DUPLICATE_ERROR", message = ex.Message }
             });
         }
     }

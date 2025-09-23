@@ -1,0 +1,4 @@
+Topic,Level,Type,Text,Options,Correct,OfficialAnswer
+JavaScript,basic,single_choice,What is a variable?,A) Data container;B) Function;C) Loop;D) Condition,A,A variable stores data values
+Python,basic,multi_choice,Which are valid operators?,A) Plus;B) Minus;C) Invalid;D) Modulo,A;B;D,Python supports arithmetic operators
+React,intermediate,written,What is JSX?,,,JSX is a syntax extension for JavaScript that allows writing HTML-like code

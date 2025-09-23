@@ -125,4 +125,12 @@ public class QuestionRepository : GenericRepository<Question>, IQuestionReposito
 
         return await query.CountAsync();
     }
+
+    public async Task<Question?> GetByTextAsync(string questionText)
+    {
+        return await _context.Questions
+            .Include(q => q.Topic)
+            .Include(q => q.Options)
+            .FirstOrDefaultAsync(q => q.Text.ToLower() == questionText.ToLower());
+    }
 }

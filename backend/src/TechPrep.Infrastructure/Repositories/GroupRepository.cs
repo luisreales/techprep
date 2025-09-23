@@ -40,7 +40,7 @@ public class GroupRepository : GenericRepository<Group>, IGroupRepository
             {
                 GroupId = groupId,
                 UserId = userId,
-                RoleInGroup = roleInGroup,
+                Role = TechPrep.Core.Enums.GroupRole.Member,
                 JoinedAt = DateTime.UtcNow
             });
 

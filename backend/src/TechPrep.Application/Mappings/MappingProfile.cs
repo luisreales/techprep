@@ -3,6 +3,7 @@ using TechPrep.Application.DTOs;
 using TechPrep.Application.DTOs.Topic;
 using TechPrep.Application.DTOs.Challenges;
 using TechPrep.Core.Entities;
+using TechPrep.Core.Enums;
 
 namespace TechPrep.Application.Mappings;
 
@@ -12,7 +13,21 @@ public class MappingProfile : Profile
     {
         // Question mappings
         CreateMap<Question, QuestionDto>()
-            .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic != null ? src.Topic.Name : ""));
+            .ForMember(dest => dest.TopicName, opt => opt.MapFrom(src => src.Topic != null ? src.Topic.Name : ""))
+            .ForMember(dest => dest.Stats, opt => opt.MapFrom(src => new QuestionStatsDto
+            {
+                TotalAttempts = 0,
+                CorrectAttempts = 0,
+                AverageScore = 0,
+                AverageTimeSpent = 0,
+                DifficultyRating = src.Level == DifficultyLevel.Basic
+                    ? 2.0
+                    : src.Level == DifficultyLevel.Advanced
+                        ? 4.0
+                        : src.Level == DifficultyLevel.Intermediate
+                            ? 3.0
+                            : 3.0
+            }));
             // Note: Options and LearningResources will be auto-mapped by convention
 
         CreateMap<CreateQuestionDto, Question>()

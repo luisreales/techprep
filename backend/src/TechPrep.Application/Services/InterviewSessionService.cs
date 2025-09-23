@@ -147,7 +147,7 @@ public class InterviewSessionService : IInterviewSessionService
             await EvaluateAllAnswersAsync(session);
 
             // Calculate total score
-            session.TotalScore = session.Answers.Where(a => a.Score.HasValue).Sum(a => (int)a.Score.Value);
+            session.TotalScore = (int)session.Answers.Where(a => a.Score.HasValue).Sum(a => a.Score.Value);
 
             // Generate certificate if enabled
             if (session.Assignment.CertificationEnabled)
@@ -291,11 +291,21 @@ public class InterviewSessionService : IInterviewSessionService
         var certificate = new InterviewCertificate
         {
             InterviewSessionId = session.Id,
-            CertificateNumber = $"CERT-{DateTime.UtcNow:yyyyMMdd}-{session.Id.ToString()[..8]}",
+            SessionId = session.Id.ToString(),
+            UserId = session.UserId,
+            CertificateId = $"CERT-{DateTime.UtcNow:yyyyMMdd}-{session.Id.ToString()[..8]}",
+            UserName = $"{session.User?.FirstName} {session.User?.LastName}".Trim(),
+            TemplateName = session.Assignment.Template.Name,
+            TotalScore = session.TotalScore,
+            MaxScore = 100,
+            ScorePercentage = session.TotalScore,
+            CompletedAt = session.SubmittedAt ?? DateTime.UtcNow,
+            DurationMinutes = (int)(session.SubmittedAt?.Subtract(session.StartedAt).TotalMinutes ?? 0),
             VerificationUrl = $"https://techprep.com/verify/{session.Id}",
             QrCodeData = $"verify:{session.Id}",
             IssuedAt = DateTime.UtcNow,
-            IsValid = true
+            IsValid = true,
+            IssuedByUserId = session.UserId // TODO: Use actual admin user ID
         };
 
         session.Certificate = certificate;

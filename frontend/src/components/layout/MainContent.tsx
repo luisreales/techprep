@@ -23,13 +23,20 @@ import AdminMaintenancePage from '@/pages/admin/AdminMaintenancePage';
 import AdminHealthPage from '@/pages/admin/AdminHealthPage';
 import TemplatesPage from '@/pages/admin/practice-interview/TemplatesPage';
 import TemplateFormPage from '@/pages/admin/practice-interview/TemplateFormPage';
+import TemplatePreviewPage from '@/pages/admin/practice-interview/TemplatePreviewPage';
 import AssignmentsPage from '@/pages/admin/practice-interview/AssignmentsPage';
 import AssignmentFormPage from '@/pages/admin/practice-interview/AssignmentFormPage';
+// New enhanced pages
+import QuestionBank from '@/pages/admin/QuestionBank';
+import GroupsManagement from '@/pages/admin/GroupsManagement';
+import CreditsManagement from '@/pages/admin/CreditsManagement';
 import { useAuthStore } from '@/stores/authStore';
 import { UserRole } from '@/types/api';
 
 // Placeholder components for new admin pages - will be replaced with actual implementations
 const AdminImport = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Excel Import</h1><p className="mt-4 text-gray-600">Excel import interface coming soon...</p></div>;
+const ProctoringPage = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Proctoring & Certificates</h1><p className="mt-4 text-gray-600">Proctoring policies and certificate management interface coming soon...</p></div>;
+const AnalyticsPage = () => <div className="p-6 bg-white rounded-lg shadow"><h1 className="text-2xl font-bold">Analytics & Reports</h1><p className="mt-4 text-gray-600">Comprehensive analytics dashboard coming soon...</p></div>;
 
 const MainContent: React.FC = () => {
   const location = useLocation();
@@ -66,7 +73,7 @@ const MainContent: React.FC = () => {
       if (location.pathname.startsWith('/admin/practice-interview/templates/')) {
         if (location.pathname.endsWith('/new')) return <TemplateFormPage />;
         if (location.pathname.endsWith('/edit')) return <TemplateFormPage />;
-        if (location.pathname.endsWith('/preview')) return <TemplateFormPage />;
+        if (location.pathname.endsWith('/preview')) return <TemplatePreviewPage />;
       }
 
       if (location.pathname.startsWith('/admin/practice-interview/assignments/')) {
@@ -89,6 +96,16 @@ const MainContent: React.FC = () => {
           return <TemplatesPage />;
         case '/admin/practice-interview/assignments':
           return <AssignmentsPage />;
+        case '/admin/question-bank':
+          return <QuestionBank />;
+        case '/admin/groups':
+          return <GroupsManagement />;
+        case '/admin/credits':
+          return <CreditsManagement />;
+        case '/admin/proctoring':
+          return <ProctoringPage />;
+        case '/admin/analytics':
+          return <AnalyticsPage />;
         case '/admin/resources':
           return <ResourcesPage />;
         case '/admin/logs':

@@ -18,4 +18,5 @@ public interface IQuestionRepository : IGenericRepository<Question>
         bool? usableInPractice = null,
         bool? usableInInterview = null,
         bool enforceInterviewCooldown = false);
+    Task<Question?> GetByTextAsync(string questionText);
 }

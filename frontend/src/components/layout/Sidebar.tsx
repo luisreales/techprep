@@ -13,9 +13,10 @@ interface NavItem {
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  collapsed?: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, collapsed = false }) => {
   const location = useLocation();
   const { user, logout } = useAuthStore();
 
@@ -112,6 +113,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       label: 'Assignments',
       adminOnly: true
     },
+    // Enhanced Question Bank
+    {
+      to: '/admin/question-bank',
+      icon: 'library_books',
+      label: 'Question Bank',
+      adminOnly: true
+    },
+    // Groups Management
+    {
+      to: '/admin/groups',
+      icon: 'groups',
+      label: 'Groups',
+      adminOnly: true
+    },
+    // Credits & Subscription
+    {
+      to: '/admin/credits',
+      icon: 'account_balance_wallet',
+      label: 'Credits & Plans',
+      adminOnly: true
+    },
+    // Proctoring & Certificates
+    {
+      to: '/admin/proctoring',
+      icon: 'verified_user',
+      label: 'Proctoring',
+      adminOnly: true
+    },
+    // Analytics & Reports
+    {
+      to: '/admin/analytics',
+      icon: 'analytics',
+      label: 'Analytics',
+      adminOnly: true
+    },
     {
       to: '/admin/logs',
       icon: 'description',
@@ -147,6 +183,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  const desktopTranslateClass = collapsed ? 'lg:-translate-x-full' : 'lg:translate-x-0';
+  const mobileTranslateClass = isOpen ? 'translate-x-0' : '-translate-x-full';
+
   return (
     <>
       {/* Overlay for mobile */}
@@ -157,7 +196,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-[var(--card-background)] shadow-lg transform transition-transform duration-300 ease-in-out z-50 lg:translate-x-0 lg:shadow-sm lg:border-r border-[var(--border-color)] ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 left-0 h-full w-64 bg-[var(--card-background)] shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${mobileTranslateClass} ${desktopTranslateClass} lg:shadow-sm lg:border-r border-[var(--border-color)]`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}

@@ -14,6 +14,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_TYPES = {
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
   'application/vnd.ms-excel': ['.xls'],
+  'text/csv': ['.csv'],
 };
 
 export const ExcelDropzone: React.FC<ExcelDropzoneProps> = ({
@@ -71,13 +72,13 @@ export const ExcelDropzone: React.FC<ExcelDropzoneProps> = ({
             </div>
             <div>
               <p className="text-lg font-medium text-gray-900">
-                {isDragActive ? 'Drop Excel file here' : 'Upload Excel file'}
+                {isDragActive ? 'Drop file here' : 'Upload file'}
               </p>
               <p className="text-sm text-gray-500 mt-1">
                 Drag and drop your file here, or click to browse
               </p>
               <p className="text-xs text-gray-400 mt-2">
-                Supports .xlsx and .xls files up to {formatFileSize(MAX_FILE_SIZE)}
+                Supports .xlsx, .xls, and .csv files up to {formatFileSize(MAX_FILE_SIZE)}
               </p>
             </div>
           </div>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to Excel Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .info {
+            background: #e7f3ff;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSV to Excel Converter for TechPrep Question Import</h1>
+
+    <div class="info">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>This tool converts the sample CSV file to Excel format for testing the import functionality</li>
+            <li>Click the button below to download the Excel version</li>
+            <li>Upload the generated Excel file to test the import feature</li>
+        </ol>
+    </div>
+
+    <div class="container">
+        <h3>Sample Questions Data</h3>
+        <p>The Excel file will contain 10 sample questions covering various topics and question types:</p>
+        <ul>
+            <li><strong>Topics:</strong> JavaScript, React, Python, SQL, Algorithms, .NET, System Design</li>
+            <li><strong>Types:</strong> Single Choice, Multiple Choice, Written</li>
+            <li><strong>Levels:</strong> Basic, Intermediate, Advanced</li>
+        </ul>
+
+        <button onclick="generateExcel()">Download Sample Questions Excel File</button>
+    </div>
+
+    <script>
+        function generateExcel() {
+            // Sample data matching our CSV format
+            const data = [
+                ["Topic", "Level", "Type", "Text", "Options", "Correct", "OfficialAnswer"],
+                ["JavaScript", "basic", "single_choice", "What is the correct way to declare a variable in JavaScript?", "A) var myVar = 5;B) variable myVar = 5;C) v myVar = 5;D) declare myVar = 5;", "A", "Variables in JavaScript can be declared using var, let, or const keywords. The var keyword is the traditional way to declare variables."],
+                ["JavaScript", "basic", "multi_choice", "Which of the following are valid JavaScript data types? (Select all that apply)", "A) string;B) integer;C) boolean;D) object;E) float", "A;C;D", "JavaScript has several primitive data types including string, number, boolean, undefined, null, and symbol. Objects are also a fundamental data type."],
+                ["React", "intermediate", "written", "Explain the difference between functional and class components in React.", "", "", "Functional components are JavaScript functions that return JSX, while class components are ES6 classes that extend React.Component. Functional components with hooks are now preferred due to their simplicity and better performance optimization."],
+                ["JavaScript", "intermediate", "single_choice", "What does the 'this' keyword refer to in JavaScript?", "A) The current function;B) The global object;C) The object that calls the function;D) The parent object", "C", "The 'this' keyword in JavaScript refers to the object that is calling the function. Its value depends on how the function is called."],
+                ["Python", "basic", "single_choice", "Which of the following is the correct syntax for a Python function?", "A) function myFunc() {};B) def myFunc():;C) func myFunc() {};D) define myFunc() {}", "B", "Python functions are defined using the 'def' keyword followed by the function name and parentheses, ending with a colon."],
+                ["Python", "basic", "multi_choice", "Which of the following are valid Python operators?", "A) +;B) **;C) //;D) %;E) <=>", "A;B;C;D", "Python supports arithmetic operators like +, ** (power), // (floor division), and % (modulo). The <=> operator doesn't exist in Python."],
+                ["SQL", "intermediate", "written", "Explain the difference between INNER JOIN and LEFT JOIN.", "", "", "INNER JOIN returns only the rows that have matching values in both tables. LEFT JOIN returns all rows from the left table and matching rows from the right table, with NULL values for non-matching rows from the right table."],
+                ["Algorithms", "advanced", "written", "Describe the time complexity of bubble sort and explain why.", "", "", "Bubble sort has O(n²) time complexity in the worst and average cases because it uses nested loops to compare each element with every other element. In the best case (already sorted array), it can be O(n) with optimization."],
+                [".NET", "intermediate", "single_choice", "What is the purpose of the 'using' statement in C#?", "A) To import namespaces;B) To manage resource disposal;C) To create variables;D) To define methods", "B", "The 'using' statement in C# ensures that objects implementing IDisposable are properly disposed of when they go out of scope, providing automatic resource management."],
+                ["System Design", "advanced", "written", "Explain the concept of microservices and their advantages over monolithic architecture.", "", "", "Microservices are an architectural approach where applications are built as a collection of small, independent services. Advantages include better scalability, technology diversity, fault isolation, and easier deployment compared to monolithic architectures."]
+            ];
+
+            // Create workbook and worksheet
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(data);
+
+            // Set column widths for better readability
+            const colWidths = [
+                { wch: 15 }, // Topic
+                { wch: 12 }, // Level
+                { wch: 15 }, // Type
+                { wch: 60 }, // Text
+                { wch: 80 }, // Options
+                { wch: 10 }, // Correct
+                { wch: 100 } // OfficialAnswer
+            ];
+            ws['!cols'] = colWidths;
+
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, "Questions");
+
+            // Generate Excel file and trigger download
+            const filename = "sample-questions-import.xlsx";
+            XLSX.writeFile(wb, filename);
+        }
+    </script>
+</body>
+</html>

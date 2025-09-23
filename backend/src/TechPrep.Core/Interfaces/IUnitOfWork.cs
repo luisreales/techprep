@@ -8,6 +8,7 @@ public interface IUnitOfWork : IDisposable
     ICodeChallengeRepository CodeChallenges { get; }
     ITagRepository Tags { get; }
     IChallengeAttemptRepository ChallengeAttempts { get; }
+    IInterviewTemplateRepository InterviewTemplates { get; }
     IGenericRepository<T> Repository<T>() where T : class;
     Task<int> SaveChangesAsync();
     Task BeginTransactionAsync();

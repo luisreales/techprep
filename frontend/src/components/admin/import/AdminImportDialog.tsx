@@ -40,17 +40,29 @@ export const AdminImportDialog: React.FC<AdminImportDialogProps> = ({
   const [summary, setSummary] = useState<ImportSummary | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Parse Excel file locally for immediate preview
-  const parseExcelFile = async (file: File): Promise<ParsedRow[]> => {
+  // Parse Excel/CSV file locally for immediate preview
+  const parseFile = async (file: File): Promise<ParsedRow[]> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
-          const data = new Uint8Array(e.target?.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: 'array' });
+          const isCSV = file.name.toLowerCase().endsWith('.csv');
+          let workbook;
+          let jsonData;
+
+          if (isCSV) {
+            // For CSV files, read as text and parse
+            const text = new TextDecoder().decode(e.target?.result as ArrayBuffer);
+            workbook = XLSX.read(text, { type: 'string' });
+          } else {
+            // For Excel files, read as binary
+            const data = new Uint8Array(e.target?.result as ArrayBuffer);
+            workbook = XLSX.read(data, { type: 'array' });
+          }
+
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+          jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
           
           // Skip header row and convert to objects
           const headers = jsonData[0] as string[];
@@ -79,7 +91,7 @@ export const AdminImportDialog: React.FC<AdminImportDialogProps> = ({
 
           resolve(parsedRows);
         } catch (error) {
-          reject(new Error('Failed to parse Excel file'));
+          reject(new Error('Failed to parse file'));
         }
       };
       reader.onerror = () => reject(new Error('Failed to read file'));
@@ -140,12 +152,12 @@ export const AdminImportDialog: React.FC<AdminImportDialogProps> = ({
     
     try {
       // Parse locally for immediate preview
-      const parsedData = await parseExcelFile(file);
+      const parsedData = await parseFile(file);
       setPreviewData(parsedData);
       setSummary(calculateSummary(parsedData));
       setCurrentStep(ImportStep.PREVIEW);
     } catch (error) {
-      setUploadError('Failed to parse Excel file. Please check the format.');
+      setUploadError('Failed to parse file. Please check the format.');
     }
   };
 
@@ -192,8 +204,8 @@ export const AdminImportDialog: React.FC<AdminImportDialogProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Import Questions from Excel</h2>
-              <p className="text-sm text-gray-500">Upload and validate Excel files with question data</p>
+              <h2 className="text-xl font-semibold text-gray-900">Import Questions</h2>
+              <p className="text-sm text-gray-500">Upload and validate Excel or CSV files with question data</p>
             </div>
             <button
               onClick={handleClose}

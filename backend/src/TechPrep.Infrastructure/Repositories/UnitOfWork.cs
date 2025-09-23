@@ -19,6 +19,7 @@ public class UnitOfWork : IUnitOfWork
         CodeChallenges = new CodeChallengeRepository(_context);
         Tags = new TagRepository(_context);
         ChallengeAttempts = new ChallengeAttemptRepository(_context);
+        InterviewTemplates = new InterviewTemplateRepository(_context);
     }
 
     public ITopicRepository Topics { get; private set; }
@@ -27,6 +28,7 @@ public class UnitOfWork : IUnitOfWork
     public ICodeChallengeRepository CodeChallenges { get; private set; }
     public ITagRepository Tags { get; private set; }
     public IChallengeAttemptRepository ChallengeAttempts { get; private set; }
+    public IInterviewTemplateRepository InterviewTemplates { get; private set; }
 
     public IGenericRepository<T> Repository<T>() where T : class
     {

@@ -111,6 +111,15 @@ export const QuestionsTable: React.FC<QuestionsTableProps> = ({
         ),
       },
       {
+        accessorKey: 'difficulty',
+        header: 'Difficulty Tag',
+        cell: ({ row }) => (
+          <span className="inline-flex items-center rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-medium text-purple-700">
+            {row.original.difficulty || 'N/A'}
+          </span>
+        ),
+      },
+      {
         accessorKey: 'updatedAt',
         header: 'Updated',
         cell: ({ row }) => {

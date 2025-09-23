@@ -55,7 +55,16 @@ export const useTemplate = (id: number) => {
 export const useCreateTemplate = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: CreateTemplateDto) => practiceInterviewAdminApi.createTemplate(data),
+    mutationFn: async (data: CreateTemplateDto) => {
+      const response = await practiceInterviewAdminApi.createTemplate(data);
+      // Check if the API response indicates an error (success: false)
+      if (!response.success) {
+        const error = new Error(response.error?.message || 'Create failed');
+        error.name = response.error?.code || 'CREATE_ERROR';
+        throw error;
+      }
+      return response;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: practiceInterviewKeys.templates() });
     }
@@ -65,8 +74,16 @@ export const useCreateTemplate = () => {
 export const useUpdateTemplate = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateTemplateDto }) =>
-      practiceInterviewAdminApi.updateTemplate(id, data),
+    mutationFn: async ({ id, data }: { id: number; data: UpdateTemplateDto }) => {
+      const response = await practiceInterviewAdminApi.updateTemplate(id, data);
+      // Check if the API response indicates an error (success: false)
+      if (!response.success) {
+        const error = new Error(response.error?.message || 'Update failed');
+        error.name = response.error?.code || 'UPDATE_ERROR';
+        throw error;
+      }
+      return response;
+    },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: practiceInterviewKeys.template(id) });
       queryClient.invalidateQueries({ queryKey: practiceInterviewKeys.templates() });

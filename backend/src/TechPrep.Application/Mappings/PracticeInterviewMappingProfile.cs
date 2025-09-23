@@ -140,9 +140,9 @@ public class PracticeInterviewMappingProfile : Profile
 
         // Certificate mappings
         CreateMap<InterviewCertificate, CertificateDto>()
-            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.InterviewSession.User.UserName))
-            .ForMember(dest => dest.TemplateName, opt => opt.MapFrom(src => src.InterviewSession.Assignment.Template.Name))
-            .ForMember(dest => dest.TotalScore, opt => opt.MapFrom(src => src.InterviewSession.TotalScore))
-            .ForMember(dest => dest.CompletedAt, opt => opt.MapFrom(src => src.InterviewSession.SubmittedAt ?? src.InterviewSession.StartedAt));
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+            .ForMember(dest => dest.TemplateName, opt => opt.MapFrom(src => src.TemplateName))
+            .ForMember(dest => dest.TotalScore, opt => opt.MapFrom(src => src.TotalScore))
+            .ForMember(dest => dest.CompletedAt, opt => opt.MapFrom(src => src.CompletedAt));
     }
 }
