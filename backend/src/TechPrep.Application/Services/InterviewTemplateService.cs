@@ -25,6 +25,7 @@ public class InterviewTemplateService : IInterviewTemplateService
         _mapper = mapper;
     }
 
+
     public async Task<ApiResponse<PaginatedResponse<TemplateDto>>> GetTemplatesAsync(
         TemplateKind? kind = null,
         int page = 1,
@@ -32,17 +33,31 @@ public class InterviewTemplateService : IInterviewTemplateService
     {
         try
         {
-            var templates = kind.HasValue
-                ? await _unitOfWork.InterviewTemplates.GetByKindAsync(kind.Value)
-                : await _unitOfWork.InterviewTemplates.GetAllAsync();
+            // Get all templates or by kind
+            IEnumerable<InterviewTemplate> allTemplates;
+            if (kind.HasValue)
+            {
+                allTemplates = await _unitOfWork.InterviewTemplates.GetByKindAsync(kind.Value);
+            }
+            else
+            {
+                allTemplates = await _unitOfWork.InterviewTemplates.GetAllAsync();
+            }
 
-            var totalCount = templates.Count();
-            var pagedTemplates = templates
+            // Order by creation date descending
+            var orderedTemplates = allTemplates.OrderByDescending(t => t.CreatedAt).ToList();
+
+            var totalCount = orderedTemplates.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // Apply pagination
+            var pageEntities = orderedTemplates
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            var templateDtos = _mapper.Map<List<TemplateDto>>(pagedTemplates);
+            // Map to DTOs
+            var templateDtos = _mapper.Map<List<TemplateDto>>(pageEntities);
 
             var response = new PaginatedResponse<TemplateDto>
             {
@@ -52,8 +67,8 @@ public class InterviewTemplateService : IInterviewTemplateService
                     Page = page,
                     PageSize = pageSize,
                     TotalItems = totalCount,
-                    TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
-                    HasNext = page < (int)Math.Ceiling((double)totalCount / pageSize),
+                    TotalPages = totalPages,
+                    HasNext = page * pageSize < totalCount,
                     HasPrevious = page > 1
                 }
             };
@@ -65,6 +80,63 @@ public class InterviewTemplateService : IInterviewTemplateService
             return ApiResponse<PaginatedResponse<TemplateDto>>.ErrorResponse(
                 "TEMPLATE_FETCH_ERROR",
                 "Failed to fetch templates",
+                ex.Message);
+        }
+    }
+
+    public async Task<ApiResponse<PaginatedResponse<UserAssignedTemplateDto>>> GetTemplatesByUserAsync(
+        Guid userId,
+        TemplateKind? kind = null,
+        int page = 1,
+        int pageSize = 10)
+    {
+        try
+        {
+            // Get templates assigned to the user
+            var userTemplatesWithAssignments = await _unitOfWork.InterviewTemplates.GetTemplatesByUserAsync(userId, kind);
+
+            // Order by creation date descending
+            var orderedTemplates = userTemplatesWithAssignments.OrderByDescending(t => t.Template.CreatedAt).ToList();
+
+            var totalCount = orderedTemplates.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // Apply pagination
+            var pageTemplates = orderedTemplates
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Map to DTOs
+            var templateDtos = new List<UserAssignedTemplateDto>();
+            foreach (var (template, assignmentId) in pageTemplates)
+            {
+                var templateDto = _mapper.Map<UserAssignedTemplateDto>(template);
+                templateDto.AssignmentId = assignmentId;
+                templateDtos.Add(templateDto);
+            }
+
+            var response = new PaginatedResponse<UserAssignedTemplateDto>
+            {
+                Data = templateDtos,
+                Pagination = new PaginationInfo
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalItems = totalCount,
+                    TotalPages = totalPages,
+                    HasNext = page * pageSize < totalCount,
+                    HasPrevious = page > 1
+                }
+            };
+
+            return ApiResponse<PaginatedResponse<UserAssignedTemplateDto>>.SuccessResponse(response);
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<PaginatedResponse<UserAssignedTemplateDto>>.ErrorResponse(
+                "TEMPLATE_FETCH_ERROR",
+                "Failed to fetch user templates",
                 ex.Message);
         }
     }

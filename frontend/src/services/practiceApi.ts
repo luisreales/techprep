@@ -12,14 +12,14 @@ import {
 export const practiceApi = {
   // Start a new practice session
   async startPractice(data: StartPracticeDto) {
-    const response = await api.post<ApiResponse<PracticeSessionDto>>('/practice/start', data);
+    const response = await api.post<ApiResponse<PracticeSessionDto>>('/practice-sessions', data);
     return response.data;
   },
 
   // Submit an answer during practice
   async submitAnswer(sessionId: string, data: SubmitAnswerDto) {
     const response = await api.post<ApiResponse<PracticeAnswerDto>>(
-      `/practice/sessions/${sessionId}/answers`,
+      `/practice-sessions/${sessionId}/answers`,
       data
     );
     return response.data;
@@ -28,7 +28,7 @@ export const practiceApi = {
   // Update session state (current question, etc.)
   async updateSessionState(sessionId: string, data: SessionStateDto) {
     const response = await api.put<ApiResponse<object>>(
-      `/practice/sessions/${sessionId}/state`,
+      `/practice-sessions/${sessionId}/state`,
       data
     );
     return response.data;
@@ -37,7 +37,7 @@ export const practiceApi = {
   // Submit/complete the practice session
   async submitPractice(sessionId: string) {
     const response = await api.post<ApiResponse<PracticeSessionDto>>(
-      `/practice/sessions/${sessionId}/submit`
+      `/practice-sessions/${sessionId}/finish`
     );
     return response.data;
   },
@@ -45,7 +45,7 @@ export const practiceApi = {
   // Get current practice session
   async getSession(sessionId: string) {
     const response = await api.get<ApiResponse<PracticeSessionDto>>(
-      `/practice/sessions/${sessionId}`
+      `/practice-sessions/${sessionId}`
     );
     return response.data;
   },
@@ -53,7 +53,7 @@ export const practiceApi = {
   // Get user's practice sessions history
   async getMySessions(page = 1, pageSize = 10) {
     const response = await api.get<ApiResponse<PaginatedResponse<PracticeSessionDto>>>(
-      `/practice/my-sessions?page=${page}&pageSize=${pageSize}`
+      `/practice-sessions/my-sessions?page=${page}&pageSize=${pageSize}`
     );
     return response.data;
   },
@@ -61,7 +61,7 @@ export const practiceApi = {
   // Pause a practice session
   async pauseSession(sessionId: string) {
     const response = await api.post<ApiResponse<PracticeSessionDto>>(
-      `/practice/sessions/${sessionId}/pause`
+      `/practice-sessions/${sessionId}/pause`
     );
     return response.data;
   },
@@ -69,7 +69,7 @@ export const practiceApi = {
   // Resume a paused practice session
   async resumeSession(sessionId: string) {
     const response = await api.post<ApiResponse<PracticeSessionDto>>(
-      `/practice/sessions/${sessionId}/resume`
+      `/practice-sessions/${sessionId}/resume`
     );
     return response.data;
   }

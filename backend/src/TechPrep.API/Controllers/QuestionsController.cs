@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TechPrep.Application.Interfaces;
 using TechPrep.Core.Enums;
+using TechPrep.Infrastructure.Data;
 
 namespace TechPrep.API.Controllers;
 
@@ -9,10 +11,152 @@ namespace TechPrep.API.Controllers;
 public class QuestionsController : ControllerBase
 {
     private readonly IQuestionService _questionService;
+    private readonly TechPrepDbContext _context;
 
-    public QuestionsController(IQuestionService questionService)
+    public QuestionsController(IQuestionService questionService, TechPrepDbContext context)
     {
         _questionService = questionService;
+        _context = context;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetQuestions(
+        [FromQuery] string? topics = null,
+        [FromQuery] string? levels = null,
+        [FromQuery] int countSingle = 0,
+        [FromQuery] int countMulti = 0,
+        [FromQuery] int countWritten = 0)
+    {
+        try
+        {
+            var questions = new List<object>();
+
+            // Parse topics and levels
+            var topicIds = string.IsNullOrEmpty(topics) ? new List<int>() :
+                topics.Split(',').Select(int.Parse).ToList();
+            var levelNames = string.IsNullOrEmpty(levels) ? new List<string>() :
+                levels.Split(',').ToList();
+
+            // Build base query
+            var baseQuery = _context.Questions
+                .Include(q => q.Options)
+                .Include(q => q.Topic)
+                .AsQueryable();
+
+            // Filter by topics if specified
+            if (topicIds.Any())
+            {
+                baseQuery = baseQuery.Where(q => topicIds.Contains(q.TopicId));
+            }
+
+            // Filter by levels if specified
+            if (levelNames.Any())
+            {
+                var parsedLevels = levelNames.Select(level => Enum.Parse<DifficultyLevel>(level, true)).ToList();
+                baseQuery = baseQuery.Where(q => parsedLevels.Contains(q.Level));
+            }
+
+            // Fetch single choice questions
+            if (countSingle > 0)
+            {
+                var singleQuestions = await baseQuery
+                    .Where(q => q.Type == QuestionType.SingleChoice)
+                    .Take(countSingle * 3) // Get more questions to randomize from
+                    .Select(q => new
+                    {
+                        id = q.Id.ToString(),
+                        text = q.Text,
+                        type = "single",
+                        level = q.Level.ToString().ToLower(),
+                        topicId = q.TopicId,
+                        topicName = q.Topic != null ? q.Topic.Name : "Unknown",
+                        officialAnswer = q.OfficialAnswer,
+                        options = q.Options.Select(o => new
+                        {
+                            id = o.Id.ToString(),
+                            text = o.Text,
+                            isCorrect = o.IsCorrect
+                        }).ToList()
+                    })
+                    .ToListAsync();
+
+                // Randomize and take the requested count
+                var randomSingleQuestions = singleQuestions.OrderBy(q => Random.Shared.Next()).Take(countSingle);
+                questions.AddRange(randomSingleQuestions);
+            }
+
+            // Fetch multiple choice questions
+            if (countMulti > 0)
+            {
+                var multiQuestions = await baseQuery
+                    .Where(q => q.Type == QuestionType.MultiChoice)
+                    .Take(countMulti * 3) // Get more questions to randomize from
+                    .Select(q => new
+                    {
+                        id = q.Id.ToString(),
+                        text = q.Text,
+                        type = "multi",
+                        level = q.Level.ToString().ToLower(),
+                        topicId = q.TopicId,
+                        topicName = q.Topic != null ? q.Topic.Name : "Unknown",
+                        officialAnswer = q.OfficialAnswer,
+                        options = q.Options.Select(o => new
+                        {
+                            id = o.Id.ToString(),
+                            text = o.Text,
+                            isCorrect = o.IsCorrect
+                        }).ToList()
+                    })
+                    .ToListAsync();
+
+                // Randomize and take the requested count
+                var randomMultiQuestions = multiQuestions.OrderBy(q => Random.Shared.Next()).Take(countMulti);
+                questions.AddRange(randomMultiQuestions);
+            }
+
+            // Fetch written questions
+            if (countWritten > 0)
+            {
+                var writtenQuestions = await baseQuery
+                    .Where(q => q.Type == QuestionType.Written)
+                    .Take(countWritten * 3) // Get more questions to randomize from
+                    .Select(q => new
+                    {
+                        id = q.Id.ToString(),
+                        text = q.Text,
+                        type = "written",
+                        level = q.Level.ToString().ToLower(),
+                        topicId = q.TopicId,
+                        topicName = q.Topic != null ? q.Topic.Name : "Unknown",
+                        officialAnswer = q.OfficialAnswer,
+                        options = new List<object>()
+                    })
+                    .ToListAsync();
+
+                // Randomize and take the requested count
+                var randomWrittenQuestions = writtenQuestions.OrderBy(q => Random.Shared.Next()).Take(countWritten);
+                questions.AddRange(randomWrittenQuestions);
+            }
+
+            // Shuffle the final list to mix question types
+            questions = questions.OrderBy(q => Random.Shared.Next()).ToList();
+
+            return Ok(new
+            {
+                success = true,
+                data = questions,
+                message = $"Retrieved {questions.Count} questions successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = "Failed to retrieve questions",
+                error = new { code = "FETCH_ERROR", message = ex.Message }
+            });
+        }
     }
 
     [HttpGet("difficulties")]

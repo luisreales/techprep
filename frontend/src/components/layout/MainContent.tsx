@@ -2,7 +2,13 @@ import React from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import Practice from '@/pages/Practice';
-import Sessions from '@/pages/Sessions';
+import { PracticeRunnerPage } from '@/pages/practice/PracticeRunnerPage';
+import { InterviewRunnerPage } from '@/pages/interviews/InterviewRunnerPage';
+import { InterviewResultsPage } from '@/pages/interviews/InterviewResultsPage';
+import InterviewRunner from '@/pages/interviews/InterviewRunner';
+import InterviewSummary from '@/pages/interviews/InterviewSummary';
+import InterviewReview from '@/pages/interviews/InterviewReview';
+import Interviews from '@/pages/Interviews';
 import Challenges from '@/pages/Challenges';
 import ChallengeDetail from '@/pages/ChallengeDetail';
 import Resources from '@/pages/Resources';
@@ -131,8 +137,11 @@ const MainContent: React.FC = () => {
         return <Dashboard />;
       case '/practice':
         return <Practice />;
+      case '/practice/runner':
+        return <PracticeRunnerPage />;
       case '/sessions':
-        return <Sessions />;
+      case '/interviews':
+        return <Interviews />;
       case '/challenges':
         return <Challenges />;
       case '/resources':
@@ -150,6 +159,29 @@ const MainContent: React.FC = () => {
         }
         return <Navigate to="/dashboard" replace />;
       default:
+        // Handle new interview runner route with sessionId (/interviews/runner/:id)
+        if (location.pathname.match(/^\/interviews\/runner\/[^/]+$/)) {
+          const pathParts = location.pathname.split('/');
+          const sessionId = pathParts[3];
+          // Check if it's a UUID (new interview runner) vs templateId (old)
+          if (sessionId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
+            return <InterviewRunner />;
+          } else {
+            return <InterviewRunnerPage />;
+          }
+        }
+        // Handle interview summary route
+        if (location.pathname.match(/^\/interviews\/summary\/[^/]+$/)) {
+          return <InterviewSummary />;
+        }
+        // Handle interview review route
+        if (location.pathname.match(/^\/interviews\/review\/[^/]+$/)) {
+          return <InterviewReview />;
+        }
+        // Handle interview results route with sessionId
+        if (location.pathname.match(/^\/interviews\/[^/]+\/results$/)) {
+          return <InterviewResultsPage />;
+        }
         // Handle challenge detail route
         if (location.pathname.startsWith('/challenges/')) {
           return <ChallengeDetail />;

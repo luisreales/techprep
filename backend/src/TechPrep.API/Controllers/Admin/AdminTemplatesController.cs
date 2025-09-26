@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TechPrep.Application.DTOs.Common;
 using TechPrep.Application.DTOs.PracticeInterview;
 using TechPrep.Application.Interfaces;
@@ -100,6 +101,37 @@ public class AdminTemplatesController : ControllerBase
     public async Task<ActionResult<ApiResponse<int>>> GetTemplatePreview(int id)
     {
         var result = await _templateService.GetEligibleQuestionsCountAsync(id);
+        return Ok(result);
+    }
+
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<ApiResponse<PaginatedResponse<UserAssignedTemplateDto>>>> GetTemplatesByUser(
+        string userId,
+        [FromQuery] string? kind = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        if (!Guid.TryParse(userId, out var userGuid))
+        {
+            return BadRequest(ApiResponse<PaginatedResponse<UserAssignedTemplateDto>>.ErrorResponse(
+                "INVALID_USER_ID",
+                "Invalid user ID format"));
+        }
+
+        TemplateKind? templateKind = null;
+        if (!string.IsNullOrWhiteSpace(kind))
+        {
+            if (!Enum.TryParse(kind, true, out TemplateKind parsedKind))
+            {
+                return BadRequest(ApiResponse<PaginatedResponse<UserAssignedTemplateDto>>.ErrorResponse(
+                    "INVALID_KIND",
+                    "Invalid template kind specified"));
+            }
+
+            templateKind = parsedKind;
+        }
+
+        var result = await _templateService.GetTemplatesByUserAsync(userGuid, templateKind, page, pageSize);
         return Ok(result);
     }
 }

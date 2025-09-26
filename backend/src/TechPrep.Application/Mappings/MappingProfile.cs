@@ -2,6 +2,7 @@ using AutoMapper;
 using TechPrep.Application.DTOs;
 using TechPrep.Application.DTOs.Topic;
 using TechPrep.Application.DTOs.Challenges;
+using TechPrep.Application.DTOs.PracticeInterview;
 using TechPrep.Core.Entities;
 using TechPrep.Core.Enums;
 
@@ -103,7 +104,7 @@ public class MappingProfile : Profile
 
         // Challenge Attempt mappings
         CreateMap<ChallengeAttempt, AttemptDto>();
-        
+
         CreateMap<AttemptCreateDto, ChallengeAttempt>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
             .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
@@ -111,5 +112,104 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.CodeChallengeId, opt => opt.Ignore())
             .ForMember(dest => dest.UserId, opt => opt.Ignore())
             .ForMember(dest => dest.CodeChallenge, opt => opt.Ignore());
+
+        // Interview Template mappings
+        CreateMap<InterviewTemplate, TemplateDto>()
+            .ForMember(dest => dest.Selection, opt => opt.MapFrom(src => src.GetSelectionCriteria()))
+            .ForMember(dest => dest.Timers, opt => opt.MapFrom(src => new TimersDto
+            {
+                TotalSec = src.TotalTimeSec,
+                PerQuestionSec = src.PerQuestionTimeSec
+            }))
+            .ForMember(dest => dest.Navigation, opt => opt.MapFrom(src => new NavigationDto
+            {
+                Mode = src.NavigationMode,
+                AllowPause = src.AllowPause,
+                MaxBacktracks = src.MaxBacktracks
+            }))
+            .ForMember(dest => dest.Feedback, opt => opt.MapFrom(src => new FeedbackDto
+            {
+                Mode = src.FeedbackMode
+            }))
+            .ForMember(dest => dest.Aids, opt => opt.MapFrom(src => new AidsDto
+            {
+                ShowHints = src.ShowHints,
+                ShowSources = src.ShowSources,
+                ShowGlossary = src.ShowGlossary
+            }))
+            .ForMember(dest => dest.Attempts, opt => opt.MapFrom(src => new AttemptsDto
+            {
+                Max = src.MaxAttempts,
+                CooldownHours = src.CooldownHours
+            }))
+            .ForMember(dest => dest.Integrity, opt => opt.MapFrom(src => new IntegrityDto
+            {
+                RequireFullscreen = src.RequireFullscreen,
+                BlockCopyPaste = src.BlockCopyPaste,
+                TrackFocusLoss = src.TrackFocusLoss,
+                Proctoring = src.ProctoringEnabled
+            }))
+            .ForMember(dest => dest.Certification, opt => opt.MapFrom(src => new CertificationDto
+            {
+                Enabled = src.CertificationEnabled
+            }))
+            .ForMember(dest => dest.Credits, opt => opt.MapFrom(src => new CreditsDto
+            {
+                InterviewCost = src.InterviewCost
+            }));
+
+        CreateMap<CreateTemplateDto, InterviewTemplate>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.SelectionCriteriaJson, opt => opt.MapFrom(src => SerializeSelectionCriteria(src.Selection)))
+            .ForMember(dest => dest.TotalTimeSec, opt => opt.MapFrom(src => src.Timers.TotalSec))
+            .ForMember(dest => dest.PerQuestionTimeSec, opt => opt.MapFrom(src => src.Timers.PerQuestionSec))
+            .ForMember(dest => dest.NavigationMode, opt => opt.MapFrom(src => src.Navigation.Mode))
+            .ForMember(dest => dest.AllowPause, opt => opt.MapFrom(src => src.Navigation.AllowPause))
+            .ForMember(dest => dest.MaxBacktracks, opt => opt.MapFrom(src => src.Navigation.MaxBacktracks))
+            .ForMember(dest => dest.FeedbackMode, opt => opt.MapFrom(src => src.Feedback.Mode))
+            .ForMember(dest => dest.ShowHints, opt => opt.MapFrom(src => src.Aids.ShowHints))
+            .ForMember(dest => dest.ShowSources, opt => opt.MapFrom(src => src.Aids.ShowSources))
+            .ForMember(dest => dest.ShowGlossary, opt => opt.MapFrom(src => src.Aids.ShowGlossary))
+            .ForMember(dest => dest.MaxAttempts, opt => opt.MapFrom(src => src.Attempts.Max))
+            .ForMember(dest => dest.CooldownHours, opt => opt.MapFrom(src => src.Attempts.CooldownHours))
+            .ForMember(dest => dest.RequireFullscreen, opt => opt.MapFrom(src => src.Integrity.RequireFullscreen))
+            .ForMember(dest => dest.BlockCopyPaste, opt => opt.MapFrom(src => src.Integrity.BlockCopyPaste))
+            .ForMember(dest => dest.TrackFocusLoss, opt => opt.MapFrom(src => src.Integrity.TrackFocusLoss))
+            .ForMember(dest => dest.ProctoringEnabled, opt => opt.MapFrom(src => src.Integrity.Proctoring))
+            .ForMember(dest => dest.CertificationEnabled, opt => opt.MapFrom(src => src.Certification.Enabled))
+            .ForMember(dest => dest.InterviewCost, opt => opt.MapFrom(src => src.Credits.InterviewCost))
+            .ForMember(dest => dest.Assignments, opt => opt.Ignore());
+
+        CreateMap<UpdateTemplateDto, InterviewTemplate>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.SelectionCriteriaJson, opt => opt.MapFrom(src => SerializeSelectionCriteria(src.Selection)))
+            .ForMember(dest => dest.TotalTimeSec, opt => opt.MapFrom(src => src.Timers.TotalSec))
+            .ForMember(dest => dest.PerQuestionTimeSec, opt => opt.MapFrom(src => src.Timers.PerQuestionSec))
+            .ForMember(dest => dest.NavigationMode, opt => opt.MapFrom(src => src.Navigation.Mode))
+            .ForMember(dest => dest.AllowPause, opt => opt.MapFrom(src => src.Navigation.AllowPause))
+            .ForMember(dest => dest.MaxBacktracks, opt => opt.MapFrom(src => src.Navigation.MaxBacktracks))
+            .ForMember(dest => dest.FeedbackMode, opt => opt.MapFrom(src => src.Feedback.Mode))
+            .ForMember(dest => dest.ShowHints, opt => opt.MapFrom(src => src.Aids.ShowHints))
+            .ForMember(dest => dest.ShowSources, opt => opt.MapFrom(src => src.Aids.ShowSources))
+            .ForMember(dest => dest.ShowGlossary, opt => opt.MapFrom(src => src.Aids.ShowGlossary))
+            .ForMember(dest => dest.MaxAttempts, opt => opt.MapFrom(src => src.Attempts.Max))
+            .ForMember(dest => dest.CooldownHours, opt => opt.MapFrom(src => src.Attempts.CooldownHours))
+            .ForMember(dest => dest.RequireFullscreen, opt => opt.MapFrom(src => src.Integrity.RequireFullscreen))
+            .ForMember(dest => dest.BlockCopyPaste, opt => opt.MapFrom(src => src.Integrity.BlockCopyPaste))
+            .ForMember(dest => dest.TrackFocusLoss, opt => opt.MapFrom(src => src.Integrity.TrackFocusLoss))
+            .ForMember(dest => dest.ProctoringEnabled, opt => opt.MapFrom(src => src.Integrity.Proctoring))
+            .ForMember(dest => dest.CertificationEnabled, opt => opt.MapFrom(src => src.Certification.Enabled))
+            .ForMember(dest => dest.InterviewCost, opt => opt.MapFrom(src => src.Credits.InterviewCost))
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Assignments, opt => opt.Ignore());
+
+        // Selection Criteria mapping for DTO compatibility
+        CreateMap<SelectionCriteria, SelectionCriteriaDto>();
+        CreateMap<SelectionCriteriaDto, SelectionCriteria>();
+    }
+
+    private static string SerializeSelectionCriteria(SelectionCriteriaDto criteria)
+    {
+        return System.Text.Json.JsonSerializer.Serialize(criteria);
     }
 }

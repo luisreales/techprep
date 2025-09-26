@@ -12,7 +12,6 @@ public static class MockHelper
         var mockUnitOfWork = new Mock<IUnitOfWork>();
         mockUnitOfWork.Setup(u => u.Topics).Returns(new Mock<ITopicRepository>().Object);
         mockUnitOfWork.Setup(u => u.Questions).Returns(new Mock<IQuestionRepository>().Object);
-        mockUnitOfWork.Setup(u => u.InterviewSessions).Returns(new Mock<IInterviewSessionRepository>().Object);
         mockUnitOfWork.Setup(u => u.SaveChangesAsync()).ReturnsAsync(1);
         return mockUnitOfWork;
     }

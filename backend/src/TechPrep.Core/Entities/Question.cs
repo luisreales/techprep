@@ -25,7 +25,6 @@ public class Question
     // Navigation properties
     public virtual Topic Topic { get; set; } = null!;
     public virtual ICollection<QuestionOption> Options { get; set; } = new List<QuestionOption>();
-    public virtual ICollection<InterviewAnswer> InterviewAnswers { get; set; } = new List<InterviewAnswer>();
     public virtual ICollection<QuestionResource> ResourceLinks { get; set; } = new List<QuestionResource>();
     public virtual ICollection<QuestionKeyword> Keywords { get; set; } = new List<QuestionKeyword>();
 }

@@ -96,7 +96,7 @@ const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center gap-3">
             {collapseButtonVisible && onCollapseToggle && (
               <button
-                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:bg-gray-50 rounded-lg transition-colors"
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--primary-color)] hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 onClick={onCollapseToggle}
               >
                 <span className="material-symbols-outlined text-base">
@@ -113,7 +113,7 @@ const TopBar: React.FC<TopBarProps> = ({
           {/* Right side - Notifications and Profile */}
           <div className="flex items-center gap-4">
             {/* Notifications */}
-            <button className="relative text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors p-2 rounded-lg hover:bg-gray-50">
+            <button className="relative text-[var(--text-secondary)] hover:text-[var(--primary-color)] transition-colors p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
               <span className="material-symbols-outlined text-2xl">notifications</span>
               <span className="absolute top-1 right-1 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
             </button>

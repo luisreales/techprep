@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <p className="text-sm text-indigo-800/80">Jump into a new session based on your goals.</p>
                 </Link>
-                <Link to="/sessions" className="text-left p-4 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-200">
+                <Link to="/sessions" className="text-left p-4 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200">
                   <div className="flex items-center gap-3 mb-1">
                     <span className="material-symbols-outlined text-2xl text-[var(--text-secondary)]">search</span>
                     <h3 className="font-bold text-lg text-[var(--text-primary)]">Browse Sessions</h3>
@@ -115,7 +115,7 @@ const Dashboard: React.FC = () => {
                 <h2 className="text-xl font-bold text-[var(--text-primary)] mb-4">Recent Sessions</h2>
                 <div className="space-y-4">
                   {recentSessions.map((session) => (
-                    <div key={session.topic} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={session.topic} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                       <div>
                         <p className="font-semibold text-[var(--text-primary)]">{session.topic}</p>
                         <p className="text-sm text-[var(--text-secondary)]">{session.details}</p>
@@ -139,7 +139,7 @@ const Dashboard: React.FC = () => {
                               <span>{item.name}</span>
                               <span className={`font-mono font-medium text-${rec.color}-600`}>{item.percent}%</span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
                               <div
                                 className={`bg-${rec.color}-500 h-1.5 rounded-full`}
                                 style={{ width: `${item.percent}%` }}

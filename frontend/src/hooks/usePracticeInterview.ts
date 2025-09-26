@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { practiceInterviewAdminApi } from '@/services/admin/practiceInterviewApi';
 import { practiceApi } from '@/services/practiceApi';
-import { interviewApi, creditsApi } from '@/services/interviewApi';
+import { interviewApi } from '@/services/interviewApi';
+import { creditsApi } from '@/services/creditsApi';
 import {
   CreateTemplateDto,
   UpdateTemplateDto,

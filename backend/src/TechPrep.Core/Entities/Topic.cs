@@ -9,5 +9,4 @@ public class Topic
     
     // Navigation properties
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
-    public virtual ICollection<InterviewSession> InterviewSessions { get; set; } = new List<InterviewSession>();
 }

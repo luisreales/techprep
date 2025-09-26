@@ -18,5 +18,4 @@ public class User : IdentityUser<Guid>
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
     // Navigation properties
-    public virtual ICollection<InterviewSession> InterviewSessions { get; set; } = new List<InterviewSession>();
 }

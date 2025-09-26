@@ -279,7 +279,6 @@ const ProfilePage: React.FC = () => {
                 {[
                   { value: 'light', label: 'Light', description: 'Default light theme' },
                   { value: 'dark', label: 'Dark', description: 'Dark theme for low-light environments' },
-                  { value: 'blue', label: 'Blue', description: 'Light theme with blue accent' },
                 ].map((theme) => (
                   <label key={theme.value} className="flex items-start cursor-pointer">
                     <input

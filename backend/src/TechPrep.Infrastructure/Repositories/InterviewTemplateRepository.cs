@@ -34,4 +34,22 @@ public class InterviewTemplateRepository : GenericRepository<InterviewTemplate>,
             .OrderBy(t => t.Name)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<(InterviewTemplate Template, int AssignmentId)>> GetTemplatesByUserAsync(Guid userId, TemplateKind? kind = null)
+    {
+        var query = _context.SessionAssignments
+            .Include(sa => sa.Template)
+            .Where(sa => sa.UserId == userId);
+
+        if (kind.HasValue)
+        {
+            query = query.Where(sa => sa.Template.Kind == kind.Value);
+        }
+
+        var assignments = await query
+            .OrderByDescending(sa => sa.CreatedAt)
+            .ToListAsync();
+
+        return assignments.Select(sa => (sa.Template, sa.Id));
+    }
 }

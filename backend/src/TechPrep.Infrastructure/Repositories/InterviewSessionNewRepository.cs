@@ -16,8 +16,6 @@ public class InterviewSessionNewRepository : GenericRepository<InterviewSessionN
     {
         return await _context.InterviewSessionsNew
             .Where(ints => ints.UserId == userId)
-            .Include(ints => ints.Assignment)
-                .ThenInclude(a => a.Template)
             .OrderByDescending(ints => ints.StartedAt)
             .ToListAsync();
     }
@@ -26,10 +24,6 @@ public class InterviewSessionNewRepository : GenericRepository<InterviewSessionN
     {
         return await _context.InterviewSessionsNew
             .Include(ints => ints.Answers)
-                .ThenInclude(a => a.Question)
-            .Include(ints => ints.Assignment)
-                .ThenInclude(a => a.Template)
-            .Include(ints => ints.Certificate)
             .FirstOrDefaultAsync(ints => ints.Id == id);
     }
 
@@ -38,19 +32,14 @@ public class InterviewSessionNewRepository : GenericRepository<InterviewSessionN
         return await _context.InterviewSessionsNew
             .Where(ints => ints.UserId == userId &&
                           ints.AssignmentId == assignmentId &&
-                          ints.Status == SessionStatus.InProgress)
-            .Include(ints => ints.Assignment)
-                .ThenInclude(a => a.Template)
+                          ints.Status == "Active")
             .FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<InterviewSessionNew>> GetCompletedSessionsAsync(Guid userId)
     {
         return await _context.InterviewSessionsNew
-            .Where(ints => ints.UserId == userId && ints.Status == SessionStatus.Completed)
-            .Include(ints => ints.Assignment)
-                .ThenInclude(a => a.Template)
-            .Include(ints => ints.Certificate)
+            .Where(ints => ints.UserId == userId && ints.Status == "Completed")
             .OrderByDescending(ints => ints.SubmittedAt)
             .ToListAsync();
     }

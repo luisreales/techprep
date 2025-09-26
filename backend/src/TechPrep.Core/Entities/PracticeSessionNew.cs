@@ -15,6 +15,10 @@ public class PracticeSessionNew
     public int TotalTimeSec { get; set; } = 0;
     public string? CurrentQuestionState { get; set; } // JSON for autosave
     public int CurrentQuestionIndex { get; set; } = 0;
+    public int TotalItems { get; set; } = 0;
+    public int CorrectCount { get; set; } = 0;
+    public int IncorrectCount { get; set; } = 0;
+    public DateTime? FinishedAt { get; set; }
 
     // Navigation properties
     public virtual User User { get; set; } = null!;

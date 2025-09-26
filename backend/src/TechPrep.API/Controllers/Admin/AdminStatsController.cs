@@ -28,7 +28,9 @@ public class AdminStatsController : ControllerBase
         var users = await _userManager.Users.CountAsync();
         var questions = await _db.Questions.CountAsync();
         var topics = await _db.Topics.CountAsync();
-        var sessions = await _db.PracticeSessions.CountAsync();
+        var interviewSessions = await _db.InterviewSessionsNew.CountAsync();
+        var practiceSessions = await _db.PracticeSessionsNew.CountAsync();
+        var sessions = interviewSessions + practiceSessions;
         var sessionTemplates = await _db.SessionTemplates.CountAsync();
 
         return Ok(new

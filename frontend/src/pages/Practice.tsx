@@ -197,7 +197,7 @@ const Practice: React.FC = () => {
       } catch (error) {
         console.error('Error initializing session:', error);
         setIsLoadingQuestions(false);
-        navigate('/sessions');
+        navigate('/interviews');
       }
     };
 
@@ -461,19 +461,32 @@ const Practice: React.FC = () => {
   };
 
   if (!sessionTemplate) {
+    // Auto-create a demo practice session
+    const demoSessionTemplate: SessionTemplate = {
+      id: 'demo-practice-session',
+      name: 'Demo Practice Session',
+      description: 'A practice session with sample questions to test the evaluation engine',
+      topicId: 1,
+      topicName: 'General Programming',
+      questionCount: 5,
+      difficulty: DifficultyLevel.Intermediate,
+      estimatedTime: 15
+    };
+
+    // Set the demo template and let the effect handle initialization
+    setTimeout(() => {
+      setSessionTemplate(demoSessionTemplate);
+      setSessionMode(PracticeMode.Study);
+    }, 100);
+
     return (
       <div className="max-w-xl mx-auto">
         <div className="bg-[var(--card-background)] rounded-xl shadow-sm p-8 text-center">
-          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Select a Practice Session</h3>
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">Starting Practice Session</h3>
           <p className="text-[var(--text-secondary)] mb-6">
-            Choose a session from the practice catalog to get started.
+            Initializing a demo practice session with sample questions.
           </p>
-          <button
-            onClick={() => navigate('/sessions', { replace: true })}
-            className="px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200"
-          >
-            Browse Sessions
-          </button>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary-color)] mx-auto"></div>
         </div>
       </div>
     );
@@ -505,10 +518,10 @@ const Practice: React.FC = () => {
             No questions found for this topic and difficulty level. Please try a different session.
           </p>
           <button
-            onClick={() => navigate('/sessions')}
+            onClick={() => navigate('/interviews')}
             className="px-6 py-3 bg-[var(--primary-color)] text-white rounded-lg font-medium hover:bg-[var(--primary-color)]/90 transition-all duration-200"
           >
-            Back to Sessions
+            Back to Interviews
           </button>
         </div>
       </div>

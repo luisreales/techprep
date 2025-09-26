@@ -8,4 +8,5 @@ public interface IInterviewTemplateRepository : IGenericRepository<InterviewTemp
     Task<IEnumerable<InterviewTemplate>> GetByKindAsync(TemplateKind kind);
     Task<InterviewTemplate?> GetWithDetailsAsync(int id);
     Task<IEnumerable<InterviewTemplate>> GetPublicTemplatesAsync(TemplateKind kind);
+    Task<IEnumerable<(InterviewTemplate Template, int AssignmentId)>> GetTemplatesByUserAsync(Guid userId, TemplateKind? kind = null);
 }

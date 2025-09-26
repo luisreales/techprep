@@ -26,19 +26,8 @@ const AuthenticatedLayout: React.FC = () => {
 
   const showCollapseToggle = location.pathname.startsWith('/admin/question-bank');
 
-  const rootStyle: React.CSSProperties = {
-    '--primary-color': '#4f46e5',
-    '--primary-color-light': '#e0e7ff',
-    '--background-color': '#f8fafc',
-    '--text-primary': '#1e293b',
-    '--text-secondary': '#64748b',
-    '--card-background': '#ffffff',
-    '--border-color': '#e2e8f0',
-    '--accent-color': '#10b981',
-  } as React.CSSProperties;
-
   return (
-    <div className="flex min-h-screen bg-[var(--background-color)]" style={rootStyle}>
+    <div className="flex min-h-screen bg-[var(--background-color)]">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} collapsed={sidebarCollapsed} />
 

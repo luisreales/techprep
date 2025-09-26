@@ -59,34 +59,35 @@ public static class TestDataHelper
         };
     }
 
-    public static InterviewSession CreateTestInterviewSession(Guid userId, PracticeMode mode = PracticeMode.Study)
+    public static InterviewSessionNew CreateTestInterviewSession(Guid userId, int assignmentId = 1)
     {
-        return new InterviewSession
+        return new InterviewSessionNew
         {
             Id = Guid.NewGuid(),
             UserId = userId,
-            Mode = mode,
-            TopicId = 1,
-            Level = DifficultyLevel.Basic,
-            TotalQuestions = 10,
-            CorrectAnswers = 0,
-            Score = 0,
-            StartedAt = DateTime.UtcNow,
-            IsCompleted = false
+            AssignmentId = assignmentId,
+            Status = Core.Enums.SessionStatus.InProgress,
+            TotalItems = 10,
+            CorrectCount = 0,
+            IncorrectCount = 0,
+            TotalScore = 0,
+            StartedAt = DateTime.UtcNow
         };
     }
 
-    public static InterviewAnswer CreateTestInterviewAnswer(Guid sessionId, Guid questionId)
+    public static InterviewAnswerNew CreateTestInterviewAnswer(Guid sessionId, Guid questionId)
     {
-        return new InterviewAnswer
+        return new InterviewAnswerNew
         {
             Id = Guid.NewGuid(),
-            SessionId = sessionId,
+            InterviewSessionId = sessionId,
             QuestionId = questionId,
             GivenAnswer = "Test answer",
+            GivenText = "Test answer",
             IsCorrect = true,
             MatchPercentage = 85.0m,
-            TimeSpentSeconds = 30,
+            TimeMs = 30000,
+            TimeSpentSec = 30,
             AnsweredAt = DateTime.UtcNow
         };
     }

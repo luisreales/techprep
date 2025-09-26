@@ -3,26 +3,26 @@
 
 // Enums
 export enum TemplateKind {
-  Practice = 'Practice',
-  Interview = 'Interview'
+  Practice = 1,
+  Interview = 2
 }
 
 export enum VisibilityType {
-  Public = 'Public',
-  Group = 'Group',
-  Private = 'Private'
+  Public = 1,
+  Group = 2,
+  Private = 3
 }
 
 export enum FeedbackMode {
-  Immediate = 'Immediate',
-  End = 'End',
-  None = 'None'
+  Immediate = 1,
+  End = 2,
+  None = 3
 }
 
 export enum NavigationMode {
-  Linear = 'Linear',
-  Free = 'Free',
-  Restricted = 'Restricted'
+  Free = 1,
+  Linear = 2,
+  Restricted = 3
 }
 
 export enum SessionStatus {
@@ -136,6 +136,10 @@ export interface CreateTemplateDto {
 }
 
 export interface UpdateTemplateDto extends CreateTemplateDto {}
+
+export interface UserAssignedTemplateDto extends TemplateDto {
+  assignmentId: number;
+}
 
 // Group DTOs
 export interface GroupDto {

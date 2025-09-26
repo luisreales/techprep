@@ -39,6 +39,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
 
 // Practice Interview System Services
 builder.Services.AddScoped<IInterviewTemplateRepository, InterviewTemplateRepository>();

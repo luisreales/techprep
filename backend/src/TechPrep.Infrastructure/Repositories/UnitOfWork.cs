@@ -15,7 +15,6 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
         Topics = new TopicRepository(_context);
         Questions = new QuestionRepository(_context);
-        InterviewSessions = new InterviewSessionRepository(_context);
         CodeChallenges = new CodeChallengeRepository(_context);
         Tags = new TagRepository(_context);
         ChallengeAttempts = new ChallengeAttemptRepository(_context);
@@ -24,7 +23,6 @@ public class UnitOfWork : IUnitOfWork
 
     public ITopicRepository Topics { get; private set; }
     public IQuestionRepository Questions { get; private set; }
-    public IInterviewSessionRepository InterviewSessions { get; private set; }
     public ICodeChallengeRepository CodeChallenges { get; private set; }
     public ITagRepository Tags { get; private set; }
     public IChallengeAttemptRepository ChallengeAttempts { get; private set; }

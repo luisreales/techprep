@@ -27,8 +27,6 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
     public DbSet<SessionTemplate> SessionTemplates { get; set; } = null!;
     public DbSet<SessionTemplateItem> SessionTemplateItems { get; set; } = null!;
     public DbSet<SessionTemplateTopic> SessionTemplateTopics { get; set; } = null!;
-    public DbSet<PracticeSession> PracticeSessions { get; set; } = null!;
-    public DbSet<PracticeSessionItem> PracticeSessionItems { get; set; } = null!;
 
     // Practice Interview System
     public DbSet<Group> Groups { get; set; } = null!;
@@ -62,7 +60,6 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Ignore(e => e.Questions);
-            entity.Ignore(e => e.InterviewSessions);
         });
         
         builder.Entity<Question>(entity =>
@@ -74,7 +71,6 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.Level).IsRequired();
             entity.Property(e => e.CreatedAt).IsRequired();
             entity.Property(e => e.UpdatedAt).IsRequired();
-            entity.Ignore(e => e.InterviewAnswers);
             entity.HasIndex(e => e.TopicId);
             
             // Configure relationships
@@ -271,51 +267,6 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.HasIndex(e => new { e.TemplateId, e.OrderIndex }).IsUnique();
         });
         
-        builder.Entity<PracticeSession>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.UserId).IsRequired();
-            entity.Property(e => e.Mode).IsRequired();
-            entity.Property(e => e.RandomOrder).IsRequired();
-            entity.Property(e => e.ThresholdWritten).IsRequired();
-            entity.Property(e => e.StartedAt).IsRequired();
-            entity.Property(e => e.TotalItems).IsRequired();
-            entity.Property(e => e.CorrectCount).IsRequired();
-            entity.Property(e => e.IncorrectCount).IsRequired();
-            entity.HasIndex(e => e.UserId);
-            entity.HasIndex(e => e.StartedAt);
-            
-            entity.HasOne(e => e.Template)
-                  .WithMany()
-                  .HasForeignKey(e => e.TemplateId)
-                  .OnDelete(DeleteBehavior.SetNull);
-                  
-            entity.HasMany(e => e.SessionItems)
-                  .WithOne(si => si.Session)
-                  .HasForeignKey(si => si.SessionId)
-                  .OnDelete(DeleteBehavior.Cascade);
-        });
-        
-        builder.Entity<PracticeSessionItem>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.SessionId).IsRequired();
-            entity.Property(e => e.OrderIndex).IsRequired();
-            entity.Property(e => e.ItemType).IsRequired();
-            entity.Property(e => e.ItemId).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.Level).IsRequired().HasMaxLength(50);
-            entity.Property(e => e.TopicId).IsRequired();
-            entity.Property(e => e.TimeMs).IsRequired();
-            entity.Property(e => e.ChosenOptionsJson).HasMaxLength(1000);
-            entity.Property(e => e.GivenText).HasMaxLength(2000);
-            entity.HasIndex(e => e.SessionId);
-            entity.HasIndex(e => new { e.SessionId, e.OrderIndex }).IsUnique();
-            
-            entity.HasOne(e => e.Topic)
-                  .WithMany()
-                  .HasForeignKey(e => e.TopicId)
-                  .OnDelete(DeleteBehavior.Restrict);
-        });
 
         // Settings configuration
         builder.Entity<AppSetting>(entity =>
@@ -430,23 +381,16 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.HasKey(e => e.Id);
             entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.AssignmentId).IsRequired();
-            entity.Property(e => e.Status).IsRequired();
+            entity.Property(e => e.Status).IsRequired().HasDefaultValue("Active");
             entity.Property(e => e.StartedAt).IsRequired();
-
-            entity.HasOne(e => e.User)
-                  .WithMany()
-                  .HasForeignKey(e => e.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(e => e.Assignment)
-                  .WithMany(a => a.InterviewSessions)
-                  .HasForeignKey(e => e.AssignmentId)
-                  .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(e => e.ConsumedCredit)
-                  .WithMany()
-                  .HasForeignKey(e => e.ConsumedCreditLedgerId)
-                  .OnDelete(DeleteBehavior.SetNull);
+            entity.Property(e => e.TotalScore).HasDefaultValue(0);
+            entity.Property(e => e.TotalTimeSec).HasDefaultValue(0);
+            entity.Property(e => e.CurrentQuestionIndex).HasDefaultValue(0);
+            entity.Property(e => e.CertificateIssued).HasDefaultValue(false);
+            entity.Property(e => e.CorrectCount).HasDefaultValue(0);
+            entity.Property(e => e.IncorrectCount).HasDefaultValue(0);
+            entity.Property(e => e.TotalItems).HasDefaultValue(0);
+            entity.Property(e => e.NumberAttemps).IsRequired().HasDefaultValue(1);
         });
 
         // PracticeAnswer configuration
@@ -476,19 +420,18 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.HasKey(e => e.Id);
             entity.Property(e => e.InterviewSessionId).IsRequired();
             entity.Property(e => e.QuestionId).IsRequired();
-            entity.Property(e => e.SelectedOptionIds).HasMaxLength(1000);
+            entity.Property(e => e.Type).IsRequired().HasDefaultValue("single");
             entity.Property(e => e.GivenText).HasMaxLength(2000);
-            entity.Property(e => e.AnsweredAt).IsRequired();
+            entity.Property(e => e.ChosenOptionIdsJson).HasMaxLength(1000);
+            entity.Property(e => e.IsCorrect).IsRequired().HasDefaultValue(false);
+            entity.Property(e => e.TimeMs).IsRequired().HasDefaultValue(0);
+            entity.Property(e => e.NumberAttemps).IsRequired().HasDefaultValue(1);
+            entity.Property(e => e.CreatedAt).IsRequired();
 
             entity.HasOne(e => e.InterviewSession)
                   .WithMany(ses => ses.Answers)
                   .HasForeignKey(e => e.InterviewSessionId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(e => e.Question)
-                  .WithMany()
-                  .HasForeignKey(e => e.QuestionId)
-                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         // SessionAuditEvent configuration
@@ -598,10 +541,11 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.QrCodeData).IsRequired().HasMaxLength(1000);
             entity.Property(e => e.IssuedAt).IsRequired();
 
-            entity.HasOne(e => e.Session)
-                  .WithOne(s => s.Certificate)
-                  .HasForeignKey<InterviewCertificate>(e => e.InterviewSessionId)
-                  .OnDelete(DeleteBehavior.Cascade);
+            // Relationship will be configured when certificate functionality is fully implemented
+            // entity.HasOne(e => e.Session)
+            //       .WithOne(s => s.Certificate)
+            //       .HasForeignKey<InterviewCertificate>(e => e.InterviewSessionId)
+            //       .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(e => e.CertificateId).IsUnique();
         });

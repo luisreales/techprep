@@ -89,6 +89,10 @@ public class PracticeInterviewMappingProfile : Profile
         CreateMap<UpdateTemplateDto, InterviewTemplate>()
             .IncludeBase<CreateTemplateDto, InterviewTemplate>();
 
+        CreateMap<InterviewTemplate, UserAssignedTemplateDto>()
+            .IncludeBase<InterviewTemplate, TemplateDto>()
+            .ForMember(dest => dest.AssignmentId, opt => opt.Ignore());
+
         // Assignment mappings
         CreateMap<SessionAssignment, AssignmentDto>()
             .ForMember(dest => dest.TemplateName, opt => opt.MapFrom(src => src.Template.Name))
@@ -119,7 +123,7 @@ public class PracticeInterviewMappingProfile : Profile
             .ForMember(dest => dest.AssignmentName, opt => opt.MapFrom(src => src.Assignment != null ? src.Assignment.Template.Name : null));
 
         CreateMap<InterviewSessionNew, InterviewSessionDto>()
-            .ForMember(dest => dest.AssignmentName, opt => opt.MapFrom(src => src.Assignment.Template.Name));
+            .ForMember(dest => dest.AssignmentName, opt => opt.MapFrom(src => "Interview Template")); // Placeholder
 
         CreateMap<PracticeAnswer, PracticeAnswerDto>()
             .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question.Text))
@@ -129,10 +133,10 @@ public class PracticeInterviewMappingProfile : Profile
                 null));
 
         CreateMap<InterviewAnswerNew, InterviewAnswerDto>()
-            .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => src.Question.Text))
+            .ForMember(dest => dest.QuestionText, opt => opt.MapFrom(src => "Question Text")) // Placeholder
             .ForMember(dest => dest.SelectedOptionIds, opt => opt.MapFrom(src =>
-                !string.IsNullOrEmpty(src.SelectedOptionIds) ?
-                System.Text.Json.JsonSerializer.Deserialize<List<Guid>>(src.SelectedOptionIds, (System.Text.Json.JsonSerializerOptions?)null) :
+                !string.IsNullOrEmpty(src.ChosenOptionIdsJson) ?
+                System.Text.Json.JsonSerializer.Deserialize<List<Guid>>(src.ChosenOptionIdsJson, (System.Text.Json.JsonSerializerOptions?)null) :
                 null));
 
         // Credit mappings

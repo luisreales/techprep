@@ -47,9 +47,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, collapsed = false })
       studentOnly: true
     },
     {
-      to: '/sessions',
+      to: '/interviews',
       icon: 'play_lesson',
-      label: 'Sessions',
+      label: 'Interviews',
       studentOnly: true
     },
     {
@@ -223,7 +223,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, collapsed = false })
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
                         isActive 
                           ? 'bg-[var(--primary-color-light)] text-[var(--primary-color)] font-semibold shadow-sm'
-                          : 'hover:bg-gray-50 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                          : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                       }`}
                     >
                       <span className="material-symbols-outlined text-lg">{item.icon}</span>
@@ -239,7 +239,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, collapsed = false })
           <div className="p-3 border-t border-[var(--border-color)]">
             <button 
               onClick={handleLogout}
-              className="flex w-full items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium transition-all duration-200"
+              className="flex w-full items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-sm font-medium transition-all duration-200"
             >
               <span className="material-symbols-outlined text-lg">logout</span>
               Logout

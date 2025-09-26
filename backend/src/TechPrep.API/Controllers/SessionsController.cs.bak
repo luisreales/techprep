@@ -1,0 +1,458 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using TechPrep.Core.Entities;
+using TechPrep.Core.Enums;
+using TechPrep.Infrastructure.Data;
+using TechPrep.Application.DTOs.Session;
+
+namespace TechPrep.API.Controllers;
+
+public class CreateInterviewSessionRequest
+{
+    public int AssignmentId { get; set; }
+}
+
+public class CreateInterviewSessionFromTemplateRequest
+{
+    public int TemplateId { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+}
+
+
+public class AnswerSubmissionDto
+{
+    public Guid QuestionId { get; set; }
+    public QuestionType AnswerType { get; set; }
+    public string? Text { get; set; }
+    public List<Guid> Options { get; set; } = new();
+    public int TimeMs { get; set; }
+}
+
+[ApiController]
+[Route("api/interview-sessions")]
+[Authorize]
+public class SessionsController : ControllerBase
+{
+    private readonly TechPrepDbContext _db;
+
+    public SessionsController(TechPrepDbContext db)
+    {
+        _db = db;
+    }
+
+    private Guid GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return Guid.TryParse(userIdClaim, out var id) ? id : Guid.Empty;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSession([FromBody] CreateInterviewSessionRequest request)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == Guid.Empty)
+        {
+            return Unauthorized(new { success = false, message = "Invalid user token" });
+        }
+
+        // Get the assignment and verify access
+        var assignment = await _db.SessionAssignments
+            .Include(a => a.Template)
+            .FirstOrDefaultAsync(a => a.Id == request.AssignmentId);
+
+        if (assignment == null)
+        {
+            return NotFound(new { success = false, message = "Assignment not found" });
+        }
+
+        // Verify user has access to this assignment
+        if (assignment.Visibility == VisibilityType.Private && assignment.UserId != userId)
+        {
+            return Forbid("You don't have access to this assignment");
+        }
+
+        if (assignment.Visibility == VisibilityType.Group)
+        {
+            var userInGroup = await _db.UserGroups
+                .AnyAsync(ug => ug.UserId == userId && ug.GroupId == assignment.GroupId);
+
+            if (!userInGroup)
+            {
+                return Forbid("You don't have access to this assignment");
+            }
+        }
+
+        // Create the interview session
+        var session = new InterviewSessionNew
+        {
+            UserId = userId,
+            AssignmentId = request.AssignmentId,
+            Status = SessionStatus.NotStarted,
+            StartedAt = DateTime.UtcNow,
+            TotalItems = 0, // Will be updated when questions are loaded
+            CorrectCount = 0,
+            IncorrectCount = 0,
+            TotalScore = 0,
+            CurrentQuestionIndex = 0
+        };
+
+        _db.InterviewSessionsNew.Add(session);
+        await _db.SaveChangesAsync();
+
+        return Ok(new { success = true, data = new { sessionId = session.Id } });
+    }
+
+    [HttpPost("from-template")]
+    public async Task<IActionResult> CreateSessionFromTemplate([FromBody] CreateInterviewSessionFromTemplateRequest request)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == Guid.Empty)
+        {
+            return Unauthorized(new { success = false, message = "Invalid user token" });
+        }
+
+        try
+        {
+            // First, create an assignment from the template
+            var assignment = new SessionAssignment
+            {
+                TemplateId = request.TemplateId,
+                Visibility = VisibilityType.Private,
+                UserId = userId,
+                WindowStart = DateTime.UtcNow,
+                WindowEnd = DateTime.UtcNow.AddDays(1), // Give 1 day window
+                MaxAttempts = 1,
+                CooldownHoursBetweenAttempts = 0,
+                CertificationEnabled = false,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _db.SessionAssignments.Add(assignment);
+            await _db.SaveChangesAsync();
+
+            // Create the interview session using the new assignment
+            var session = new InterviewSessionNew
+            {
+                UserId = userId,
+                AssignmentId = assignment.Id,
+                Status = SessionStatus.NotStarted,
+                StartedAt = DateTime.UtcNow,
+                TotalItems = 0, // Will be updated when questions are loaded
+                CorrectCount = 0,
+                IncorrectCount = 0,
+                TotalScore = 0,
+                CurrentQuestionIndex = 0
+            };
+
+            _db.InterviewSessionsNew.Add(session);
+            await _db.SaveChangesAsync();
+
+            return Ok(new { success = true, data = new { sessionId = session.Id } });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { success = false, message = "Failed to create session from template", error = ex.Message });
+        }
+    }
+
+
+
+    [HttpPost("{sessionId:guid}/answers")]
+    public async Task<IActionResult> SubmitAnswer(Guid sessionId, [FromBody] AnswerSubmissionDto submission)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == Guid.Empty)
+        {
+            return Unauthorized(new { success = false, message = "Invalid user token" });
+        }
+
+        // Get session with answers to verify ownership
+        var session = await _db.InterviewSessionsNew
+            .Include(s => s.Assignment)
+            .Include(s => s.Answers)
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+        {
+            return NotFound(new { success = false, message = "Session not found" });
+        }
+
+        if (session.Status == SessionStatus.Completed)
+        {
+            return BadRequest(new { success = false, message = "Session is already completed" });
+        }
+
+        // Get question with options for evaluation
+        var question = await _db.Questions
+            .Include(q => q.Options)
+            .Include(q => q.ResourceLinks)
+            .ThenInclude(rl => rl.Resource)
+            .FirstOrDefaultAsync(q => q.Id == submission.QuestionId);
+
+        if (question == null)
+        {
+            return NotFound(new { success = false, message = "Question not found" });
+        }
+
+        // Check if answer already exists for this question in this session
+        var existingAnswer = session.Answers.FirstOrDefault(a => a.QuestionId == submission.QuestionId);
+        if (existingAnswer != null)
+        {
+            return BadRequest(new { success = false, message = "Answer already submitted for this question" });
+        }
+
+        // Evaluate the answer using EvaluationService
+        bool isCorrect = false;
+        decimal? matchPercent = null;
+
+        // For now, use simplified evaluation. TODO: Inject IEvaluationService
+        switch (submission.AnswerType)
+        {
+            case QuestionType.SingleChoice:
+                if (submission.Options.Count == 1)
+                {
+                    var selectedOption = question.Options.FirstOrDefault(o => o.Id == submission.Options.First());
+                    isCorrect = selectedOption?.IsCorrect ?? false;
+                }
+                break;
+            case QuestionType.MultiChoice:
+                var correctOptionIds = question.Options.Where(o => o.IsCorrect).Select(o => o.Id).ToHashSet();
+                var selectedSet = submission.Options.ToHashSet();
+                isCorrect = correctOptionIds.SetEquals(selectedSet);
+                break;
+            case QuestionType.Written:
+                // Simple text matching for now - TODO: Use EvaluationService
+                if (!string.IsNullOrEmpty(question.OfficialAnswer) && !string.IsNullOrEmpty(submission.Text))
+                {
+                    var normalizedOfficial = question.OfficialAnswer.ToLowerInvariant().Trim();
+                    var normalizedUser = submission.Text.ToLowerInvariant().Trim();
+                    matchPercent = normalizedUser.Contains(normalizedOfficial) ? 100m : 0m;
+                    isCorrect = matchPercent >= 80m; // Default threshold
+                }
+                break;
+        }
+
+        // Create answer record
+        var answer = new InterviewAnswerNew
+        {
+            Id = Guid.NewGuid(),
+            InterviewSessionId = sessionId,
+            QuestionId = submission.QuestionId,
+            GivenText = submission.Text,
+            GivenAnswer = submission.Text,
+            SelectedOptionIds = submission.Options.Any() ? System.Text.Json.JsonSerializer.Serialize(submission.Options) : null,
+            SelectedOptionsJson = submission.Options.Any() ? System.Text.Json.JsonSerializer.Serialize(submission.Options) : null,
+            IsCorrect = isCorrect,
+            MatchPercentage = matchPercent,
+            TimeSpentSec = submission.TimeMs / 1000,
+            TimeMs = submission.TimeMs,
+            AnsweredAt = DateTime.UtcNow
+        };
+
+        // Add answer to database
+        _db.InterviewAnswersNew.Add(answer);
+
+        // Update session statistics
+        if (isCorrect)
+        {
+            session.TotalScore += 1; // Simple scoring - 1 point per correct answer
+            session.CorrectCount += 1;
+        }
+        else
+        {
+            session.IncorrectCount += 1;
+        }
+
+        session.Status = SessionStatus.InProgress;
+
+        await _db.SaveChangesAsync();
+
+        // Prepare response based on session mode
+        object response = new { accepted = true, isCorrect = (bool?)null, matchPercent = (decimal?)null, explanation = (string?)null, resources = new List<object>() };
+
+        // For practice mode, return immediate feedback
+        // Note: We'll check the assignment template kind for practice vs interview mode
+        var template = await _db.InterviewTemplates.FindAsync(session.Assignment.TemplateId);
+        if (template?.Kind == TemplateKind.Practice)
+        {
+            response = new
+            {
+                accepted = true,
+                isCorrect = (bool?)isCorrect,
+                matchPercent = matchPercent,
+                explanation = question.OfficialAnswer,
+                resources = question.ResourceLinks?.Select(rl => new
+                {
+                    id = rl.ResourceId,
+                    title = rl.Resource?.Title ?? "",
+                    url = rl.Resource?.Url ?? "",
+                    type = rl.Resource?.Kind.ToString() ?? ""
+                }).Cast<object>().ToList() ?? new List<object>()
+            };
+        }
+
+        return Ok(new { success = true, data = response });
+    }
+
+    [HttpGet("{sessionId:guid}/summary")]
+    public async Task<IActionResult> GetSummary(Guid sessionId)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == Guid.Empty)
+        {
+            return Unauthorized(new { success = false, message = "Invalid user token" });
+        }
+
+        var session = await _db.InterviewSessionsNew
+            .Include(s => s.Assignment)
+            .ThenInclude(a => a.Template)
+            .Include(s => s.Answers)
+            .ThenInclude(a => a.Question)
+            .ThenInclude(q => q.Topic)
+            .Include(s => s.Answers)
+            .ThenInclude(a => a.Question)
+            .ThenInclude(q => q.ResourceLinks)
+            .ThenInclude(rl => rl.Resource)
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+        {
+            return NotFound(new { success = false, message = "Session not found" });
+        }
+
+        var totalQuestions = session.Answers.Count();
+        var correctAnswers = session.Answers.Count(a => a.IsCorrect == true);
+
+        var summary = new
+        {
+            sessionId = sessionId,
+            totalQuestions = totalQuestions,
+            correctAnswers = correctAnswers,
+            incorrectAnswers = totalQuestions - correctAnswers,
+            score = session.TotalScore,
+            totalTimeMs = session.Answers.Sum(a => a.TimeMs),
+            startedAt = session.StartedAt,
+            finishedAt = session.SubmittedAt,
+            topicStats = session.Answers
+                .GroupBy(a => a.Question.TopicId)
+                .Select(g => new
+                {
+                    topicId = g.Key,
+                    topicName = g.First().Question.Topic?.Name ?? "Unknown",
+                    totalQuestions = g.Count(),
+                    correctAnswers = g.Count(a => a.IsCorrect == true),
+                    accuracy = g.Count() > 0 ? (decimal)g.Count(a => a.IsCorrect == true) / g.Count() * 100 : 0
+                }).ToList(),
+            questions = (session.Assignment.Template?.Kind == TemplateKind.Practice || session.Status == SessionStatus.Completed) ?
+                session.Answers.Select(a => new
+                {
+                    questionId = a.QuestionId,
+                    questionText = a.Question.Text,
+                    isCorrect = a.IsCorrect,
+                    matchPercent = a.MatchPercentage,
+                    userAnswer = a.GivenAnswer ?? a.SelectedOptionsJson,
+                    officialAnswer = a.Question.OfficialAnswer,
+                    explanation = a.Question.OfficialAnswer,
+                    resources = a.Question.ResourceLinks?.Select(rl => new
+                    {
+                        id = rl.ResourceId,
+                        title = rl.Resource?.Title ?? "",
+                        url = rl.Resource?.Url ?? "",
+                        type = rl.Resource?.Kind.ToString() ?? ""
+                    }).Cast<object>().ToList() ?? new List<object>()
+                }).Cast<object>().ToList() : new List<object>()
+        };
+
+        return Ok(new { success = true, data = summary });
+    }
+
+    [HttpGet("{sessionId:guid}")]
+    public async Task<IActionResult> GetSession(Guid sessionId)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == Guid.Empty)
+        {
+            return Unauthorized(new { success = false, message = "Invalid user token" });
+        }
+
+        var session = await _db.InterviewSessionsNew
+            .Include(s => s.Assignment)
+            .ThenInclude(a => a.Template)
+            .Include(s => s.Answers)
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+        {
+            return NotFound(new { success = false, message = "Session not found" });
+        }
+
+        var sessionData = new
+        {
+            id = session.Id,
+            userId = session.UserId,
+            assignmentId = session.AssignmentId,
+            status = session.Status.ToString(),
+            startedAt = session.StartedAt,
+            submittedAt = session.SubmittedAt,
+            finishedAt = session.FinishedAt,
+            totalItems = session.TotalItems,
+            correctCount = session.CorrectCount,
+            incorrectCount = session.IncorrectCount,
+            totalScore = session.TotalScore,
+            currentQuestionIndex = session.CurrentQuestionIndex,
+            assignment = new
+            {
+                id = session.Assignment.Id,
+                templateId = session.Assignment.TemplateId,
+                visibility = session.Assignment.Visibility.ToString(),
+                template = session.Assignment.Template != null ? new
+                {
+                    id = session.Assignment.Template.Id,
+                    name = session.Assignment.Template.Name,
+                    kind = session.Assignment.Template.Kind.ToString()
+                } : null
+            },
+            answersCount = session.Answers.Count
+        };
+
+        return Ok(new { success = true, data = sessionData });
+    }
+
+    [HttpPost("{sessionId:guid}/finish")]
+    public async Task<IActionResult> FinishSession(Guid sessionId)
+    {
+        var userId = GetCurrentUserId();
+        if (userId == Guid.Empty)
+        {
+            return Unauthorized(new { success = false, message = "Invalid user token" });
+        }
+
+        var session = await _db.InterviewSessionsNew
+            .Include(s => s.Answers)
+            .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+        if (session == null)
+        {
+            return NotFound(new { success = false, message = "Session not found" });
+        }
+
+        // Update session as finished
+        session.FinishedAt = DateTime.UtcNow;
+        session.SubmittedAt = DateTime.UtcNow;
+        session.Status = SessionStatus.Completed;
+
+        // Recalculate totals
+        session.CorrectCount = session.Answers.Count(a => a.IsCorrect == true);
+        session.IncorrectCount = session.Answers.Count(a => a.IsCorrect == false);
+        session.TotalItems = session.Answers.Count();
+
+        await _db.SaveChangesAsync();
+
+        return Ok(new { success = true, message = "Interview session finished successfully" });
+    }
+}
+

@@ -44,6 +44,11 @@ public class UpdateTemplateDto : CreateTemplateDto
     public int Id { get; set; }
 }
 
+public class UserAssignedTemplateDto : TemplateDto
+{
+    public int AssignmentId { get; set; }
+}
+
 public class SelectionCriteriaDto
 {
     public List<int> ByTopics { get; set; } = new();

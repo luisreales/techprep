@@ -56,12 +56,21 @@ public class InterviewTemplate
     // Helper methods for JSON serialization
     public SelectionCriteria GetSelectionCriteria()
     {
-        return JsonSerializer.Deserialize<SelectionCriteria>(SelectionCriteriaJson) ?? new SelectionCriteria();
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        return JsonSerializer.Deserialize<SelectionCriteria>(SelectionCriteriaJson, options) ?? new SelectionCriteria();
     }
 
     public void SetSelectionCriteria(SelectionCriteria criteria)
     {
-        SelectionCriteriaJson = JsonSerializer.Serialize(criteria);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        SelectionCriteriaJson = JsonSerializer.Serialize(criteria, options);
     }
 }
 
