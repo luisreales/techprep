@@ -1,6 +1,7 @@
 using AutoMapper;
 using TechPrep.Application.DTOs.Common;
 using TechPrep.Application.DTOs.PracticeInterview;
+using TechPrep.Application.DTOs;
 using TechPrep.Application.Interfaces;
 using TechPrep.Core.Entities;
 using TechPrep.Core.Enums;
@@ -313,5 +314,222 @@ public class InterviewSessionService : IInterviewSessionService
 
         // session.Certificate = certificate; // Will be implemented later
         session.CertificateIssued = true;
+    }
+
+    // New interview state management methods
+    public async Task<ApiResponse<InterviewSessionDto>> FinishInterviewAsync(Guid sessionId)
+    {
+        try
+        {
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null)
+            {
+                return ApiResponse<InterviewSessionDto>.ErrorResponse(
+                    "SESSION_NOT_FOUND",
+                    "Interview session not found",
+                    $"Session {sessionId} does not exist");
+            }
+
+            // Only allow finishing if status is "InProgress"
+            if (session.Status != "InProgress")
+            {
+                // Idempotent - return existing session if already submitted
+                if (session.Status == "Submitted" || session.Status == "Finalized")
+                {
+                    return ApiResponse<InterviewSessionDto>.SuccessResponse(
+                        _mapper.Map<InterviewSessionDto>(session),
+                        "Interview session already submitted");
+                }
+                return ApiResponse<InterviewSessionDto>.ErrorResponse(
+                    "INVALID_STATE",
+                    "Cannot finish interview in current state",
+                    $"Session status is '{session.Status}', expected 'InProgress'");
+            }
+
+            // Update session status and compute metrics
+            session.Status = "Submitted";
+            session.SubmittedAt = DateTime.UtcNow;
+            session.TotalTimeSec = (int)(DateTime.UtcNow - session.StartedAt).TotalSeconds;
+
+            _sessionRepository.Update(session);
+
+            return ApiResponse<InterviewSessionDto>.SuccessResponse(
+                _mapper.Map<InterviewSessionDto>(session),
+                "Interview finished successfully");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<InterviewSessionDto>.ErrorResponse(
+                "FINISH_ERROR",
+                "Error finishing interview",
+                ex.Message);
+        }
+    }
+
+    public async Task<ApiResponse<InterviewSessionDto>> FinalizeInterviewAsync(Guid sessionId)
+    {
+        try
+        {
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null)
+            {
+                return ApiResponse<InterviewSessionDto>.ErrorResponse(
+                    "SESSION_NOT_FOUND",
+                    "Interview session not found",
+                    $"Session {sessionId} does not exist");
+            }
+
+            // Only allow finalizing if status is "Submitted" or already "Finalized"
+            if (session.Status != "Submitted" && session.Status != "Finalized")
+            {
+                return ApiResponse<InterviewSessionDto>.ErrorResponse(
+                    "INVALID_STATE",
+                    "Cannot finalize interview in current state",
+                    $"Session status is '{session.Status}', expected 'Submitted' or 'Finalized'");
+            }
+
+            // Idempotent - return existing session if already finalized
+            if (session.Status == "Finalized")
+            {
+                return ApiResponse<InterviewSessionDto>.SuccessResponse(
+                    _mapper.Map<InterviewSessionDto>(session),
+                    "Interview session already finalized");
+            }
+
+            // Update session status
+            session.Status = "Finalized";
+            session.FinalizedAt = DateTime.UtcNow;
+
+            _sessionRepository.Update(session);
+
+            return ApiResponse<InterviewSessionDto>.SuccessResponse(
+                _mapper.Map<InterviewSessionDto>(session),
+                "Interview finalized successfully");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<InterviewSessionDto>.ErrorResponse(
+                "FINALIZE_ERROR",
+                "Error finalizing interview",
+                ex.Message);
+        }
+    }
+
+    public async Task<ApiResponse<InterviewSummaryDto>> GetInterviewSummaryAsync(Guid sessionId)
+    {
+        try
+        {
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null)
+            {
+                return ApiResponse<InterviewSummaryDto>.ErrorResponse(
+                    "SESSION_NOT_FOUND",
+                    "Interview session not found",
+                    $"Session {sessionId} does not exist");
+            }
+
+            var summary = new InterviewSummaryDto(
+                session.Id,
+                session.StartedAt,
+                session.SubmittedAt ?? DateTime.UtcNow,
+                session.TotalItems,
+                session.CorrectCount,
+                session.IncorrectCount,
+                session.TotalTimeSec,
+                new List<SummarySlice>(), // TODO: Implement topic breakdown
+                new List<SummarySlice>(), // TODO: Implement type breakdown
+                new List<SummarySlice>()  // TODO: Implement level breakdown
+            );
+
+            return ApiResponse<InterviewSummaryDto>.SuccessResponse(summary, "Summary retrieved successfully");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<InterviewSummaryDto>.ErrorResponse(
+                "SUMMARY_ERROR",
+                "Error retrieving interview summary",
+                ex.Message);
+        }
+    }
+
+    public async Task<ApiResponse<List<InterviewSessionListDto>>> GetMyInterviewSessionsAsync(Guid userId)
+    {
+        try
+        {
+            var sessions = await _sessionRepository.GetByUserIdAsync(userId);
+            var sessionList = sessions.Select(session => new InterviewSessionListDto(
+                session.Id,
+                session.ParentSessionId,
+                session.AttemptNumber,
+                "Assignment Name", // TODO: Get actual assignment name
+                session.Status,
+                session.TotalScore,
+                session.TotalItems,
+                session.StartedAt,
+                session.SubmittedAt,
+                session.TotalTimeSec
+            )).ToList();
+
+            return ApiResponse<List<InterviewSessionListDto>>.SuccessResponse(
+                sessionList,
+                "Interview sessions retrieved successfully");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<List<InterviewSessionListDto>>.ErrorResponse(
+                "LIST_ERROR",
+                "Error retrieving interview sessions",
+                ex.Message);
+        }
+    }
+
+    public async Task<ApiResponse<InterviewRetakeDto>> RetakeInterviewAsync(Guid sessionId)
+    {
+        try
+        {
+            var originalSession = await _sessionRepository.GetByIdAsync(sessionId);
+            if (originalSession == null)
+            {
+                return ApiResponse<InterviewRetakeDto>.ErrorResponse(
+                    "SESSION_NOT_FOUND",
+                    "Interview session not found",
+                    $"Session {sessionId} does not exist");
+            }
+
+            // Only allow retaking if status is "Finalized"
+            if (originalSession.Status != "Finalized")
+            {
+                return ApiResponse<InterviewRetakeDto>.ErrorResponse(
+                    "INVALID_STATE",
+                    "Cannot retake interview in current state",
+                    $"Session status is '{originalSession.Status}', expected 'Finalized'");
+            }
+
+            // Create new session for retake
+            var newSession = new InterviewSessionNew
+            {
+                Id = Guid.NewGuid(),
+                UserId = originalSession.UserId,
+                AssignmentId = originalSession.AssignmentId,
+                Status = "Assigned",
+                StartedAt = DateTime.UtcNow,
+                TotalItems = originalSession.TotalItems,
+                AttemptNumber = originalSession.AttemptNumber + 1,
+                ParentSessionId = originalSession.ParentSessionId ?? originalSession.Id // Root session if no parent
+            };
+
+            await _sessionRepository.AddAsync(newSession);
+
+            return ApiResponse<InterviewRetakeDto>.SuccessResponse(
+                new InterviewRetakeDto(newSession.Id),
+                "Retake session created successfully");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<InterviewRetakeDto>.ErrorResponse(
+                "RETAKE_ERROR",
+                "Error creating retake session",
+                ex.Message);
+        }
     }
 }

@@ -66,7 +66,7 @@ public static class TestDataHelper
             Id = Guid.NewGuid(),
             UserId = userId,
             AssignmentId = assignmentId,
-            Status = Core.Enums.SessionStatus.InProgress,
+            Status = "InProgress",
             TotalItems = 10,
             CorrectCount = 0,
             IncorrectCount = 0,
@@ -82,13 +82,10 @@ public static class TestDataHelper
             Id = Guid.NewGuid(),
             InterviewSessionId = sessionId,
             QuestionId = questionId,
-            GivenAnswer = "Test answer",
             GivenText = "Test answer",
             IsCorrect = true,
-            MatchPercentage = 85.0m,
-            TimeMs = 30000,
-            TimeSpentSec = 30,
-            AnsweredAt = DateTime.UtcNow
+            MatchPercent = 85,
+            TimeMs = 30000
         };
     }
 

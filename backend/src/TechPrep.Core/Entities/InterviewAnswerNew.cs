@@ -12,7 +12,7 @@ public class InterviewAnswerNew
     public bool IsCorrect { get; set; }
     public int? MatchPercent { get; set; }
     public int TimeMs { get; set; }
-    public int NumberAttemps { get; set; } = 1;
+    public int AttemptNumber { get; set; } = 1;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties

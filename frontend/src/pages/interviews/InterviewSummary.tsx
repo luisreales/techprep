@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calendar, Clock, Trophy, Target, BarChart3, RefreshCw, Eye, LogOut } from 'lucide-react';
+import { Calendar, Clock, Trophy, Target, BarChart3, Eye, LogOut } from 'lucide-react';
 import { interviewApi, InterviewSummaryDto, SummarySlice } from '@/services/interviewApi';
 
 const InterviewSummary: React.FC = () => {
@@ -10,7 +10,6 @@ const InterviewSummary: React.FC = () => {
   const [summary, setSummary] = useState<InterviewSummaryDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [retaking, setRetaking] = useState(false);
 
   useEffect(() => {
     const loadSummary = async () => {
@@ -33,27 +32,30 @@ const InterviewSummary: React.FC = () => {
     loadSummary();
   }, [sessionId]);
 
-  const handleRetake = async () => {
+  const handleClose = async () => {
     if (!sessionId) return;
 
-    setRetaking(true);
     try {
-      const retakeResponse = await interviewApi.retake(sessionId);
-      navigate(`/interviews/runner/${retakeResponse.newInterviewSessionId}`);
+      await interviewApi.finalize(sessionId);
+      navigate('/interviews');
     } catch (err) {
-      setError('Failed to start retake');
-      console.error('Failed to retake:', err);
-    } finally {
-      setRetaking(false);
+      console.error('Failed to finalize session:', err);
+      // Navigate anyway since the UX spec says this should happen
+      navigate('/interviews');
     }
   };
 
-  const handleViewReview = () => {
-    navigate(`/interviews/review/${sessionId}`);
-  };
+  const handleViewDetails = async () => {
+    if (!sessionId) return;
 
-  const handleExit = () => {
-    navigate('/interviews');
+    try {
+      await interviewApi.finalize(sessionId);
+      navigate(`/interviews/review/${sessionId}`);
+    } catch (err) {
+      console.error('Failed to finalize session:', err);
+      // Navigate anyway to review page
+      navigate(`/interviews/review/${sessionId}`);
+    }
   };
 
   const formatTime = (seconds: number) => {
@@ -189,28 +191,19 @@ const InterviewSummary: React.FC = () => {
       {/* Actions */}
       <div className="flex flex-wrap gap-4 justify-center">
         <button
-          onClick={handleViewReview}
+          onClick={handleViewDetails}
           className="flex items-center space-x-2 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
         >
           <Eye className="w-5 h-5" />
-          <span>Ver Resumen</span>
+          <span>View Details</span>
         </button>
 
         <button
-          onClick={handleRetake}
-          disabled={retaking}
-          className="flex items-center space-x-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <RefreshCw className={`w-5 h-5 ${retaking ? 'animate-spin' : ''}`} />
-          <span>{retaking ? 'Starting...' : 'Retake'}</span>
-        </button>
-
-        <button
-          onClick={handleExit}
+          onClick={handleClose}
           className="flex items-center space-x-2 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
         >
           <LogOut className="w-5 h-5" />
-          <span>Salir</span>
+          <span>Close</span>
         </button>
       </div>
 

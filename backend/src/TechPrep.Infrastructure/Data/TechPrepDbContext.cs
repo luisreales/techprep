@@ -381,8 +381,9 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.HasKey(e => e.Id);
             entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.AssignmentId).IsRequired();
-            entity.Property(e => e.Status).IsRequired().HasDefaultValue("Active");
+            entity.Property(e => e.Status).IsRequired().HasDefaultValue("Assigned");
             entity.Property(e => e.StartedAt).IsRequired();
+            entity.Property(e => e.FinalizedAt);
             entity.Property(e => e.TotalScore).HasDefaultValue(0);
             entity.Property(e => e.TotalTimeSec).HasDefaultValue(0);
             entity.Property(e => e.CurrentQuestionIndex).HasDefaultValue(0);
@@ -390,7 +391,8 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.CorrectCount).HasDefaultValue(0);
             entity.Property(e => e.IncorrectCount).HasDefaultValue(0);
             entity.Property(e => e.TotalItems).HasDefaultValue(0);
-            entity.Property(e => e.NumberAttemps).IsRequired().HasDefaultValue(1);
+            entity.Property(e => e.AttemptNumber).IsRequired().HasDefaultValue(1);
+            entity.Property(e => e.ParentSessionId);
         });
 
         // PracticeAnswer configuration
@@ -425,7 +427,7 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
             entity.Property(e => e.ChosenOptionIdsJson).HasMaxLength(1000);
             entity.Property(e => e.IsCorrect).IsRequired().HasDefaultValue(false);
             entity.Property(e => e.TimeMs).IsRequired().HasDefaultValue(0);
-            entity.Property(e => e.NumberAttemps).IsRequired().HasDefaultValue(1);
+            entity.Property(e => e.AttemptNumber).IsRequired().HasDefaultValue(1);
             entity.Property(e => e.CreatedAt).IsRequired();
 
             entity.HasOne(e => e.InterviewSession)

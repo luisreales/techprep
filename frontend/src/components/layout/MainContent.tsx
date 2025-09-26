@@ -163,10 +163,16 @@ const MainContent: React.FC = () => {
         if (location.pathname.match(/^\/interviews\/runner\/[^/]+$/)) {
           const pathParts = location.pathname.split('/');
           const sessionId = pathParts[3];
+          console.log('Router: sessionId =', sessionId);
           // Check if it's a UUID (new interview runner) vs templateId (old)
-          if (sessionId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)) {
+          // UUID pattern: 8-4-4-4-12 hex characters with hyphens
+          const isUUID = sessionId.match(/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/);
+          console.log('Router: isUUID =', isUUID);
+          if (isUUID) {
+            console.log('Router: Using InterviewRunner for UUID sessionId');
             return <InterviewRunner />;
           } else {
+            console.log('Router: Using InterviewRunnerPage for templateId');
             return <InterviewRunnerPage />;
           }
         }

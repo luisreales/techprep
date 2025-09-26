@@ -61,9 +61,10 @@ public class InterviewRunnerController : ControllerBase
             if (template.Kind != TemplateKind.Interview)
                 return BadRequest(new { message = "Assignment is not for an interview template" });
 
-            // Check for existing active session
+            // Check for existing active session (either Assigned or InProgress)
             var existingSession = await _context.InterviewSessionsNew
-                .FirstOrDefaultAsync(s => s.UserId == userId && s.AssignmentId == request.assignmentId && s.Status == "Active");
+                .FirstOrDefaultAsync(s => s.UserId == userId && s.AssignmentId == request.assignmentId &&
+                    (s.Status == "Assigned" || s.Status == "InProgress"));
 
             if (existingSession != null)
             {
@@ -78,9 +79,9 @@ public class InterviewRunnerController : ControllerBase
             {
                 UserId = userId,
                 AssignmentId = request.assignmentId,
-                Status = "Active",
+                Status = "InProgress",
                 StartedAt = DateTime.UtcNow,
-                NumberAttemps = 1,
+                AttemptNumber = 1,
                 TotalItems = questions.Count()
             };
 
@@ -113,7 +114,7 @@ public class InterviewRunnerController : ControllerBase
             if (session == null)
                 return NotFound(new { message = "Session not found" });
 
-            if (session.Status != "Active")
+            if (session.Status != "InProgress" && session.Status != "Active")
                 return BadRequest(new { message = "Session is not active" });
 
             // Get template from assignment
@@ -179,7 +180,7 @@ public class InterviewRunnerController : ControllerBase
                 return await GetSummaryInternal(session);
             }
 
-            if (session.Status != "Active")
+            if (session.Status != "InProgress" && session.Status != "Active")
                 return BadRequest(new { message = "Session is not active" });
 
             // Get template from assignment
@@ -242,7 +243,7 @@ public class InterviewRunnerController : ControllerBase
                     IsCorrect = isCorrect,
                     MatchPercent = matchPercent,
                     TimeMs = submitItem.TimeMs,
-                    NumberAttemps = session.NumberAttemps,
+                    AttemptNumber = session.AttemptNumber,
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -328,9 +329,9 @@ public class InterviewRunnerController : ControllerBase
             {
                 UserId = userId,
                 AssignmentId = originalSession.AssignmentId,
-                Status = "Active",
+                Status = "InProgress",
                 StartedAt = DateTime.UtcNow,
-                NumberAttemps = originalSession.NumberAttemps + 1,
+                AttemptNumber = originalSession.AttemptNumber + 1,
                 TotalItems = questions.Count()
             };
 
@@ -339,7 +340,7 @@ public class InterviewRunnerController : ControllerBase
 
             _logger.LogInformation("Interview session retake created: {SessionId} for user {UserId}", newSession.Id, userId);
 
-            return Ok(new RetakeResponse(newSession.Id, newSession.NumberAttemps));
+            return Ok(new RetakeResponse(newSession.Id, newSession.AttemptNumber));
         }
         catch (Exception ex)
         {
@@ -511,6 +512,97 @@ public class InterviewRunnerController : ControllerBase
         );
 
         return Ok(summary);
+    }
+
+    // New interview state management endpoints
+    [HttpPost("sessions/{sessionId}/finish")]
+    public async Task<ActionResult> FinishInterview(Guid sessionId)
+    {
+        var session = await _context.InterviewSessionsNew.FindAsync(sessionId);
+        if (session == null)
+        {
+            return NotFound("Session not found");
+        }
+
+        // Allow finishing for both "Active" (backward compatibility) and "InProgress" statuses
+        if (session.Status != "InProgress" && session.Status != "Active")
+        {
+            // Idempotent - return success if already submitted or finalized
+            if (session.Status == "Submitted" || session.Status == "Finalized")
+            {
+                return Ok(new { message = "Interview session already submitted" });
+            }
+            return BadRequest($"Cannot finish interview in current state: {session.Status}");
+        }
+
+        // Update session status and compute metrics
+        session.Status = "Submitted";
+        session.SubmittedAt = DateTime.UtcNow;
+        session.TotalTimeSec = (int)(DateTime.UtcNow - session.StartedAt).TotalSeconds;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Interview finished successfully" });
+    }
+
+    [HttpPost("sessions/{sessionId}/finalize")]
+    public async Task<ActionResult> FinalizeInterview(Guid sessionId)
+    {
+        var session = await _context.InterviewSessionsNew.FindAsync(sessionId);
+        if (session == null)
+        {
+            return NotFound("Session not found");
+        }
+
+        // Only allow finalizing if status is "Submitted" or already "Finalized"
+        if (session.Status != "Submitted" && session.Status != "Finalized")
+        {
+            return BadRequest($"Cannot finalize interview in current state: {session.Status}");
+        }
+
+        // Idempotent - return success if already finalized
+        if (session.Status == "Finalized")
+        {
+            return Ok(new { message = "Interview session already finalized" });
+        }
+
+        // Update session status
+        session.Status = "Finalized";
+        session.FinalizedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Interview finalized successfully" });
+    }
+
+    [HttpGet("sessions/mine")]
+    public async Task<ActionResult> GetMyInterviewSessions()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized("User not authenticated");
+        }
+
+        var sessions = await _context.InterviewSessionsNew
+            .Where(s => s.UserId == userId)
+            .OrderByDescending(s => s.StartedAt)
+            .Select(s => new
+            {
+                id = s.Id,
+                parentSessionId = s.ParentSessionId,
+                attemptNumber = s.AttemptNumber,
+                assignmentName = "Interview Assignment", // TODO: Get actual assignment name
+                status = s.Status,
+                score = s.TotalScore,
+                totalItems = s.TotalItems,
+                startedAt = s.StartedAt,
+                submittedAt = s.SubmittedAt,
+                durationSec = s.TotalTimeSec
+            })
+            .ToListAsync();
+
+        return Ok(new { success = true, data = sessions });
     }
 
     private static string GetQuestionTypeString(QuestionType type)

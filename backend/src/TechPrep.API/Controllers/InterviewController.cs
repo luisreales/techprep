@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TechPrep.Application.DTOs.Common;
 using TechPrep.Application.DTOs.PracticeInterview;
+using TechPrep.Application.DTOs;
 using TechPrep.Application.Interfaces;
 using TechPrep.Core.Enums;
 using System.Security.Claims;
@@ -134,6 +135,59 @@ public class InterviewController : ControllerBase
     {
         var userId = GetCurrentUserId();
         var result = await _interviewSessionService.GetMySessionsAsync(userId, page, pageSize);
+        return Ok(result);
+    }
+
+    // New interview state management endpoints
+    [HttpPost("sessions/{sessionId}/finish")]
+    public async Task<ActionResult<ApiResponse<InterviewSessionDto>>> FinishInterview(Guid sessionId)
+    {
+        var result = await _interviewSessionService.FinishInterviewAsync(sessionId);
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+        return Ok(result);
+    }
+
+    [HttpPost("sessions/{sessionId}/finalize")]
+    public async Task<ActionResult<ApiResponse<InterviewSessionDto>>> FinalizeInterview(Guid sessionId)
+    {
+        var result = await _interviewSessionService.FinalizeInterviewAsync(sessionId);
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+        return Ok(result);
+    }
+
+    [HttpGet("sessions/{sessionId}/summary")]
+    public async Task<ActionResult<ApiResponse<InterviewSummaryDto>>> GetInterviewSummary(Guid sessionId)
+    {
+        var result = await _interviewSessionService.GetInterviewSummaryAsync(sessionId);
+        if (!result.Success)
+        {
+            return NotFound(result);
+        }
+        return Ok(result);
+    }
+
+    [HttpGet("sessions/mine")]
+    public async Task<ActionResult<ApiResponse<List<InterviewSessionListDto>>>> GetMyInterviewSessions()
+    {
+        var userId = GetCurrentUserId();
+        var result = await _interviewSessionService.GetMyInterviewSessionsAsync(userId);
+        return Ok(result);
+    }
+
+    [HttpPost("sessions/{sessionId}/retake")]
+    public async Task<ActionResult<ApiResponse<InterviewRetakeDto>>> RetakeInterview(Guid sessionId)
+    {
+        var result = await _interviewSessionService.RetakeInterviewAsync(sessionId);
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
         return Ok(result);
     }
 }

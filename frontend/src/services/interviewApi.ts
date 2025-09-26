@@ -80,6 +80,23 @@ export interface ReviewResponse {
   questions: ReviewQuestion[];
 }
 
+export interface InterviewSessionListDto {
+  id: string;
+  parentSessionId?: string;
+  attemptNumber: number;
+  assignmentName: string;
+  status: string;
+  score?: number;
+  totalItems: number;
+  startedAt: string;
+  submittedAt?: string;
+  durationSec: number;
+}
+
+export interface InterviewRetakeDto {
+  interviewSessionId: string;
+}
+
 export const interviewApi = {
   start: async (assignmentId: number): Promise<StartInterviewResponse> => {
     debugger
@@ -115,6 +132,35 @@ export const interviewApi = {
 
   review: async (sessionId: string): Promise<ReviewResponse> => {
     const response = await http.get<ReviewResponse>(`/interviews/sessions/${sessionId}/review`);
+    return response.data;
+  },
+
+  // New interview state management methods
+  finish: async (sessionId: string): Promise<void> => {
+    await http.post(`/interviews/sessions/${sessionId}/finish`, {});
+  },
+
+  finalize: async (sessionId: string): Promise<void> => {
+    await http.post(`/interviews/sessions/${sessionId}/finalize`, {});
+  },
+
+  listMine: async (): Promise<InterviewSessionListDto[]> => {
+    const response = await http.get<{success: boolean, data: InterviewSessionListDto[]}>('/interviews/sessions/mine');
+    return response.data.data;
+  },
+
+  getSummary: async (sessionId: string): Promise<InterviewSummaryDto> => {
+    const response = await http.get<InterviewSummaryDto>(`/interviews/sessions/${sessionId}/summary`);
+    return response.data;
+  },
+
+  getReview: async (sessionId: string): Promise<ReviewResponse> => {
+    const response = await http.get<ReviewResponse>(`/interviews/sessions/${sessionId}/review`);
+    return response.data;
+  },
+
+  retakeInterview: async (sessionId: string): Promise<InterviewRetakeDto> => {
+    const response = await http.post<InterviewRetakeDto>(`/interviews/sessions/${sessionId}/retake`, {});
     return response.data;
   },
 };

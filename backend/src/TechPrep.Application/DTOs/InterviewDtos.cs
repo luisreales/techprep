@@ -71,3 +71,20 @@ public record RetakeResponse(
     Guid newInterviewSessionId,
     int numberAttemps
 );
+
+public record InterviewSessionListDto(
+    Guid Id,
+    Guid? ParentSessionId,
+    int AttemptNumber,
+    string AssignmentName,
+    string Status,
+    int? Score,
+    int TotalItems,
+    DateTime StartedAt,
+    DateTime? SubmittedAt,
+    int DurationSec
+);
+
+public record InterviewRetakeDto(
+    Guid InterviewSessionId
+);

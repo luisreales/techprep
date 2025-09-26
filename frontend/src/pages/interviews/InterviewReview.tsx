@@ -19,6 +19,10 @@ const InterviewReview: React.FC = () => {
       }
 
       try {
+        // First, ensure the session is finalized before loading review
+        await interviewApi.finalize(sessionId);
+
+        // Then load the review data
         const data = await interviewApi.review(sessionId);
         setReviewData(data);
       } catch (err) {

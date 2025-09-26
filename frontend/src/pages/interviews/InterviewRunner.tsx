@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronRight, Clock, Save, Edit, RotateCcw, SkipForward } from 'lucide-react';
-import { interviewApi, RunnerStateDto, RunnerQuestionDto, SubmitItem } from '@/services/interviewApi';
+import { ChevronRight, Clock, Save, Edit, RotateCcw, SkipForward, X } from 'lucide-react';
+import { interviewApi, RunnerStateDto, RunnerQuestionDto } from '@/services/interviewApi';
 
 interface UserAnswer {
   type: 'single' | 'multiple' | 'written';
@@ -24,6 +24,7 @@ const InterviewRunner: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   const currentQuestion = runnerState?.questions[currentQuestionIndex];
   const currentAnswer = currentQuestion ? answersUser.get(currentQuestion.questionId) : null;
@@ -57,6 +58,39 @@ const InterviewRunner: React.FC = () => {
 
     loadRunnerState();
   }, [sessionId]);
+
+  // Handle browser navigation away from page
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = 'Are you sure you want to leave this interview? Your progress will be lost.';
+      return 'Are you sure you want to leave this interview? Your progress will be lost.';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+  // Custom navigation blocking using history
+  useEffect(() => {
+    const handlePopState = () => {
+      if (!window.confirm('Are you sure you want to leave this interview? Your progress will be lost.')) {
+        // Push the current state back to prevent navigation
+        window.history.pushState(null, '', window.location.href);
+      }
+    };
+
+    // Push an initial state
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   // Update answer in local state
   const updateCurrentAnswer = useCallback((updates: Partial<UserAnswer>) => {
@@ -180,17 +214,8 @@ const InterviewRunner: React.FC = () => {
 
     setSubmitting(true);
     try {
-      const payload = {
-        questions: Array.from(answersUser.entries()).map(([questionId, answer]): SubmitItem => ({
-          questionId,
-          type: answer.type,
-          optionIds: answer.optionIds,
-          text: answer.text,
-          timeMs: answer.timeMs
-        }))
-      };
-
-      await interviewApi.submit(sessionId, payload);
+      // Call the new finish endpoint to evaluate & compute the results
+      await interviewApi.finish(sessionId);
       navigate(`/interviews/summary/${sessionId}`);
     } catch (err) {
       setError('Failed to submit interview');
@@ -198,6 +223,29 @@ const InterviewRunner: React.FC = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  // Handle exit interview with confirmation
+  const handleExitClick = () => {
+    setShowExitConfirm(true);
+  };
+
+  const handleExitConfirm = async () => {
+    if (!sessionId) return;
+
+    try {
+      // Call finish endpoint to close the interview
+      await interviewApi.finish(sessionId);
+      navigate('/interviews');
+    } catch (error) {
+      console.error('Failed to close interview:', error);
+      // Navigate anyway if there's an error
+      navigate('/interviews');
+    }
+  };
+
+  const handleExitCancel = () => {
+    setShowExitConfirm(false);
   };
 
   // Format time display
@@ -337,7 +385,17 @@ const InterviewRunner: React.FC = () => {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex justify-between items-center mb-6">
+        {/* Exit */}
+        <button
+          onClick={handleExitClick}
+          className="flex items-center space-x-2 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          <X className="w-4 h-4" />
+          <span>Exit</span>
+        </button>
+
+        <div className="flex flex-wrap gap-3">
         {/* Save */}
         {!isAnswered && (
           <button
@@ -403,6 +461,7 @@ const InterviewRunner: React.FC = () => {
             <span>{submitting ? 'Submitting...' : 'Submit Answer'}</span>
           </button>
         )}
+        </div>
       </div>
 
       {/* Answer Status */}
@@ -411,6 +470,32 @@ const InterviewRunner: React.FC = () => {
           <p className="text-green-800 text-sm">
             ✓ Answer saved. Time spent: {formatTime(currentAnswer?.timeMs || 0)}
           </p>
+        </div>
+      )}
+
+      {/* Exit Confirmation Modal */}
+      {showExitConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Exit Interview?</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to leave this interview? If you exit, the interview will be closed and your current progress will be submitted.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleExitCancel}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Stay
+              </button>
+              <button
+                onClick={handleExitConfirm}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Exit Interview
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

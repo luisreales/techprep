@@ -279,12 +279,23 @@ export const InterviewRunnerPage: React.FC<InterviewRunnerPageProps> = ({ templa
   }, []);
 
   const initializeInterview = useCallback(async () => {
-    if (!templateId) return;
+    if (!templateId) {
+      setErrorMessage('Template ID is required');
+      setInitializing(false);
+      return;
+    }
+
+    const templateIdNum = parseInt(templateId);
+    if (isNaN(templateIdNum)) {
+      setErrorMessage('Invalid template ID provided');
+      setInitializing(false);
+      return;
+    }
 
     setInitializing(true);
     try {
       // Always fetch complete template from API to get full TemplateDto structure
-      const templateResponse = await practiceInterviewTemplatesApi.get(parseInt(templateId));
+      const templateResponse = await practiceInterviewTemplatesApi.get(templateIdNum);
       if (!templateResponse.success || !templateResponse.data) {
         setErrorMessage('Failed to load interview template');
         throw new Error('Failed to load template');
@@ -300,9 +311,9 @@ export const InterviewRunnerPage: React.FC<InterviewRunnerPageProps> = ({ templa
       }
 
       // Create interview session
-      console.log('Creating interview session for template:', templateId);
+      console.log('Creating interview session for template:', templateIdNum);
       const sessionResponse = await interviewApi.start({
-        templateId: parseInt(templateId)
+        templateId: templateIdNum
       });
       console.log('Session response:', sessionResponse);
 
