@@ -24,4 +24,5 @@ public class PracticeSessionNew
     public virtual User User { get; set; } = null!;
     public virtual SessionAssignment? Assignment { get; set; }
     public virtual ICollection<PracticeAnswer> Answers { get; set; } = new List<PracticeAnswer>();
+    public virtual ICollection<PracticeSessionTopic> Topics { get; set; } = new List<PracticeSessionTopic>();
 }

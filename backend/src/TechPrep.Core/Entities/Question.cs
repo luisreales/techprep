@@ -18,6 +18,11 @@ public class Question
     public int EstimatedTimeSec { get; set; } = 60;
     public int InterviewCooldownDays { get; set; } = 0;
     public DateTime? LastUsedInInterviewAt { get; set; }
+    public string? ExplanationText { get; set; }
+    public string? HintSummary { get; set; }
+    public string? DifficultyExplanation { get; set; }
+    public string? LearningObjectivesJson { get; set; }
+    public string? TagsJson { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

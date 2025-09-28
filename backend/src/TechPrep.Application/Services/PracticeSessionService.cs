@@ -13,17 +13,23 @@ public class PracticeSessionService : IPracticeSessionService
     private readonly IPracticeSessionRepository _sessionRepository;
     private readonly ISessionAssignmentRepository _assignmentRepository;
     private readonly IQuestionService _questionService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IEvaluationService _evaluationService;
     private readonly IMapper _mapper;
 
     public PracticeSessionService(
         IPracticeSessionRepository sessionRepository,
         ISessionAssignmentRepository assignmentRepository,
         IQuestionService questionService,
+        IUnitOfWork unitOfWork,
+        IEvaluationService evaluationService,
         IMapper mapper)
     {
         _sessionRepository = sessionRepository;
         _assignmentRepository = assignmentRepository;
         _questionService = questionService;
+        _unitOfWork = unitOfWork;
+        _evaluationService = evaluationService;
         _mapper = mapper;
     }
 
@@ -293,15 +299,71 @@ public class PracticeSessionService : IPracticeSessionService
 
     private async Task<AnswerEvaluationResult> EvaluateAnswerAsync(SubmitAnswerDto answerDto)
     {
-        // Simplified evaluation logic - in real implementation, this would use
-        // the text matching algorithm from the existing QuestionService
-        return new AnswerEvaluationResult
+        try
         {
-            IsCorrect = true, // Placeholder
-            Score = 85,
-            Explanation = "Good answer! Here's why this is correct...",
-            SuggestedResources = new List<string> { "Resource 1", "Resource 2" }
-        };
+            // Get the question to evaluate against
+            var question = await _unitOfWork.Questions.GetByIdAsync(answerDto.QuestionId);
+            if (question == null)
+            {
+                return new AnswerEvaluationResult
+                {
+                    IsCorrect = false,
+                    Score = 0,
+                    Explanation = "Question not found",
+                    SuggestedResources = new List<string>()
+                };
+            }
+
+            decimal matchPercentage = 0;
+            bool isCorrect = false;
+            string explanation = "";
+
+            switch (question.Type)
+            {
+                case QuestionType.SingleChoice:
+                    isCorrect = _evaluationService.EvaluateSingleChoice(question, answerDto.SelectedOptionIds ?? new List<Guid>());
+                    matchPercentage = isCorrect ? 100 : 0;
+                    explanation = isCorrect ? "Correct answer!" : "Incorrect answer. Please review the topic.";
+                    break;
+
+                case QuestionType.MultiChoice:
+                    isCorrect = _evaluationService.EvaluateMultiChoice(question, answerDto.SelectedOptionIds ?? new List<Guid>());
+                    matchPercentage = isCorrect ? 100 : 0;
+                    explanation = isCorrect ? "Correct answer!" : "Incorrect answer. Please review the topic.";
+                    break;
+
+                case QuestionType.Written:
+                    var userThreshold = 80m; // TODO: Get from user settings
+                    var (textMatchPercent, textIsCorrect) = _evaluationService.EvaluateWritten(question, answerDto.GivenText ?? "", userThreshold);
+                    matchPercentage = textMatchPercent;
+                    isCorrect = textIsCorrect;
+                    explanation = $"Your answer matched {matchPercentage:F1}% of the expected keywords. " +
+                                 (isCorrect ? "Good job!" : $"Try to include more key concepts. Threshold: {userThreshold}%");
+                    break;
+
+                default:
+                    explanation = "Unknown question type";
+                    break;
+            }
+
+            return new AnswerEvaluationResult
+            {
+                IsCorrect = isCorrect,
+                Score = matchPercentage,
+                Explanation = explanation,
+                SuggestedResources = new List<string>() // TODO: Implement resource suggestions
+            };
+        }
+        catch (Exception ex)
+        {
+            return new AnswerEvaluationResult
+            {
+                IsCorrect = false,
+                Score = 0,
+                Explanation = $"Error evaluating answer: {ex.Message}",
+                SuggestedResources = new List<string>()
+            };
+        }
     }
 
     private class AnswerEvaluationResult

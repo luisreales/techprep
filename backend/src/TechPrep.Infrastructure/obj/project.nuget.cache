@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "82A2VBXYoK4=",
+  "dgSpecHash": "2J4ue1eraAs=",
   "success": true,
   "projectFilePath": "/Users/luisreales/techprep/backend/src/TechPrep.Infrastructure/TechPrep.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -77,8 +77,8 @@
     "/Users/luisreales/.nuget/packages/system.text.encodings.web/8.0.0/system.text.encodings.web.8.0.0.nupkg.sha512",
     "/Users/luisreales/.nuget/packages/system.text.json/8.0.0/system.text.json.8.0.0.nupkg.sha512",
     "/Users/luisreales/.nuget/packages/system.threading.channels/6.0.0/system.threading.channels.6.0.0.nupkg.sha512",
-    "/Users/luisreales/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.15/microsoft.aspnetcore.app.ref.8.0.15.nupkg.sha512",
-    "/Users/luisreales/.nuget/packages/microsoft.netcore.app.ref/8.0.15/microsoft.netcore.app.ref.8.0.15.nupkg.sha512"
+    "/Users/luisreales/.nuget/packages/microsoft.netcore.app.ref/8.0.15/microsoft.netcore.app.ref.8.0.15.nupkg.sha512",
+    "/Users/luisreales/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.15/microsoft.aspnetcore.app.ref.8.0.15.nupkg.sha512"
   ],
   "logs": []
 }

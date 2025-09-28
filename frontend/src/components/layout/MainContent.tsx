@@ -3,6 +3,7 @@ import { useLocation, Navigate } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import Practice from '@/pages/Practice';
 import { PracticeRunnerPage } from '@/pages/practice/PracticeRunnerPage';
+import PracticeReview from '@/pages/practice/PracticeReview';
 import { InterviewRunnerPage } from '@/pages/interviews/InterviewRunnerPage';
 import { InterviewResultsPage } from '@/pages/interviews/InterviewResultsPage';
 import InterviewRunner from '@/pages/interviews/InterviewRunner';
@@ -159,6 +160,18 @@ const MainContent: React.FC = () => {
         }
         return <Navigate to="/dashboard" replace />;
       default:
+        // Handle practice session route (/practice/session/:sessionId)
+        if (location.pathname.match(/^\/practice\/session\/[^/]+$/)) {
+          return <PracticeRunnerPage />;
+        }
+        // Handle practice review route (/practice/review/:sessionId)
+        if (location.pathname.match(/^\/practice\/review\/[^/]+$/)) {
+          return <PracticeReview />;
+        }
+        // Handle practice summary route (/practice/summary/:sessionId)
+        if (location.pathname.match(/^\/practice\/summary\/[^/]+$/)) {
+          return <div className="text-center p-8"><h1 className="text-2xl font-bold mb-4">Practice Complete!</h1><p>Practice summary page coming soon...</p></div>;
+        }
         // Handle new interview runner route with sessionId (/interviews/runner/:id)
         if (location.pathname.match(/^\/interviews\/runner\/[^/]+$/)) {
           const pathParts = location.pathname.split('/');

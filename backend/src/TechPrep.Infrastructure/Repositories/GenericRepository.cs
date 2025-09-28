@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Expressions;
 using TechPrep.Core.Interfaces;
 using TechPrep.Infrastructure.Data;
@@ -14,6 +15,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _context = context;
         _dbSet = context.Set<T>();
+    }
+
+    public IQueryable<T> Query()
+    {
+        return _dbSet.AsQueryable();
     }
 
     public virtual async Task<T?> GetByIdAsync(object id)

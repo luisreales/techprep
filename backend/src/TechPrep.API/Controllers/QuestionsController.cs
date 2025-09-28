@@ -21,6 +21,9 @@ public class QuestionsController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetQuestions(
+        [FromQuery] int? topicId = null,
+        [FromQuery] string? level = null,
+        [FromQuery] string? type = null,
         [FromQuery] string? topics = null,
         [FromQuery] string? levels = null,
         [FromQuery] int countSingle = 0,
@@ -31,11 +34,32 @@ public class QuestionsController : ControllerBase
         {
             var questions = new List<object>();
 
-            // Parse topics and levels
-            var topicIds = string.IsNullOrEmpty(topics) ? new List<int>() :
-                topics.Split(',').Select(int.Parse).ToList();
-            var levelNames = string.IsNullOrEmpty(levels) ? new List<string>() :
-                levels.Split(',').ToList();
+            // Handle both single and plural parameter formats
+            var topicIds = new List<int>();
+            if (topicId.HasValue)
+            {
+                topicIds.Add(topicId.Value);
+            }
+            else if (!string.IsNullOrEmpty(topics))
+            {
+                topicIds = topics.Split(',').Select(int.Parse).ToList();
+            }
+
+            var levelNames = new List<string>();
+            if (!string.IsNullOrEmpty(level))
+            {
+                levelNames.Add(level);
+            }
+            else if (!string.IsNullOrEmpty(levels))
+            {
+                levelNames = levels.Split(',').ToList();
+            }
+
+            // Handle practice mode - return simpler question list
+            if (topicId.HasValue && !string.IsNullOrEmpty(level))
+            {
+                return await GetPracticeQuestions(topicId.Value, level, type);
+            }
 
             // Build base query
             var baseQuery = _context.Questions
@@ -398,6 +422,73 @@ public class QuestionsController : ControllerBase
                 success = false,
                 message = "Failed to check duplicates",
                 error = new { code = "CHECK_ERROR", message = ex.Message }
+            });
+        }
+    }
+
+    private async Task<IActionResult> GetPracticeQuestions(int topicId, string level, string? type = null)
+    {
+        try
+        {
+            // Parse the difficulty level
+            if (!Enum.TryParse<DifficultyLevel>(level, true, out var difficulty))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid difficulty level",
+                    error = new { code = "INVALID_LEVEL", message = $"Level '{level}' is not valid" }
+                });
+            }
+
+            // Build query for practice questions
+            var query = _context.Questions
+                .Include(q => q.Options)
+                .Include(q => q.Topic)
+                .Where(q => q.TopicId == topicId && q.Level == difficulty);
+
+            // Filter by type if specified
+            if (!string.IsNullOrEmpty(type))
+            {
+                if (Enum.TryParse<QuestionType>(type, true, out var questionType))
+                {
+                    query = query.Where(q => q.Type == questionType);
+                }
+            }
+
+            var questions = await query
+                .Select(q => new
+                {
+                    id = q.Id.ToString(),
+                    text = q.Text,
+                    type = q.Type.ToString().ToLower(),
+                    level = q.Level.ToString().ToLower(),
+                    topicId = q.TopicId,
+                    topicName = q.Topic != null ? q.Topic.Name : "Unknown",
+                    officialAnswer = q.OfficialAnswer,
+                    options = q.Options.Select(o => new
+                    {
+                        id = o.Id.ToString(),
+                        text = o.Text,
+                        isCorrect = o.IsCorrect
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                success = true,
+                data = questions,
+                message = $"Retrieved {questions.Count} practice questions successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = "Failed to retrieve practice questions",
+                error = new { code = "FETCH_ERROR", message = ex.Message }
             });
         }
     }

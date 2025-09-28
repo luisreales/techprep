@@ -39,6 +39,13 @@ public class StartPracticeDto
     public int AssignmentId { get; set; }
 }
 
+public class StartDirectPracticeDto
+{
+    public int? TopicId { get; set; }
+    public string? Level { get; set; }
+    public int QuestionCount { get; set; } = 10;
+}
+
 public class StartInterviewDto
 {
     public int AssignmentId { get; set; }

@@ -34,6 +34,7 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
     public DbSet<InterviewTemplate> InterviewTemplates { get; set; } = null!;
     public DbSet<SessionAssignment> SessionAssignments { get; set; } = null!;
     public DbSet<PracticeSessionNew> PracticeSessionsNew { get; set; } = null!;
+    public DbSet<PracticeSessionTopic> PracticeSessionTopics { get; set; } = null!;
     public DbSet<InterviewSessionNew> InterviewSessionsNew { get; set; } = null!;
     public DbSet<PracticeAnswer> PracticeAnswers { get; set; } = null!;
     public DbSet<InterviewAnswerNew> InterviewAnswersNew { get; set; } = null!;
@@ -373,6 +374,24 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
                   .WithMany(a => a.PracticeSessions)
                   .HasForeignKey(e => e.AssignmentId)
                   .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // PracticeSessionTopic configuration
+        builder.Entity<PracticeSessionTopic>(entity =>
+        {
+            entity.HasKey(e => new { e.PracticeSessionId, e.TopicId });
+            entity.Property(e => e.PracticeSessionId).IsRequired();
+            entity.Property(e => e.TopicId).IsRequired();
+
+            entity.HasOne(e => e.PracticeSession)
+                  .WithMany(ps => ps.Topics)
+                  .HasForeignKey(e => e.PracticeSessionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Topic)
+                  .WithMany()
+                  .HasForeignKey(e => e.TopicId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         // InterviewSessionNew configuration

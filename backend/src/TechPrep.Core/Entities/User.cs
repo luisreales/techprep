@@ -16,6 +16,11 @@ public class User : IdentityUser<Guid>
     public string? AvatarUrl { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public int PracticeStreakDays { get; set; }
+    public int PracticeTotalQuestions { get; set; }
+    public int PracticeCorrectAnswers { get; set; }
+    public DateTime? LastPracticeDate { get; set; }
+    public string PracticeRank { get; set; } = "Beginner";
     
     // Navigation properties
 }

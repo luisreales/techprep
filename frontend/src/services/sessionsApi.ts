@@ -174,7 +174,7 @@ export const sessionsApi = {
     assignmentId?: number;
   }) {
     const { data } = await http.post<ApiResponse<{ sessionId: string; questionCount: number; questions: any[] }>>(
-      '/practice-sessions',
+      '/practice/start',
       payload
     );
     return data;
@@ -190,7 +190,7 @@ export const sessionsApi = {
 
   async submitPracticeAnswer(sessionId: string, answer: AnswerSubmission) {
     const { data } = await http.post<ApiResponse<AnswerResult>>(
-      `/practice-sessions/${sessionId}/answers`,
+      `/practice/${sessionId}/answer`,
       answer
     );
     return data;
@@ -202,12 +202,12 @@ export const sessionsApi = {
   },
 
   async finishPracticeSession(sessionId: string) {
-    const { data } = await http.post<ApiResponse>(`/practice-sessions/${sessionId}/finish`);
+    const { data } = await http.post<ApiResponse>(`/practice/${sessionId}/submit`);
     return data;
   },
 
   async getPracticeSessionSummary(sessionId: string) {
-    const { data } = await http.get<ApiResponse<SessionSummary>>(`/practice-sessions/${sessionId}/summary`);
+    const { data } = await http.get<ApiResponse<SessionSummary>>(`/practice/${sessionId}/summary`);
     return data;
   },
 
@@ -219,7 +219,7 @@ export const sessionsApi = {
 
   // Get current practice session details (when form opens)
   async getPracticeSessionDetails(sessionId: string) {
-    const { data } = await http.get<ApiResponse<any>>(`/practice-sessions/${sessionId}`);
+    const { data } = await http.get<ApiResponse<any>>(`/practice/${sessionId}`);
     return data;
   },
 };

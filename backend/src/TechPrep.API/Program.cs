@@ -170,8 +170,7 @@ builder.Services.AddCors(o =>
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
-        // add only if you actually send cookies/Authorization with credentials:
-        //.AllowCredentials()
+        .AllowCredentials()
     );
 });
 

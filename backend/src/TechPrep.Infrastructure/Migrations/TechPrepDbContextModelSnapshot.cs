@@ -1027,6 +1027,21 @@ namespace TechPrep.Infrastructure.Migrations
                     b.ToTable("PracticeSessionsNew");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionTopic", b =>
+                {
+                    b.Property<Guid>("PracticeSessionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PracticeSessionId", "TopicId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("PracticeSessionTopics");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1040,10 +1055,19 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DifficultyExplanation")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("EstimatedTimeSec")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(60);
+
+                    b.Property<string>("ExplanationText")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HintSummary")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("InterviewCooldownDays")
                         .ValueGeneratedOnAdd()
@@ -1053,10 +1077,16 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<DateTime?>("LastUsedInInterviewAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("LearningObjectivesJson")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Level")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("OfficialAnswer")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TagsJson")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Text")
@@ -1508,6 +1538,9 @@ namespace TechPrep.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastPracticeDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
 
@@ -1535,6 +1568,19 @@ namespace TechPrep.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PracticeCorrectAnswers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PracticeRank")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PracticeStreakDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PracticeTotalQuestions")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Role")
@@ -1882,6 +1928,25 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionTopic", b =>
+                {
+                    b.HasOne("TechPrep.Core.Entities.PracticeSessionNew", "PracticeSession")
+                        .WithMany("Topics")
+                        .HasForeignKey("PracticeSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
+                        .WithMany()
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PracticeSession");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
                 {
                     b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
@@ -2123,6 +2188,8 @@ namespace TechPrep.Infrastructure.Migrations
             modelBuilder.Entity("TechPrep.Core.Entities.PracticeSessionNew", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("Topics");
                 });
 
             modelBuilder.Entity("TechPrep.Core.Entities.Question", b =>
