@@ -361,6 +361,7 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.Name).HasMaxLength(80).IsRequired();
             entity.Property(e => e.Status).IsRequired();
             entity.Property(e => e.StartedAt).IsRequired();
             entity.Property(e => e.CurrentQuestionState).HasMaxLength(2000);
@@ -381,17 +382,16 @@ public class TechPrepDbContext(DbContextOptions<TechPrepDbContext> options) : Id
         {
             entity.HasKey(e => new { e.PracticeSessionId, e.TopicId });
             entity.Property(e => e.PracticeSessionId).IsRequired();
-            entity.Property(e => e.TopicId).IsRequired();
+            entity.Property(e => e.TopicId).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Levels).HasMaxLength(100);
 
             entity.HasOne(e => e.PracticeSession)
                   .WithMany(ps => ps.Topics)
                   .HasForeignKey(e => e.PracticeSessionId)
                   .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(e => e.Topic)
-                  .WithMany()
-                  .HasForeignKey(e => e.TopicId)
-                  .OnDelete(DeleteBehavior.Restrict);
+            // No foreign key relationship with Topic since TopicId is now a string
+            // that can contain comma-separated topic IDs or other values
         });
 
         // InterviewSessionNew configuration

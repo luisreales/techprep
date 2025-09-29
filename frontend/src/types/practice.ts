@@ -63,15 +63,26 @@ export interface PracticeProgress {
 
 export interface PracticeSession {
   id: string;
+  name: string;
   userId: string;
   startedAt: string;
   finishedAt?: string;
+  submittedAt?: string;
   totalQuestions: number;
   questionsAnswered: number;
   correctAnswers: number;
   totalScore: number;
   timeSpent: number;
-  filters: {
+  status: 'NotStarted' | 'InProgress' | 'Paused' | 'Completed' | 'Expired' | 'Abandoned';
+  levels?: string;
+  topicId?: string;
+  topicName?: string;
+  topics?: Array<{
+    id: string;
+    name: string;
+    levels: string;
+  }>;
+  filters?: {
     topicIds: number[];
     difficulties: PracticeDifficulty[];
     questionTypes: PracticeQuestionType[];

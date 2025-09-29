@@ -24,7 +24,11 @@ export const PracticePage: React.FC = () => {
     setIsStartingSession(true);
     try {
       const requestData = {
-        TopicId: config.topicId,
+        Name: config.name,
+        ...(config.topicIds.length === 1
+          ? { TopicId: config.topicIds[0] } // Single topic for backward compatibility
+          : { TopicIds: config.topicIds }   // Multiple topics
+        ),
         Level: config.levels.join(','), // Send as comma-separated string
         QuestionCount: config.questionCount
       };

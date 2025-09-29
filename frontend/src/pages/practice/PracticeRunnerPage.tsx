@@ -16,6 +16,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import PracticeModuleApi, { type SubmitPracticeAttemptRequest } from '@/services/practiceModuleApi';
+import { api } from '@/services/api';
 
 interface PracticeQuestion {
   id: string;
@@ -91,15 +92,8 @@ export const PracticeRunnerPage: React.FC<PracticeRunnerPageProps> = ({ sessionI
   useEffect(() => {
     const updateProgress = async () => {
       try {
-        await fetch(`/api/practice/${sessionId}/update-progress`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            currentQuestionIndex: currentQuestionIndex
-          })
+        await api.post(`/practice/${sessionId}/update-progress`, {
+          currentQuestionIndex: currentQuestionIndex
         });
       } catch (error) {
         console.error('Error updating progress:', error);
@@ -163,14 +157,15 @@ export const PracticeRunnerPage: React.FC<PracticeRunnerPageProps> = ({ sessionI
 
     setSubmitting(true);
     try {
-      const request: SubmitPracticeAttemptRequest = {
+      const submitData = {
         questionId: currentQuestion.id,
         selectedOptionIds: currentAnswer.optionIds,
         givenText: currentAnswer.text,
-        timeSpent: currentAnswer.timeMs
+        timeSpentSec: Math.floor(currentAnswer.timeMs / 1000) // Convert to seconds
       };
 
-      const result = await PracticeModuleApi.submitAttempt(request);
+      const response = await api.post(`/practice/${sessionId}/answer`, submitData);
+      const result = response.data;
 
       // Mark answer as submitted
       const submittedAnswer: PracticeAnswer = {
@@ -179,13 +174,14 @@ export const PracticeRunnerPage: React.FC<PracticeRunnerPageProps> = ({ sessionI
       };
       setAnswers(prev => new Map(prev).set(currentQuestion.id, submittedAnswer));
 
-      // Store feedback
+      // Store feedback from the API response
+      const responseData = result.data || result;
       const practiceFeedback: PracticeFeedback = {
-        isCorrect: result.isCorrect,
-        matchPercentage: result.matchPercentage,
-        correctAnswer: result.correctAnswer,
-        explanation: result.explanation,
-        relatedResources: result.relatedResources || []
+        isCorrect: responseData.isCorrect || false,
+        matchPercentage: responseData.matchPercentage,
+        correctAnswer: responseData.correctAnswer,
+        explanation: responseData.explanation,
+        relatedResources: responseData.relatedResources || []
       };
       setFeedback(prev => new Map(prev).set(currentQuestion.id, practiceFeedback));
 
@@ -212,21 +208,11 @@ export const PracticeRunnerPage: React.FC<PracticeRunnerPageProps> = ({ sessionI
       try {
         setLoading(true);
         // Call the complete endpoint
-        const response = await fetch(`/api/practice/${sessionId}/complete`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.ok) {
-          console.log('Session marked as completed successfully');
-        } else {
-          console.error('Failed to mark session as completed');
-        }
+        const response = await api.post(`/practice/${sessionId}/complete`);
+        console.log('Session marked as completed successfully:', response.data);
       } catch (error) {
         console.error('Error completing session:', error);
+        // Still navigate to review even if completion fails
       } finally {
         setLoading(false);
       }
@@ -578,7 +564,8 @@ export const PracticeRunnerPage: React.FC<PracticeRunnerPageProps> = ({ sessionI
           {/* Next */}
           <button
             onClick={handleNext}
-            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            disabled={!isAnswered && hasAnswer}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>{isLastQuestion ? 'Finish' : 'Next'}</span>
             <ChevronRight className="w-4 h-4" />

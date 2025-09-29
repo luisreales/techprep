@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const http = axios.create({
-  baseURL: 'http://localhost:5001/api', // Direct backend URL to bypass proxy issues
+  baseURL: 'http://localhost:5000/api', // Direct backend URL to bypass proxy issues
   timeout: 10000, // 10 second timeout to prevent hanging requests
 });
 

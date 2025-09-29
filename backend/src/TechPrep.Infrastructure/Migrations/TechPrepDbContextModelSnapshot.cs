@@ -994,6 +994,11 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<int>("IncorrectCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("PausedAt")
                         .HasColumnType("TEXT");
 
@@ -1032,12 +1037,21 @@ namespace TechPrep.Infrastructure.Migrations
                     b.Property<Guid>("PracticeSessionId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TopicId")
+                    b.Property<string>("TopicId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Levels")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TopicId1")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("PracticeSessionId", "TopicId");
 
-                    b.HasIndex("TopicId");
+                    b.HasIndex("TopicId1");
 
                     b.ToTable("PracticeSessionTopics");
                 });
@@ -1938,9 +1952,7 @@ namespace TechPrep.Infrastructure.Migrations
 
                     b.HasOne("TechPrep.Core.Entities.Topic", "Topic")
                         .WithMany()
-                        .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("TopicId1");
 
                     b.Navigation("PracticeSession");
 

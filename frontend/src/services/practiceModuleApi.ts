@@ -138,6 +138,12 @@ export class PracticeModuleApi {
     const response = await api.get('/practice/recommendations');
     return response.data.data;
   }
+
+  // Get session review data
+  static async getSessionReview(sessionId: string): Promise<any> {
+    const response = await api.get(`/practice/${sessionId}/review`);
+    return response.data.data;
+  }
 }
 
 export default PracticeModuleApi;

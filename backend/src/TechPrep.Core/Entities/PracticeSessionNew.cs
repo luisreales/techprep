@@ -7,6 +7,7 @@ public class PracticeSessionNew
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
     public int? AssignmentId { get; set; }
+    public string Name { get; set; } = string.Empty;
     public SessionStatus Status { get; set; } = SessionStatus.NotStarted;
     public DateTime StartedAt { get; set; } = DateTime.UtcNow;
     public DateTime? SubmittedAt { get; set; }

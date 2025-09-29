@@ -21,9 +21,9 @@ export const PracticeSessionFilters: React.FC<PracticeSessionFiltersProps> = ({ 
 
   const statusOptions = [
     { value: '', label: 'All Sessions' },
-    { value: 'NotStarted', label: 'Not Started' },
     { value: 'InProgress', label: 'In Progress' },
-    { value: 'Completed', label: 'Completed' }
+    { value: 'Completed', label: 'Completed' },
+    { value: 'Paused', label: 'Paused' }
   ];
 
   const handleTopicChange = (topicId: number | undefined) => {

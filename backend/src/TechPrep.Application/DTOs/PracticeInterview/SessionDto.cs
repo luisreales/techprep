@@ -41,7 +41,9 @@ public class StartPracticeDto
 
 public class StartDirectPracticeDto
 {
-    public int? TopicId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int? TopicId { get; set; } // Keep for backward compatibility
+    public int[]? TopicIds { get; set; } // New field for multiple topics
     public string? Level { get; set; }
     public int QuestionCount { get; set; } = 10;
 }

@@ -32,10 +32,17 @@ interface PracticeReviewQuestion {
 
 interface PracticeReviewResponse {
   sessionId: string;
-  questions: PracticeReviewQuestion[];
-  totalTimeMs: number;
-  correctCount: number;
+  sessionName: string;
+  status: string;
+  startedAt: string;
+  finishedAt?: string;
+  submittedAt?: string;
   totalQuestions: number;
+  correctCount: number;
+  incorrectCount: number;
+  totalScore: number;
+  totalTimeMs: number;
+  answers: PracticeReviewQuestion[];
 }
 
 const PracticeReview: React.FC = () => {
@@ -54,21 +61,9 @@ const PracticeReview: React.FC = () => {
       }
 
       try {
-        // For now, since we don't have a practice review API endpoint,
-        // we'll simulate the data structure based on the interview pattern
-        // In a real implementation, you would call:
-        // const data = await PracticeModuleApi.getSessionReview(sessionId);
-
-        // Temporary mock data - this should be replaced with actual API call
-        const mockData: PracticeReviewResponse = {
-          sessionId,
-          questions: [],
-          totalTimeMs: 0,
-          correctCount: 0,
-          totalQuestions: 0
-        };
-
-        setReviewData(mockData);
+        // Call the actual API endpoint to get session review data
+        const data = await PracticeModuleApi.getSessionReview(sessionId);
+        setReviewData(data);
       } catch (err) {
         setError('Failed to load practice review');
         console.error('Failed to load review:', err);
@@ -343,10 +338,10 @@ const PracticeReview: React.FC = () => {
       </div>
 
       {/* Questions Review */}
-      {reviewData.questions.length > 0 ? (
+      {reviewData.answers && reviewData.answers.length > 0 ? (
         <div className="space-y-6">
           <h2 className="text-xl font-semibold">Question-by-Question Review</h2>
-          {reviewData.questions.map((question, index) => renderQuestion(question, index))}
+          {reviewData.answers.map((question, index) => renderQuestion(question, index))}
         </div>
       ) : (
         <div className="text-center py-8">

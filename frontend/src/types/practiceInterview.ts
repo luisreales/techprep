@@ -26,10 +26,12 @@ export enum NavigationMode {
 }
 
 export enum SessionStatus {
+  NotStarted = 'NotStarted',
   InProgress = 'InProgress',
-  Completed = 'Completed',
   Paused = 'Paused',
-  Expired = 'Expired'
+  Completed = 'Completed',
+  Expired = 'Expired',
+  Abandoned = 'Abandoned'
 }
 
 export enum AuditEventType {
@@ -200,6 +202,7 @@ export interface UpdateAssignmentDto extends CreateAssignmentDto {}
 // Session DTOs
 export interface PracticeSessionDto {
   id: string;
+  name: string;
   assignmentId: number;
   assignmentName?: string;
   status: SessionStatus;
@@ -210,7 +213,20 @@ export interface PracticeSessionDto {
   startedAt: string;
   submittedAt?: string;
   pausedAt?: string;
+  finishedAt?: string;
   answers: PracticeAnswerDto[];
+  topics?: Array<{
+    id: string;
+    name: string;
+    levels: string;
+  }>;
+  levels?: string;
+  topicId?: string;
+  topicName?: string;
+  questionCount?: number;
+  totalItems?: number;
+  correctCount?: number;
+  incorrectCount?: number;
 }
 
 export interface InterviewSessionDto {
@@ -257,6 +273,14 @@ export interface InterviewAnswerDto {
 // Request DTOs
 export interface StartPracticeDto {
   assignmentId: number;
+}
+
+export interface StartDirectPracticeDto {
+  name: string;
+  topicId?: number; // Keep for backward compatibility
+  topicIds?: number[]; // New field for multiple topics
+  level?: string;
+  questionCount: number;
 }
 
 export interface StartInterviewDto {

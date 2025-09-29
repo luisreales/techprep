@@ -2,6 +2,7 @@ import { api } from './api';
 import {
   PracticeSessionDto,
   StartPracticeDto,
+  StartDirectPracticeDto,
   SubmitAnswerDto,
   SessionStateDto,
   PracticeAnswerDto,
@@ -13,6 +14,12 @@ export const practiceApi = {
   // Start a new practice session
   async startPractice(data: StartPracticeDto) {
     const response = await api.post<ApiResponse<PracticeSessionDto>>('/practice/start', data);
+    return response.data;
+  },
+
+  // Start a direct practice session
+  async startDirectPractice(data: StartDirectPracticeDto) {
+    const response = await api.post<any>('/practice/start-direct', data);
     return response.data;
   },
 
@@ -71,6 +78,30 @@ export const practiceApi = {
     const response = await api.post<ApiResponse<PracticeSessionDto>>(
       `/practice/${sessionId}/resume`
     );
+    return response.data;
+  },
+
+  // Get practice sessions (filtered for InProgress and Completed only)
+  async getPracticeSessions(topicId?: number, status?: string) {
+    const params = new URLSearchParams();
+    if (topicId) params.append('topicId', topicId.toString());
+    if (status) params.append('status', status);
+
+    const response = await api.get<any>(`/practice/sessions?${params.toString()}`);
+    return response.data;
+  },
+
+  // Complete a practice session
+  async completeSession(sessionId: string) {
+    const response = await api.post<any>(`/practice/${sessionId}/complete`);
+    return response.data;
+  },
+
+  // Update session progress
+  async updateSessionProgress(sessionId: string, currentQuestionIndex: number) {
+    const response = await api.post<any>(`/practice/${sessionId}/update-progress`, {
+      currentQuestionIndex
+    });
     return response.data;
   }
 };

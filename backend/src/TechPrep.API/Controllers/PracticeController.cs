@@ -73,7 +73,7 @@ public class PracticeController : ControllerBase
     public async Task<ActionResult> StartDirectPractice([FromBody] StartDirectPracticeDto request)
     {
         Console.WriteLine("🎯 StartDirectPractice endpoint called");
-        Console.WriteLine($"📨 Request data: TopicId={request.TopicId}, Level={request.Level}, QuestionCount={request.QuestionCount}");
+        Console.WriteLine($"📨 Request data: TopicId={request.TopicId}, TopicIds={string.Join(",", request.TopicIds ?? Array.Empty<int>())}, Level={request.Level}, QuestionCount={request.QuestionCount}");
 
         var userId = GetCurrentUserId();
         Console.WriteLine($"👤 User ID: {userId}");
@@ -92,14 +92,22 @@ public class PracticeController : ControllerBase
         // Collect the topic IDs that will be used
         var topicIds = new List<int>();
 
-        if (request.TopicId.HasValue)
+        // Handle multiple topics (new approach) or single topic (backward compatibility)
+        if (request.TopicIds != null && request.TopicIds.Length > 0)
         {
+            // New multi-topic support
+            questionsQuery = questionsQuery.Where(q => request.TopicIds.Contains(q.TopicId));
+            topicIds.AddRange(request.TopicIds);
+        }
+        else if (request.TopicId.HasValue)
+        {
+            // Backward compatibility - single topic
             questionsQuery = questionsQuery.Where(q => q.TopicId == request.TopicId.Value);
             topicIds.Add(request.TopicId.Value);
         }
         else
         {
-            // If no specific topic, get all topics represented in the questions
+            // If no specific topics, get all topics represented in the questions
             topicIds = await questionsQuery.Select(q => q.TopicId).Distinct().ToListAsync();
         }
 
@@ -140,6 +148,7 @@ public class PracticeController : ControllerBase
         {
             UserId = userId,
             AssignmentId = null, // No assignment for direct practice
+            Name = !string.IsNullOrEmpty(request.Name) ? request.Name.Substring(0, Math.Min(request.Name.Length, 80)) : $"Practice Session {DateTime.UtcNow:yyyy-MM-dd HH:mm}",
             Status = SessionStatus.InProgress, // Start as InProgress since user is actively starting
             StartedAt = DateTime.UtcNow,
             TotalItems = questions.Count,
@@ -159,7 +168,8 @@ public class PracticeController : ControllerBase
             var sessionTopic = new PracticeSessionTopic
             {
                 PracticeSessionId = session.Id,
-                TopicId = topicId
+                TopicId = topicId.ToString(),
+                Levels = request.Level ?? string.Empty
             };
             _context.PracticeSessionTopics.Add(sessionTopic);
         }
@@ -248,10 +258,19 @@ public class PracticeController : ControllerBase
                 .Where(q => q.UsableInPractice == true);
 
             // Filter by session topics
-            var topicIds = session.Topics.Select(st => st.TopicId).ToList();
-            if (topicIds.Any())
+            var topicIdStrings = session.Topics.Select(st => st.TopicId).ToList();
+            if (topicIdStrings.Any())
             {
-                questionsQuery = questionsQuery.Where(q => topicIds.Contains(q.TopicId));
+                // Convert string topic IDs back to integers for filtering questions
+                var topicIds = topicIdStrings
+                    .Where(s => int.TryParse(s, out _))
+                    .Select(s => int.Parse(s))
+                    .ToList();
+
+                if (topicIds.Any())
+                {
+                    questionsQuery = questionsQuery.Where(q => topicIds.Contains(q.TopicId));
+                }
             }
 
             var questions = await questionsQuery
@@ -330,12 +349,12 @@ public class PracticeController : ControllerBase
         var sessionsQuery = _context.PracticeSessionsNew
             .Include(s => s.Topics)
             .ThenInclude(st => st.Topic)
-            .Where(s => s.UserId == userId)
+            .Where(s => s.UserId == userId && (s.Status == SessionStatus.InProgress || s.Status == SessionStatus.Completed || s.Status == SessionStatus.Paused))
             .AsQueryable();
 
         if (topicId.HasValue)
         {
-            sessionsQuery = sessionsQuery.Where(s => s.Topics.Any(st => st.TopicId == topicId.Value));
+            sessionsQuery = sessionsQuery.Where(s => s.Topics.Any(st => st.TopicId == topicId.Value.ToString()));
         }
 
         if (!string.IsNullOrEmpty(status))
@@ -351,19 +370,21 @@ public class PracticeController : ControllerBase
             .Select(s => new
             {
                 id = s.Id,
-                topicId = s.Topics.FirstOrDefault() != null ? s.Topics.FirstOrDefault()!.TopicId : (int?)null,
-                topicName = s.Topics.Any() ? string.Join(", ", s.Topics.Select(st => st.Topic.Name)) : "Mixed Topics",
-                level = "Mixed", // Could be enhanced to track actual levels used
+                name = s.Name,
+                topicId = s.Topics.FirstOrDefault() != null ? s.Topics.FirstOrDefault()!.TopicId : null,
+                topicName = s.Topics.Any() ? string.Join(", ", s.Topics.Select(st => st.Topic != null ? st.Topic.Name : "Unknown")) : "Mixed Topics",
+                levels = s.Topics.Any() ? string.Join(", ", s.Topics.Select(st => st.Levels).Where(l => !string.IsNullOrEmpty(l))) : "Mixed",
                 questionCount = s.TotalItems,
                 status = s.Status.ToString(),
                 startedAt = s.StartedAt,
                 finishedAt = s.FinishedAt,
+                submittedAt = s.SubmittedAt,
                 totalScore = s.TotalScore,
                 correctCount = s.CorrectCount,
                 incorrectCount = s.IncorrectCount,
                 totalItems = s.TotalItems,
                 currentQuestionIndex = s.CurrentQuestionIndex,
-                topics = s.Topics.Select(st => new { id = st.TopicId, name = st.Topic.Name }).ToList()
+                topics = s.Topics.Select(st => new { id = st.TopicId, name = st.Topic != null ? st.Topic.Name : "Unknown", levels = st.Levels }).ToList()
             })
             .ToListAsync();
 
@@ -687,20 +708,99 @@ public class PracticeController : ControllerBase
         }
     }
 
+    [HttpGet("{sessionId}/review")]
+    public async Task<ActionResult> GetSessionReview(Guid sessionId)
+    {
+        try
+        {
+            Console.WriteLine($"🔍 Review endpoint called for session: {sessionId}");
+            var userId = GetCurrentUserId();
+            Console.WriteLine($"👤 User ID: {userId}");
+
+            var session = await _context.PracticeSessionsNew
+                .Include(s => s.Answers)
+                .ThenInclude(a => a.Question)
+                .ThenInclude(q => q.Options)
+                .Include(s => s.Topics)
+                .ThenInclude(st => st.Topic)
+                .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+            if (session == null)
+            {
+                Console.WriteLine("❌ Session not found");
+                return NotFound(new { success = false, message = "Session not found" });
+            }
+
+            Console.WriteLine($"📊 Session found: {session.Name}, Status: {session.Status}, Answers count: {session.Answers?.Count ?? 0}");
+
+            var reviewData = new
+            {
+                sessionId = session.Id,
+                sessionName = session.Name,
+                status = session.Status.ToString(),
+                startedAt = session.StartedAt,
+                finishedAt = session.FinishedAt,
+                submittedAt = session.SubmittedAt,
+                totalQuestions = session.TotalItems,
+                correctCount = session.CorrectCount,
+                incorrectCount = session.IncorrectCount,
+                totalScore = session.TotalScore,
+                totalTimeMs = session.Answers.Sum(a => a.TimeSpentSec * 1000),
+                answers = session.Answers.Select(a => new
+                {
+                    questionId = a.QuestionId,
+                    questionText = a.Question.Text,
+                    type = a.Question.Type.ToString(),
+                    level = a.Question.Level.ToString(),
+                    topicName = a.Question.Topic?.Name,
+                    givenText = a.GivenText,
+                    selectedOptionIds = a.SelectedOptionIds?.Split(',').Where(s => !string.IsNullOrEmpty(s)).ToList() ?? new List<string>(),
+                    isCorrect = a.IsCorrect,
+                    score = a.Score,
+                    timeSpentSec = a.TimeSpentSec,
+                    matchPercentage = a.MatchPercentage,
+                    explanation = a.Question.ExplanationText,
+                    options = a.Question.Options.Select(o => new
+                    {
+                        id = o.Id,
+                        text = o.Text,
+                        isCorrect = o.IsCorrect
+                    }).ToList()
+                }).ToList()
+            };
+
+            return Ok(new
+            {
+                success = true,
+                data = reviewData,
+                message = "Practice review retrieved successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { success = false, message = "Error retrieving session review", error = ex.Message });
+        }
+    }
+
     [HttpPost("{sessionId}/complete")]
     public async Task<ActionResult> CompleteSession(Guid sessionId)
     {
         try
         {
+            Console.WriteLine($"🏁 Complete endpoint called for session: {sessionId}");
             var userId = GetCurrentUserId();
+            Console.WriteLine($"👤 User ID: {userId}");
 
             var session = await _context.PracticeSessionsNew
                 .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
 
             if (session == null)
             {
+                Console.WriteLine("❌ Session not found");
                 return NotFound(new { success = false, message = "Session not found" });
             }
+
+            Console.WriteLine($"📊 Session found - Current Status: {session.Status}, updating to Completed");
 
             // Update session status to completed
             session.Status = SessionStatus.Completed;
@@ -708,6 +808,7 @@ public class PracticeController : ControllerBase
             session.CurrentQuestionIndex = session.TotalItems; // Mark all questions as completed
 
             await _context.SaveChangesAsync();
+            Console.WriteLine($"✅ Session status updated to: {session.Status}");
 
             return Ok(new {
                 success = true,
@@ -756,6 +857,62 @@ public class PracticeController : ControllerBase
         }
         catch (Exception ex)
         {
+            return BadRequest(new { success = false, message = ex.Message });
+        }
+    }
+
+    [HttpDelete("sessions/{sessionId}")]
+    public async Task<ActionResult> DeleteSession(Guid sessionId)
+    {
+        try
+        {
+            Console.WriteLine($"🗑️ Delete endpoint called for session: {sessionId}");
+            var userId = GetCurrentUserId();
+            Console.WriteLine($"👤 User ID: {userId}");
+
+            var session = await _context.PracticeSessionsNew
+                .FirstOrDefaultAsync(s => s.Id == sessionId && s.UserId == userId);
+
+            if (session == null)
+            {
+                Console.WriteLine("❌ Session not found");
+                return NotFound(new { success = false, message = "Session not found" });
+            }
+
+            // Only allow deletion of completed sessions
+            if (session.Status != SessionStatus.Completed)
+            {
+                Console.WriteLine($"❌ Cannot delete session with status: {session.Status}");
+                return BadRequest(new { success = false, message = "Only completed sessions can be deleted" });
+            }
+
+            Console.WriteLine($"🗑️ Deleting session: {session.Name} (Status: {session.Status})");
+
+            // Delete related data first (foreign key constraints)
+            var sessionTopics = await _context.PracticeSessionTopics
+                .Where(st => st.PracticeSessionId == sessionId)
+                .ToListAsync();
+            _context.PracticeSessionTopics.RemoveRange(sessionTopics);
+
+            var sessionAnswers = await _context.PracticeAnswers
+                .Where(a => a.PracticeSessionId == sessionId)
+                .ToListAsync();
+            _context.PracticeAnswers.RemoveRange(sessionAnswers);
+
+            // Delete the session itself
+            _context.PracticeSessionsNew.Remove(session);
+
+            await _context.SaveChangesAsync();
+            Console.WriteLine($"✅ Session {sessionId} deleted successfully");
+
+            return Ok(new {
+                success = true,
+                message = "Session deleted successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error deleting session: {ex.Message}");
             return BadRequest(new { success = false, message = ex.Message });
         }
     }
