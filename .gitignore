@@ -1,0 +1,4 @@
+# Build outputs
+*.dll
+
+# Optional: extend with other patterns as needed
